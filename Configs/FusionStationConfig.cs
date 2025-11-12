@@ -13,3 +13,4 @@ namespace WeaponMerging.Configs
         public bool DisableAnimation { get; set; }
     }
 }
+

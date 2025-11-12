@@ -31,7 +31,7 @@ namespace WeaponMerging.Content.Items.Weapons
         public override bool Shoot(Player player, Terraria.DataStructures.EntitySource_ItemUse_WithAmmo source,
             Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            // Shoot 3 arrows in a spread for extra visuals
+            
             float spread = 0.1f;
             for (int i = -1; i <= 1; i++)
             {
@@ -46,7 +46,7 @@ namespace WeaponMerging.Content.Items.Weapons
                     player.whoAmI
                 );
             }
-            return false; // Don't shoot the default ammo
+            return false; 
         }
 
         public override void AddRecipes()
@@ -60,3 +60,4 @@ namespace WeaponMerging.Content.Items.Weapons
         }
     }
 }
+

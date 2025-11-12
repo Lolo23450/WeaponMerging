@@ -12,7 +12,7 @@ namespace WeaponMerging.Content.Biomes
 {
     public class FusionRuinsBiome : ModBiome
     {
-        public override int Music => MusicID.Shimmer; // Placeholder, we'll add custom music later
+        public override int Music => MusicID.Shimmer; 
         public override SceneEffectPriority Priority => SceneEffectPriority.BiomeLow;
 
         public override string BestiaryIcon => base.BestiaryIcon;
@@ -21,12 +21,12 @@ namespace WeaponMerging.Content.Biomes
 
         public override bool IsBiomeActive(Player player)
         {
-            return ModContent.GetInstance<FusionRuinsBiomeTileCount>().FusionRuinsTiles >= 5000; // Much higher threshold for massive 3x larger complex with extensive brick coverage
+            return ModContent.GetInstance<FusionRuinsBiomeTileCount>().FusionRuinsTiles >= 5000; 
         }
 
         public override void OnEnter(Player player)
         {
-            // Add ambient effects when entering
+            
             if (Main.netMode != NetmodeID.Server)
             {
                 SkyManager.Instance.Activate("WeaponMerging:FusionRuinsSky");
@@ -35,7 +35,7 @@ namespace WeaponMerging.Content.Biomes
 
         public override void OnLeave(Player player)
         {
-            // Remove ambient effects when leaving
+            
             if (Main.netMode != NetmodeID.Server)
             {
                 SkyManager.Instance.Deactivate("WeaponMerging:FusionRuinsSky");
@@ -50,7 +50,7 @@ namespace WeaponMerging.Content.Biomes
         public override void TileCountsAvailable(ReadOnlySpan<int> tileCounts)
         {
             FusionRuinsTiles = tileCounts[ModContent.TileType<Tiles.FusionRuinsBrick>()];
-            // Debug logging
+            
             if (FusionRuinsTiles > 0)
             {
                 ModContent.GetInstance<WeaponMerging>().Logger.Info($"Fusion Ruins: Found {FusionRuinsTiles} FusionRuinsBrick tiles");
@@ -58,3 +58,4 @@ namespace WeaponMerging.Content.Biomes
         }
     }
 }
+

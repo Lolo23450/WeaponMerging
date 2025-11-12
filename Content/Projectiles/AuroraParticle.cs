@@ -18,19 +18,19 @@ namespace WeaponMerging.Content.Projectiles
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
-            Projectile.timeLeft = 30; // Short lifetime
+            Projectile.timeLeft = 30; 
             Projectile.alpha = 0;
         }
 
         public override void AI()
         {
-            Projectile.alpha += 8; // Fade out
+            Projectile.alpha += 8; 
             if (Projectile.alpha > 255) Projectile.Kill();
 
-            // Slow down
+            
             Projectile.velocity *= 0.95f;
 
-            // Light
+            
             Lighting.AddLight(Projectile.Center, new Vector3(0.2f, 0.4f, 0.6f) * (1f - Projectile.alpha / 255f));
         }
 
@@ -43,3 +43,4 @@ namespace WeaponMerging.Content.Projectiles
         }
     }
 }
+

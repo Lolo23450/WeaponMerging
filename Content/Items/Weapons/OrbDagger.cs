@@ -77,7 +77,7 @@ namespace WeaponMerging.Content.Items.Weapons
 
             float scale = 1.1f + comboCounter * 0.2f;
             Item.scale = scale;
-            player.HeldItem.scale = scale; // Ensure held sprite scales
+            player.HeldItem.scale = scale; 
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
@@ -85,7 +85,7 @@ namespace WeaponMerging.Content.Items.Weapons
             if (player.altFunctionUse != 2 || comboCounter < 3)
                 return false;
 
-            // Dash
+            
             Vector2 toMouse = Main.MouseWorld - player.Center;
             toMouse.Normalize();
             player.velocity = toMouse * 15f;
@@ -107,11 +107,11 @@ namespace WeaponMerging.Content.Items.Weapons
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
             SpawnComboHitEffects(target, comboCounter);
-            Lighting.AddLight(target.Center, 0.2f, 0.4f, 0.6f); // Blue light
+            Lighting.AddLight(target.Center, 0.2f, 0.4f, 0.6f); 
 
             if (comboCounter == 3)
             {
-                // Screen shake
+                
                 if (Main.myPlayer == player.whoAmI)
                 {
                     Main.screenPosition += Main.rand.NextVector2Circular(5f, 5f);
@@ -175,3 +175,4 @@ namespace WeaponMerging.Content.Items.Weapons
         }
     }
 }
+

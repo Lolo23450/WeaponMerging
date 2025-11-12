@@ -33,7 +33,7 @@ namespace WeaponMerging.Content.NPCs
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath1;
             NPC.value = 500f;
-            NPC.aiStyle = -1; // Custom AI
+            NPC.aiStyle = -1; 
             NPC.noGravity = true;
             NPC.noTileCollide = false;
         }
@@ -50,7 +50,7 @@ namespace WeaponMerging.Content.NPCs
         {
             if (spawnInfo.Player.ZoneRockLayerHeight || spawnInfo.Player.ZoneDirtLayerHeight)
             {
-                // Only spawn in Fusion Ruins biome
+                
                 return ModContent.GetInstance<Biomes.FusionRuinsBiomeTileCount>().FusionRuinsTiles >= 40 ? 0.1f : 0f;
             }
             return 0f;
@@ -66,20 +66,20 @@ namespace WeaponMerging.Content.NPCs
 
             if (distance > 300f)
             {
-                // Float towards player
+                
                 NPC.velocity = Vector2.Lerp(NPC.velocity, toPlayer.SafeNormalize(Vector2.Zero) * 2f, 0.05f);
             }
             else if (distance < 100f)
             {
-                // Back away if too close
+                
                 NPC.velocity = Vector2.Lerp(NPC.velocity, -toPlayer.SafeNormalize(Vector2.Zero) * 1.5f, 0.05f);
             }
             else
             {
-                // Hover and attack
+                
                 NPC.velocity *= 0.95f;
 
-                if (NPC.ai[0]++ > 120) // Attack every 2 seconds
+                if (NPC.ai[0]++ > 120) 
                 {
                     NPC.ai[0] = 0;
                     Vector2 direction = toPlayer.SafeNormalize(Vector2.Zero);
@@ -89,7 +89,7 @@ namespace WeaponMerging.Content.NPCs
                 }
             }
 
-            // Animation
+            
             NPC.frameCounter++;
             if (NPC.frameCounter >= 8)
             {
@@ -99,7 +99,7 @@ namespace WeaponMerging.Content.NPCs
                     NPC.frame.Y = 0;
             }
 
-            // Glow effect
+            
             Lighting.AddLight(NPC.Center, 0.3f, 0.4f, 0.5f);
         }
 
@@ -110,3 +110,4 @@ namespace WeaponMerging.Content.NPCs
         }
     }
 }
+

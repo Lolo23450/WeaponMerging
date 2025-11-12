@@ -55,8 +55,7 @@ namespace WeaponMerging
 			}
 			catch
 			{
-				// ignore - SkyManager may already be disposed during shutdown
-			}
+				}
 			finally
 			{
 				_fusionSkyRegistered = false;
@@ -64,3 +63,4 @@ namespace WeaponMerging
 		}
 	}
 }
+

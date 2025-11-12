@@ -166,3 +166,4 @@ namespace WeaponMerging.Content.Projectiles
             Projectile.ai[1] == 1f ? true : false;
     }
 }
+

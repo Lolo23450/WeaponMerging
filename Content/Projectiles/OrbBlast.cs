@@ -22,7 +22,7 @@ namespace WeaponMerging.Content.Projectiles
 
         public override void AI()
         {
-            // Glow and trail effect
+            
             for (int i = 0; i < 2; i++)
             {
                 Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Stone);
@@ -30,7 +30,7 @@ namespace WeaponMerging.Content.Projectiles
                 dust.noGravity = true;
             }
 
-            // Homing behavior (slight)
+            
             if (Projectile.ai[0] == 0)
             {
                 Projectile.ai[0] = 1;
@@ -55,3 +55,4 @@ namespace WeaponMerging.Content.Projectiles
         }
     }
 }
+

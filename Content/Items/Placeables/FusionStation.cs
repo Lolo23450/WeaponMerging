@@ -34,3 +34,4 @@ namespace WeaponMerging.Content.Items.Placeables
         }
     }
 }
+

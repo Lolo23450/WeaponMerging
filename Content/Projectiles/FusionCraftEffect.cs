@@ -48,3 +48,4 @@ namespace WeaponMerging.Content.Projectiles
         public override bool PreDraw(ref Color lightColor) => false;
     }
 }
+

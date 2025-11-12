@@ -15,3 +15,4 @@ namespace WeaponMerging.Content.Walls
         }
     }
 }
+

@@ -271,3 +271,4 @@ namespace WeaponMerging.Content.Projectiles
         }
     }
 }
+

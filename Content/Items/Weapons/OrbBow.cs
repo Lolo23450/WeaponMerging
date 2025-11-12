@@ -40,7 +40,7 @@ namespace WeaponMerging.Content.Items.Weapons
                 knockback,
                 player.whoAmI
             );
-            return false; // Don't shoot the default ammo
+            return false; 
         }
 
         public override void AddRecipes()
@@ -53,3 +53,4 @@ namespace WeaponMerging.Content.Items.Weapons
         }
     }
 }
+

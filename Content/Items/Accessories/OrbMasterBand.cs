@@ -24,3 +24,4 @@ namespace WeaponMerging.Content.Items.Accessories
         }
     }
 }
+

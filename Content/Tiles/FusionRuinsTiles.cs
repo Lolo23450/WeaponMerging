@@ -25,7 +25,7 @@ namespace WeaponMerging.Content.Tiles
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
-            // Subtle glowing effect
+            
             r = 0.3f;
             g = 0.3f;
             b = 0.2f;
@@ -52,7 +52,7 @@ namespace WeaponMerging.Content.Tiles
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
-            // Magical glow
+            
             r = 1.6f;
             g = 1.6f;
             b = 1.4f;
@@ -60,7 +60,7 @@ namespace WeaponMerging.Content.Tiles
 
         public override bool RightClick(int i, int j)
         {
-            // Could open a fusion recipe menu or spawn items
+            
             return true;
         }
     }
@@ -82,10 +82,11 @@ namespace WeaponMerging.Content.Tiles
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
-            // Subtle glowing effect
+            
             r = 3.0f;
             g = 3.0f;
             b = 2.0f;
         }
     }
 }
+
