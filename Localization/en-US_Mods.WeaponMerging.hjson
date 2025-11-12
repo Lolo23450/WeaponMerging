@@ -1,0 +1,330 @@
+Items: {
+	CelestialFrostBlade: {
+		DisplayName: Celestial Frost
+		Tooltip:
+			'''
+			Summons frozen stars from the sky
+			Frozen stars release icy shards upon hitting an enemy
+			'''
+	}
+
+	VenomBarrage: {
+		DisplayName: Venom Barrage
+		Tooltip:
+			'''
+			Uses darts as ammo
+			Shoots 3 venom darts that poison enemies on hit
+			Downside: Venom darts will fall down due to their weight after little time, limiting their range
+			'''
+	}
+
+	SharkCannon: {
+		DisplayName: Shark Cannon
+		Tooltip:
+			'''
+			Shoots high speed bullets, every 7th bullet a spread of 8 extra bullets is fired alongside it
+			Downside: The spread bullets are very inaccurate
+			'''
+	}
+
+	SolarConductor: {
+		DisplayName: Solar Conductor
+		Tooltip:
+			'''
+			Casts bouncing fireballs with 4 homing flames orbiting around them,
+			1.5 seconds after casting a fireball, it will explode and release the homing flames
+			You can pause that 1.5 second timer by holding another item, storing the homing flames inside the fireball until you switch back to the Solar Conductor
+			Downside: When a fireball that has homing flames inside hits an enemy, it will not release the homing flames
+			'''
+	}
+
+	NightfallHarbinger: {
+		DisplayName: Nightfall Harbinger
+		Tooltip: Turns wooden arrows into 2 or 3 piercing shadow scythes that slightly home into enemies
+	}
+
+	FossilDancer: {
+		DisplayName: Fossil Dancer
+		Tooltip:
+			'''
+			A blade that gets progressively better the more you swing it, 4 stages
+			Each stage increases the size, knockback and damage of the blade, up to 300% knockback, 180% damage, and ~170% size at stage 4
+			Killing an enemy with the blade while in the 4th stage releases a burst of damaging bones
+			Downside: The stage resets after reaching stage 4 or after not swinging for a short time
+			'''
+	}
+
+	PainSpiral: {
+		DisplayName: Pain Spiral
+		Tooltip:
+			'''
+			Summons Pain Orbs that orbit around you, up to 5 at a time, you can release them with right click to make them home into enemies dealing normal damage
+			If you dont want to release them, they will stay with you until you have 5 Pain Orbs, at which point the orbs will start firing 12 lasers that deal about half damage
+			Releasing Pain Orbs early adds more orbs to the count of orbs needed to charge the lasers, making it take more time, but have an additional laser shooting orb
+			Downside: Using lasers resets orb count after all 12 lasers are fired from all orbs, and the orbs dont last indefinetely
+			'''
+	}
+
+	ShurikenwoodBow: {
+		Tooltip:
+			'''
+			Shoots arrows, every 3 arrows shot a shuriken is fired alongside them
+			Downside: Shurikens dont have as much range as arrows
+			'''
+		DisplayName: Shurikenwood Bow
+	}
+
+	FrostShurikenwoodBow: {
+		DisplayName: Frost Shurikenwood Bow
+		Tooltip:
+			'''
+			Shoots arrows, every 3 arrows shot a shuriken is fired alongside them
+			every 6 arrows shot a snowball is fired alongside them
+			Downside: Shurikens and snowballs dont have as much range as arrows, snowballs have a bit more range than shurikens
+			'''
+	}
+
+	ShadowReaper: {
+		Tooltip:
+			'''
+			Summons Shadow Orbs that orbit around you, up to 3 at a time, you can press right click to use the orbs you have orbiting around to fire different attacks depending on how many orbs you have
+			1 Orb: Fires a shadow laser that pierces enemies and bounces off walls
+			2 Orbs: Fires 5 spreaded medium range demon scythes that pierce through enemies
+			3 Orbs: Fires 4 shadow lasers in all 4 direction, and a burst of 8 demon scythes around the player
+			Downside: Using any of these attacks consumes all the orbs you have orbiting around you
+			'''
+		DisplayName: Shadow Reaper
+	}
+
+	FusionOrbReleaser: {
+		Tooltip: "Releases all Fusion Orbs that are currently orbiting around you "
+		DisplayName: Fusion Orb Releaser
+	}
+
+	InfernoOrb: {
+		Tooltip:
+			'''
+			Summons Inferno Orbs that orbit around you, up to 4 at a time, you can press right click to use the orbs you have orbiting around to fire different attacks depending on how many orbs you have
+			1 Orb: Fires a very fast fireball that explodes on impact dealing high damage
+			2 Orbs: Fires many fireballs around you in a spread pattern, each putting enemies on fire
+			3 Orbs: Releases a temporary ring of fire around you that damages enemies and sets them on fire
+			4 Orbs: Combination of all previous attacks
+			The orbs from this weapon stay with you until you release or fuse them
+			Downside: Using any of these attacks consumes all the orbs you have orbiting around you
+			'''
+		DisplayName: Inferno Orb
+	}
+
+	StarlitWhirlwind: {
+		Tooltip: ""
+		DisplayName: Starlit Whirlwind
+	}
+
+	CrystalCascade: {
+		Tooltip:
+			'''
+			Summons crystalline orbs that orbit you and absorb other crystals to grow stronger
+			Absorbing increases size, and damage
+			Downside: Crystals cannot be fused with other orb types
+			'''
+		DisplayName: Crystal Cascade
+	}
+
+	GaleCrescent: {
+		Tooltip:
+			'''
+			Alternating slashes send wind crescents toward the cursor
+			Landing hits builds Gale stacks; at 3 stacks, the next use fires a powerful returning wind crescent
+			Downside: Damage focused on the crescents rather than the blade itself
+			'''
+		DisplayName: Gale Crescent
+	}
+
+	AbyssalSharkCannon: {
+		DisplayName: Abyssal Shark Cannon
+		Tooltip:
+			'''
+			Fires abyssal torpedoes that lightly home and explode into mini-sharks on impact
+			Every 6th shot unleashes a frenzy triple volley with boosted critical chance
+			'''
+	}
+
+	VerdantConduitTome: {
+		DisplayName: Verdant Conduit Tome
+		Tooltip:
+			'''
+			Places a verdant rune at the cursor that periodically zaps up to 2 nearby enemies
+			Only one rune can be active per player; placing a new one replaces the old
+			Downside: Rune duration is limited and zaps have a short cadence
+			'''
+	}
+
+	OrbweaverBand: {
+		DisplayName: Orbweaver Band
+		Tooltip: Increases maximum orbiting orbs by 1 for compatible orb weapons
+	}
+
+	FocusCrystal: {
+		DisplayName: Focus Crystal
+		Tooltip: Laser Orbs fire more frequently and each orb fires +2 additional shots during charged barrages
+	}
+
+	AccelerantCharm: {
+		DisplayName: Accelerant Charm
+		Tooltip: Reduces time required to gain an orb for orb weapons
+	}
+
+	FusionStation: {
+		DisplayName: Fusion Station
+		Tooltip: ""
+	}
+
+	OrbCatalystCore: {
+		Tooltip: Increases maximum orbs by 1 and slightly speeds up laser orb barrages
+		DisplayName: Orb Catalyst Core
+	}
+
+	OrbPersistenceCharm: {
+		DisplayName: Orb Persistence Charm
+		Tooltip: 10% chance orbiting orbs aren’t consumed after actions
+	}
+
+	FocusedPersistenceCrystal: {
+		Tooltip: ""
+		DisplayName: Focused Persistence Crystal
+	}
+
+	ComboCatalystCharm: {
+		Tooltip: ""
+		DisplayName: Combo Catalyst Charm
+	}
+
+	OrbMasterBand: {
+		DisplayName: Orb Master Band
+		Tooltip: ""
+	}
+
+	AuroraBow: {
+		Tooltip: ""
+		DisplayName: Aurora Bow
+	}
+
+	OrbFragment: {
+		DisplayName: Orb Fragment
+		Tooltip: ""
+	}
+
+	OrbDagger: {
+		Tooltip: ""
+		DisplayName: Orb Dagger
+	}
+
+	OrbBow: {
+		Tooltip: ""
+		DisplayName: Orb Bow
+	}
+
+	OrbStaff: {
+		DisplayName: Orb Staff
+		Tooltip: ""
+	}
+}
+
+Projectiles: {
+	NightfallHarbingerProjectile.DisplayName: Nightfall Harbinger Projectile
+	FossilDancerProjectile.DisplayName: Fossil Dancer Projectile
+	PainSpiralProjectile.DisplayName: Pain Spiral Projectile
+	PainOrbLaser.DisplayName: Pain Orb Laser
+	PainOrbProjectile.DisplayName: Pain Orb Projectile
+	ShadowReaperProjectile.DisplayName: Shadow Reaper Projectile
+	ShadowOrbProjectile.DisplayName: Shadow Orb Projectile
+	FusionOrbProjectile.DisplayName: Fusion Orb Projectile
+	ChaosOrbProjectile.DisplayName: Chaos Orb Projectile
+	ChaosBoltProjectile.DisplayName: Chaos Bolt Projectile
+	InfernoOrbProjectile.DisplayName: Inferno Orb Projectile
+	StarlitWhirlwindProjectile.DisplayName: Starlit Whirlwind Projectile
+	StarlitOrbProjectile.DisplayName: Starlit Orb Projectile
+	StarlightShieldVisual.DisplayName: Starlight Shield Visual
+	ThornOrbProjectile.DisplayName: Thorn Orb Projectile
+	CrimsonOrbProjectile.DisplayName: Crimson Orb Projectile
+	CrystalOrbProjectile.DisplayName: Crystal Orb Projectile
+	CrystalCascadeProjectile.DisplayName: Crystal Cascade Projectile
+	GaleCrescentSlashProjectile.DisplayName: Gale Crescent Slash Projectile
+	GaleCrescentFinisherProjectile.DisplayName: Gale Crescent Finisher Projectile
+	BoneWaltzCycloneProjectile.DisplayName: Bone Waltz Cyclone Projectile
+	BoneWaltzSlashProjectile.DisplayName: Bone Waltz Slash Projectile
+	AbyssalMiniShark.DisplayName: Abyssal Mini Shark
+	AbyssalSharkTorpedo.DisplayName: Abyssal Shark Torpedo
+	VerdantRune.DisplayName: Verdant Rune
+	VerdantZap.DisplayName: Verdant Zap
+	StarlitShadowFusionOrbProjectile.DisplayName: Starlit Shadow Fusion Orb Projectile
+	StarlitPainFusionOrbProjectile.DisplayName: Starlit Pain Fusion Orb Projectile
+	StarlitInfernoFusionOrbProjectile.DisplayName: Starlit Inferno Fusion Orb Projectile
+	InfernoPainFusionOrbProjectile.DisplayName: Inferno Pain Fusion Orb Projectile
+	FusionCraftEffect.DisplayName: Fusion Craft Effect
+	AuroraArrow.DisplayName: Aurora Arrow
+	AuroraParticle.DisplayName: Aurora Particle
+	OrbBlast.DisplayName: Orb Blast
+	OrbDaggerOrb.DisplayName: Orb Dagger Orb
+	OrbDaggerProjectile.DisplayName: Orb Dagger Projectile
+	OrbProjectile.DisplayName: Orb Projectile
+}
+
+Tiles: {
+	FusionStationTile.MapEntry: Fusion Station Tile
+	FusionRuinsBrick.MapEntry: Fusion Ruins Brick
+	FusionAltar.MapEntry: Fusion Altar
+	FusionRuinsLight.MapEntry: Fusion Ruins Light
+}
+
+OrbFragment: {
+	DisplayName: Orb Fragment
+	Tooltip: A fragment of ancient fusion energy. Used in advanced fusions.
+}
+
+FusionRuinsBrick: {
+	DisplayName: Fusion Ruins Brick
+	Tooltip: An ancient brick infused with fusion energy.
+}
+
+FusionAltar: {
+	DisplayName: Fusion Altar
+	Tooltip: An ancient altar where weapon fusions were once performed.
+}
+
+FusionRuinsWall: {
+	DisplayName: Fusion Ruins Wall
+	Tooltip: A wall from the ancient fusion ruins.
+}
+
+Configs: {
+	FusionStationConfig: {
+		DisplayName: Fusion Station Config
+
+		DisableWhiteLights: {
+			Label: Disable White Lights
+			Tooltip: Disables the animated white lights on unlocked fusion links.
+		}
+
+		DisableAnimation: {
+			Label: Disable Animation
+			Tooltip: Disables fusion animations when unlocking new weapons.
+		}
+	}
+}
+
+NPCs: {
+	FusionSlime.DisplayName: Fusion Slime
+
+	OrbElemental: {
+		DisplayName: Orb Elemental
+		Bestiary: A floating orb of fused energies, drawn to ancient ruins where weapon fusions once occurred.
+	}
+}
+
+Biomes: {
+	FusionRuinsBiome: {
+		TownNPCDialogueName: the Fusion Ruins Biome
+		DisplayName: Fusion Ruins Biome
+	}
+}

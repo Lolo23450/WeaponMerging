@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- Import tModLoader mod properties -->
+	<Import Project="..\tModLoader.targets" />
+
+	<PropertyGroup>
+		<EnableDefaultCompileItems>true</EnableDefaultCompileItems>
+		<EnableDefaultItems>true</EnableDefaultItems>
+	</PropertyGroup>
+
+</Project>
