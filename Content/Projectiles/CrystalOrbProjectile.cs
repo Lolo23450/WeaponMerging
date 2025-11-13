@@ -51,6 +51,8 @@ namespace WeaponMerging.Content.Projectiles
             int crystalCount = modPlayer?.crystalCount ?? 1;
             if (crystalCount < 1) crystalCount = 1;
 
+            var accessoryPlayer = owner.GetModPlayer<Players.AccessoryEffectsPlayer>();
+            float speedMult = accessoryPlayer.orbSpeedMultipliers.TryGetValue("Crystal", out float mult) ? mult : 1f;
             
             float index = Projectile.localAI[0];
             if (index < 0) index = 0;
@@ -58,7 +60,7 @@ namespace WeaponMerging.Content.Projectiles
 
             
             float speedVar = (Projectile.whoAmI % 7) * 0.01f; 
-            float globalAngle = Main.GlobalTimeWrappedHourly * ORBIT_SPEED * (1f + speedVar);
+            float globalAngle = Main.GlobalTimeWrappedHourly * ORBIT_SPEED * (1f + speedVar) * speedMult;
             float phaseJitter = (float)System.Math.Sin(Main.GlobalTimeWrappedHourly * (0.6f + Projectile.whoAmI * 0.03f)) * 0.25f;
             float myAngle = globalAngle + (MathHelper.TwoPi * index / crystalCount) + phaseJitter;
 

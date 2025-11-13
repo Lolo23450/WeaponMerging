@@ -199,9 +199,9 @@ Items: {
 		DisplayName: Combo Catalyst Charm
 	}
 
-	OrbMasterBand: {
-		DisplayName: Orb Master Band
-		Tooltip: ""
+	OrbAmplifierRing: {
+		DisplayName: Orb Amplifier Ring
+		Tooltip: Allows configuration of orbiting orb speeds in the Fusion Station
 	}
 
 	AuroraBow: {
@@ -214,11 +214,6 @@ Items: {
 		Tooltip: ""
 	}
 
-	OrbDagger: {
-		Tooltip: ""
-		DisplayName: Orb Dagger
-	}
-
 	OrbBow: {
 		Tooltip: ""
 		DisplayName: Orb Bow
@@ -227,6 +222,11 @@ Items: {
 	OrbStaff: {
 		DisplayName: Orb Staff
 		Tooltip: ""
+	}
+
+	OrbMasterBand: {
+		Tooltip: ""
+		DisplayName: Orb Master Band
 	}
 }
 
@@ -245,14 +245,10 @@ Projectiles: {
 	StarlitWhirlwindProjectile.DisplayName: Starlit Whirlwind Projectile
 	StarlitOrbProjectile.DisplayName: Starlit Orb Projectile
 	StarlightShieldVisual.DisplayName: Starlight Shield Visual
-	ThornOrbProjectile.DisplayName: Thorn Orb Projectile
-	CrimsonOrbProjectile.DisplayName: Crimson Orb Projectile
 	CrystalOrbProjectile.DisplayName: Crystal Orb Projectile
 	CrystalCascadeProjectile.DisplayName: Crystal Cascade Projectile
 	GaleCrescentSlashProjectile.DisplayName: Gale Crescent Slash Projectile
 	GaleCrescentFinisherProjectile.DisplayName: Gale Crescent Finisher Projectile
-	BoneWaltzCycloneProjectile.DisplayName: Bone Waltz Cyclone Projectile
-	BoneWaltzSlashProjectile.DisplayName: Bone Waltz Slash Projectile
 	AbyssalMiniShark.DisplayName: Abyssal Mini Shark
 	AbyssalSharkTorpedo.DisplayName: Abyssal Shark Torpedo
 	VerdantRune.DisplayName: Verdant Rune
@@ -265,8 +261,6 @@ Projectiles: {
 	AuroraArrow.DisplayName: Aurora Arrow
 	AuroraParticle.DisplayName: Aurora Particle
 	OrbBlast.DisplayName: Orb Blast
-	OrbDaggerOrb.DisplayName: Orb Dagger Orb
-	OrbDaggerProjectile.DisplayName: Orb Dagger Projectile
 	OrbProjectile.DisplayName: Orb Projectile
 }
 

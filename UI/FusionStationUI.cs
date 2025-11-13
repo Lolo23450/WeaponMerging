@@ -40,6 +40,10 @@ namespace WeaponMerging.UI
         private Dictionary<string, float> _baseHeights = new();
         private float _zoom = 1f;
 
+        private int currentTab = 0;
+        private UIElement tabButtons;
+        private UIElement configPanel;
+
         private Vector2 _panOffset = Vector2.Zero;
         private bool _isDragging = false;
         private Vector2 _lastMousePos;
@@ -64,6 +68,41 @@ namespace WeaponMerging.UI
             titleText.Top.Set(8f, 0f);
             titleText.HAlign = 0.5f;
             panel.Append(titleText);
+
+            tabButtons = new UIElement();
+            tabButtons.Top.Set(8f, 0f);
+            tabButtons.Width.Set(300f, 0f);
+            tabButtons.Height.Set(30f, 0f);
+            panel.Append(tabButtons);
+
+            var tab1 = new UIElement();
+            tab1.Width.Set(100f, 0f);
+            tab1.Height.Set(30f, 0f);
+            tab1.Left.Set(0f, 0f);
+            tab1.OnLeftClick += (e, l) => { currentTab = 0; UpdateUI(); };
+            var tab1Text = new UIText("Tech Tree");
+            tab1Text.HAlign = 0.5f;
+            tab1Text.VAlign = 0.5f;
+            tab1.Append(tab1Text);
+            tabButtons.Append(tab1);
+
+            var tab2 = new UIElement();
+            tab2.Width.Set(120f, 0f);
+            tab2.Height.Set(30f, 0f);
+            tab2.Left.Set(110f, 0f);
+            tab2.OnLeftClick += (e, l) => { currentTab = 1; UpdateUI(); };
+            var tab2Text = new UIText("Accessory Config");
+            tab2Text.HAlign = 0.5f;
+            tab2Text.VAlign = 0.5f;
+            tab2.Append(tab2Text);
+            tabButtons.Append(tab2);
+
+            configPanel = new UIElement();
+            configPanel.Width.Set(-48f, 1f);
+            configPanel.Height.Set(-108f, 1f);
+            configPanel.Left.Set(24f, 0f);
+            configPanel.Top.Set(44f, 0f);
+            panel.Append(configPanel);
 
             treeArea = new UIElement();
             treeArea.Width.Set(-348f, 1f);
@@ -245,6 +284,8 @@ namespace WeaponMerging.UI
             _journeyUnlockAllButton.Append(unlockAllText);
 
             EnsureJourneyControls();
+
+            UpdateUI();
         }
 
         public override void OnActivate()
@@ -255,6 +296,7 @@ namespace WeaponMerging.UI
 
         private void OnPanelScrollWheel(UIScrollWheelEvent evt, UIElement listeningElement)
         {
+            if (currentTab != 0) return;
             float oldZoom = _zoom;
             _zoom = MathHelper.Clamp(_zoom + evt.ScrollWheelValue * 0.001f, 0.5f, 2f);
             float newZoom = _zoom;
@@ -299,6 +341,8 @@ namespace WeaponMerging.UI
 
             base.DrawSelf(spriteBatch);
             EnsureJourneyControls();
+
+            if (currentTab != 0) return;
 
             if (_entries == null || _entries.Count == 0)
                 return;
@@ -1299,6 +1343,17 @@ namespace WeaponMerging.UI
 
         private void EnsureJourneyControls()
         {
+            if (currentTab != 0)
+            {
+                if (_journeyUnlockAllButton.Parent != null) _journeyUnlockAllButton.Remove();
+                foreach (var kvp in _journeySkipButtons)
+                {
+                    var skipBtn = kvp.Value;
+                    if (skipBtn.Parent != null) skipBtn.Remove();
+                }
+                return;
+            }
+
             bool isJourney = JourneyCheatsEnabled;
 
             if (_journeyUnlockAllButton != null)
@@ -1340,6 +1395,76 @@ namespace WeaponMerging.UI
                 else if (skipPanel.Parent != null)
                 {
                     skipPanel.Remove();
+                }
+            }
+        }
+
+        private void UpdateUI()
+        {
+            if (currentTab == 0)
+            {
+                if (configPanel.Parent != null) configPanel.Remove();
+                if (treeArea.Parent == null) panel.Append(treeArea);
+                if (infoPanel.Parent == null) panel.Append(infoPanel);
+            }
+            else
+            {
+                if (treeArea.Parent != null) treeArea.Remove();
+                if (infoPanel.Parent != null) infoPanel.Remove();
+                if (configPanel.Parent == null) panel.Append(configPanel);
+                configPanel.RemoveAllChildren();
+                var player = Main.LocalPlayer.GetModPlayer<Content.Players.AccessoryEffectsPlayer>();
+                if (player.amplifierEquipped)
+                {
+                    var title = new UIText("Orb Speed Multipliers");
+                    title.Top.Set(8f, 0f);
+                    title.HAlign = 0.5f;
+                    configPanel.Append(title);
+                    string[] categories = { "Inferno", "Shadow", "Pain", "Crystal", "Starlit" };
+                    float y = 40f;
+                    foreach (var cat in categories)
+                    {
+                        var row = new UIElement();
+                        row.Width.Set(0f, 1f);
+                        row.Height.Set(30f, 0f);
+                        row.Top.Set(y, 0f);
+                        configPanel.Append(row);
+                        var label = new UIText(cat + ": " + player.orbSpeedMultipliers[cat].ToString("F2"));
+                        label.Left.Set(10f, 0f);
+                        label.VAlign = 0.5f;
+                        row.Append(label);
+                        var minusBtn = new UIElement();
+                        minusBtn.Width.Set(20f, 0f);
+                        minusBtn.Height.Set(20f, 0f);
+                        minusBtn.Left.Set(150f, 0f);
+                        minusBtn.VAlign = 0.5f;
+                        minusBtn.OnLeftClick += (e, l) => { player.orbSpeedMultipliers[cat] = Math.Max(0.1f, player.orbSpeedMultipliers[cat] - 0.1f); UpdateUI(); };
+                        var minusText = new UIText("-");
+                        minusText.HAlign = 0.5f;
+                        minusText.VAlign = 0.5f;
+                        minusBtn.Append(minusText);
+                        row.Append(minusBtn);
+
+                        var plusBtn = new UIElement();
+                        plusBtn.Width.Set(20f, 0f);
+                        plusBtn.Height.Set(20f, 0f);
+                        plusBtn.Left.Set(180f, 0f);
+                        plusBtn.VAlign = 0.5f;
+                        plusBtn.OnLeftClick += (e, l) => { player.orbSpeedMultipliers[cat] = Math.Min(3f, player.orbSpeedMultipliers[cat] + 0.1f); UpdateUI(); };
+                        var plusText = new UIText("+");
+                        plusText.HAlign = 0.5f;
+                        plusText.VAlign = 0.5f;
+                        plusBtn.Append(plusText);
+                        row.Append(plusBtn);
+                        y += 35f;
+                    }
+                }
+                else
+                {
+                    var msg = new UIText("Equip the Orb Amplifier Ring to access this config.");
+                    msg.HAlign = 0.5f;
+                    msg.VAlign = 0.5f;
+                    configPanel.Append(msg);
                 }
             }
         }

@@ -1,5 +1,6 @@
 using Terraria;
 using Terraria.ModLoader;
+using System.Collections.Generic;
 
 namespace WeaponMerging.Content.Players
 {
@@ -12,6 +13,8 @@ namespace WeaponMerging.Content.Players
         public bool orbMasterBandEquipped;
         public bool focusedPersistenceEquipped;
         public bool comboCatalystEquipped;
+        public bool amplifierEquipped;
+        public Dictionary<string, float> orbSpeedMultipliers = new Dictionary<string, float>();
         public int ComboReduction;
 
         public int BonusMaxOrbs => (orbBandEquipped ? 1 : 0) + (catalystEquipped ? 1 : 0) + (orbMasterBandEquipped ? 2 : 0);
@@ -27,7 +30,16 @@ namespace WeaponMerging.Content.Players
             orbMasterBandEquipped = false;
             focusedPersistenceEquipped = false;
             comboCatalystEquipped = false;
+            amplifierEquipped = false;
             ComboReduction = 0;
+            if (orbSpeedMultipliers.Count == 0)
+            {
+                orbSpeedMultipliers["Inferno"] = 1f;
+                orbSpeedMultipliers["Shadow"] = 1f;
+                orbSpeedMultipliers["Pain"] = 1f;
+                orbSpeedMultipliers["Crystal"] = 1f;
+                orbSpeedMultipliers["Starlit"] = 1f;
+            }
         }
 
         public bool RollPersist()

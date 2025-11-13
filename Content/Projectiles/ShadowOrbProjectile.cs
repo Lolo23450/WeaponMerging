@@ -89,8 +89,11 @@ namespace WeaponMerging.Content.Projectiles
             int orbCount = modPlayer?.orbCount ?? 1;
             if (orbCount < 1) orbCount = 1;
 
+            var accessoryPlayer = owner.GetModPlayer<Content.Players.AccessoryEffectsPlayer>();
+            float speedMult = accessoryPlayer.orbSpeedMultipliers.TryGetValue("Shadow", out float mult) ? mult : 1f;
+
             float index = Projectile.localAI[0];
-            float globalAngle = Main.GlobalTimeWrappedHourly * ORBIT_SPEED * 2f;
+            float globalAngle = Main.GlobalTimeWrappedHourly * ORBIT_SPEED * 2f * speedMult;
             float myAngle = globalAngle + (MathHelper.TwoPi * index / orbCount);
 
             Vector2 orbitTarget = owner.Center + myAngle.ToRotationVector2() * (ORBIT_RADIUS + orbCount * 5f);
