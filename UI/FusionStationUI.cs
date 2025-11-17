@@ -43,6 +43,7 @@ namespace WeaponMerging.UI
         private int currentTab = 0;
         private UIElement tabButtons;
         private UIElement configPanel;
+        private UIPanel[] tabs;
 
         private Vector2 _panOffset = Vector2.Zero;
         private bool _isDragging = false;
@@ -75,10 +76,12 @@ namespace WeaponMerging.UI
             tabButtons.Height.Set(30f, 0f);
             panel.Append(tabButtons);
 
-            var tab1 = new UIElement();
-            tab1.Width.Set(100f, 0f);
+            var tab1 = new UIPanel();
+            tab1.Width.Set(120f, 0f);
             tab1.Height.Set(30f, 0f);
             tab1.Left.Set(0f, 0f);
+            tab1.BackgroundColor = Color.Transparent;
+            tab1.BorderColor = new Color(75, 85, 120);
             tab1.OnLeftClick += (e, l) => { currentTab = 0; UpdateUI(); };
             var tab1Text = new UIText("Tech Tree");
             tab1Text.HAlign = 0.5f;
@@ -86,16 +89,27 @@ namespace WeaponMerging.UI
             tab1.Append(tab1Text);
             tabButtons.Append(tab1);
 
-            var tab2 = new UIElement();
+            var tab2 = new UIPanel();
             tab2.Width.Set(120f, 0f);
             tab2.Height.Set(30f, 0f);
-            tab2.Left.Set(110f, 0f);
+            tab2.Left.Set(130f, 0f);
+            tab2.BackgroundColor = Color.Transparent;
+            tab2.BorderColor = new Color(75, 85, 120);
             tab2.OnLeftClick += (e, l) => { currentTab = 1; UpdateUI(); };
             var tab2Text = new UIText("Accessory Config");
             tab2Text.HAlign = 0.5f;
             tab2Text.VAlign = 0.5f;
             tab2.Append(tab2Text);
             tabButtons.Append(tab2);
+
+            tabs = new UIPanel[] { tab1, tab2 };
+
+            foreach (var tab in tabs)
+            {
+                int idx = Array.IndexOf(tabs, tab);
+                tab.OnMouseOver += (e, l) => { tab.BackgroundColor = new Color(100, 120, 180) * 0.7f; };
+                tab.OnMouseOut += (e, l) => { tab.BackgroundColor = (idx == currentTab) ? new Color(63, 82, 151) * 0.7f : Color.Transparent; };
+            }
 
             configPanel = new UIElement();
             configPanel.Width.Set(-48f, 1f);
@@ -224,15 +238,45 @@ namespace WeaponMerging.UI
                 () => FP != null && FP.Unlocked_OrbMasterBand,
                 new Vector2(550, 350));
 
-            nodes["Focused Persistence Crystal"] = CreateNode("Focused Persistence Crystal", AttemptUnlock_FocusedPersistenceCrystal,
+            nodes["Focus Crystal"] = CreateNode("Focus Crystal", AttemptUnlock_FocusCrystal,
                 new List<(int,int)>{ (ModContent.ItemType<Content.Items.Accessories.FocusCrystal>(),1), (ModContent.ItemType<Content.Items.Accessories.OrbPersistenceCharm>(),1), (ItemID.CrystalShard,20), (ItemID.FallenStar,5) },
-                () => FP != null && FP.Unlocked_FocusedPersistenceCrystal,
+                () => FP != null && FP.Unlocked_FocusCrystal,
                 new Vector2(100, 150));
 
             nodes["Combo Catalyst Charm"] = CreateNode("Combo Catalyst Charm", AttemptUnlock_ComboCatalystCharm,
                 new List<(int,int)>{ (ModContent.ItemType<Content.Items.Accessories.AccelerantCharm>(),1), (ModContent.ItemType<Content.Items.Accessories.OrbCatalystCore>(),1), (ItemID.Bone, 20), (ItemID.SoulofLight,5) },
                 () => FP != null && FP.Unlocked_ComboCatalystCharm,
                 new Vector2(650, 250));
+
+            nodes["Orb Weaver Band"] = CreateNode("Orb Weaver Band", AttemptUnlock_OrbWeaverBand,
+                new List<(int,int)>{ (ItemID.Silk,20), (ItemID.IronBar,10), (ModContent.ItemType<OrbFragment>(),3) },
+                () => FP != null && FP.Unlocked_OrbWeaverBand,
+                new Vector2(100, -50));
+
+            nodes["Orb Catalyst Core"] = CreateNode("Orb Catalyst Core", AttemptUnlock_OrbCatalystCore,
+                new List<(int,int)>{ (ItemID.GoldBar,10), (ItemID.Sapphire,5), (ModContent.ItemType<OrbFragment>(),3) },
+                () => FP != null && FP.Unlocked_OrbCatalystCore,
+                new Vector2(100, -150));
+
+            nodes["Focused Persistence Crystal"] = CreateNode("Focused Persistence Crystal", AttemptUnlock_FocusCrystal,
+                new List<(int,int)>{ (ItemID.CrystalShard,20), (ItemID.FallenStar,5) },
+                () => FP != null && FP.Unlocked_FocusCrystal,
+                new Vector2(0, 150));
+
+            nodes["Orb Persistence Charm"] = CreateNode("Orb Persistence Charm", AttemptUnlock_OrbPersistenceCharm,
+                new List<(int,int)>{ (ItemID.Bone,15), (ItemID.FallenStar,5) },
+                () => FP != null && FP.Unlocked_OrbPersistenceCharm,
+                new Vector2(100, 250));
+
+            nodes["Accelerant Charm"] = CreateNode("Accelerant Charm", AttemptUnlock_AccelerantCharm,
+                new List<(int,int)>{ (ItemID.Gel,20), (ItemID.Bone,10) },
+                () => FP != null && FP.Unlocked_AccelerantCharm,
+                new Vector2(200, -150));
+
+            nodes["Orb Amplifier Ring"] = CreateNode("Orb Amplifier Ring", AttemptUnlock_OrbAmplifierRing,
+                new List<(int,int)>{ (ItemID.GoldBar,10), (ModContent.ItemType<OrbFragment>(),5) },
+                () => FP != null && FP.Unlocked_OrbAmplifierRing,
+                new Vector2(200, -50));
 
             Link(nodes["Starlit Whirlwind"], nodes["Crystal Cascade"]);
             Link(nodes["Starlit Whirlwind"], nodes["Pain Spiral"]);
@@ -255,8 +299,15 @@ namespace WeaponMerging.UI
             Link(nodes["Shark Cannon"], nodes["Shadow Reaper"]);
 
             Link(nodes["Combo Catalyst Charm"], nodes["Orb Master Band"]);
-            Link(nodes["Crystal Cascade"], nodes["Focused Persistence Crystal"]);
+            Link(nodes["Crystal Cascade"], nodes["Focus Crystal"]);
             Link(nodes["Venom Barrage"], nodes["Combo Catalyst Charm"]);
+
+            Link(nodes["Starlit Whirlwind"], nodes["Orb Amplifier Ring"]);
+            Link(nodes["Orb Weaver Band"], nodes["Orb Catalyst Core"]);
+            Link(nodes["Focus Crystal"], nodes["Orb Persistence Charm"]);
+            Link(nodes["Focus Crystal"], nodes["Focused Persistence Crystal"]);
+            Link(nodes["Orb Catalyst Core"], nodes["Accelerant Charm"]);
+            Link(nodes["Orb Amplifier Ring"], nodes["Orb Weaver Band"]);
 
             var closeBtn = new UIPanel();
             closeBtn.Width.Set(60f, 0f);
@@ -1128,6 +1179,72 @@ namespace WeaponMerging.UI
                 StartCraftAnimation(ModContent.ItemType<Content.Items.Weapons.AuroraBow>(), ItemID.DaedalusStormbow, ItemID.RainbowRod);
         }
 
+        private void AttemptUnlock_OrbWeaverBand(UIMouseEvent evt, UIElement listeningElement)
+        {
+            if (FP.Unlocked_OrbWeaverBand) { ShowRejected("Already unlocked"); return; }
+            var cost = new List<(int,int)> { (ItemID.Silk,20), (ItemID.IronBar,10), (ModContent.ItemType<OrbFragment>(),3) };
+            if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
+            ConsumeItems(cost);
+            FP.Unlocked_OrbWeaverBand = true;
+            ShowAccepted("Orb Weaver Band unlocked");
+            GrantItem(ModContent.ItemType<Content.Items.Accessories.OrbweaverBand>());
+        }
+
+        private void AttemptUnlock_OrbCatalystCore(UIMouseEvent evt, UIElement listeningElement)
+        {
+            if (FP.Unlocked_OrbCatalystCore) { ShowRejected("Already unlocked"); return; }
+            var cost = new List<(int,int)> { (ItemID.GoldBar,10), (ItemID.Sapphire,5), (ModContent.ItemType<OrbFragment>(),3) };
+            if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
+            ConsumeItems(cost);
+            FP.Unlocked_OrbCatalystCore = true;
+            ShowAccepted("Orb Catalyst Core unlocked");
+            GrantItem(ModContent.ItemType<Content.Items.Accessories.OrbCatalystCore>());
+        }
+
+        private void AttemptUnlock_FocusCrystal(UIMouseEvent evt, UIElement listeningElement)
+        {
+            if (FP.Unlocked_FocusCrystal) { ShowRejected("Already unlocked"); return; }
+            var cost = new List<(int,int)> { (ItemID.CrystalShard,20), (ItemID.FallenStar,5) };
+            if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
+            ConsumeItems(cost);
+            FP.Unlocked_FocusCrystal = true;
+            ShowAccepted("Focus Crystal unlocked");
+            GrantItem(ModContent.ItemType<Content.Items.Accessories.FocusCrystal>());
+        }
+
+        private void AttemptUnlock_OrbPersistenceCharm(UIMouseEvent evt, UIElement listeningElement)
+        {
+            if (FP.Unlocked_OrbPersistenceCharm) { ShowRejected("Already unlocked"); return; }
+            var cost = new List<(int,int)> { (ItemID.Bone,15), (ItemID.FallenStar,5) };
+            if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
+            ConsumeItems(cost);
+            FP.Unlocked_OrbPersistenceCharm = true;
+            ShowAccepted("Orb Persistence Charm unlocked");
+            GrantItem(ModContent.ItemType<Content.Items.Accessories.OrbPersistenceCharm>());
+        }
+
+        private void AttemptUnlock_AccelerantCharm(UIMouseEvent evt, UIElement listeningElement)
+        {
+            if (FP.Unlocked_AccelerantCharm) { ShowRejected("Already unlocked"); return; }
+            var cost = new List<(int,int)> { (ItemID.Gel,20), (ItemID.Bone,10) };
+            if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
+            ConsumeItems(cost);
+            FP.Unlocked_AccelerantCharm = true;
+            ShowAccepted("Accelerant Charm unlocked");
+            GrantItem(ModContent.ItemType<Content.Items.Accessories.AccelerantCharm>());
+        }
+
+        private void AttemptUnlock_OrbAmplifierRing(UIMouseEvent evt, UIElement listeningElement)
+        {
+            if (FP.Unlocked_OrbAmplifierRing) { ShowRejected("Already unlocked"); return; }
+            var cost = new List<(int,int)> { (ItemID.GoldBar,10), (ModContent.ItemType<OrbFragment>(),5) };
+            if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
+            ConsumeItems(cost);
+            FP.Unlocked_OrbAmplifierRing = true;
+            ShowAccepted("Orb Amplifier Ring unlocked");
+            GrantItem(ModContent.ItemType<Content.Items.Accessories.OrbAmplifierRing>());
+        }
+
         private void StartCraftAnimation(int crafted, int baseA, int baseB)
         {
             Systems.FusionUISystem.BeginCraftAnimationLock();
@@ -1324,6 +1441,12 @@ namespace WeaponMerging.UI
             "Shark Cannon" => ModContent.ItemType<SharkCannon>(),
             "Abyssal Shark Cannon" => ModContent.ItemType<AbyssalSharkCannon>(),
             "Aurora Bow" => ModContent.ItemType<AuroraBow>(),
+            "Orb Weaver Band" => ModContent.ItemType<OrbweaverBand>(),
+            "Orb Catalyst Core" => ModContent.ItemType<OrbCatalystCore>(),
+            "Focus Crystal" => ModContent.ItemType<FocusCrystal>(),
+            "Orb Persistence Charm" => ModContent.ItemType<OrbPersistenceCharm>(),
+            "Accelerant Charm" => ModContent.ItemType<AccelerantCharm>(),
+            "Orb Amplifier Ring" => ModContent.ItemType<OrbAmplifierRing>(),
             _ => ItemID.None
         };
 
@@ -1466,6 +1589,10 @@ namespace WeaponMerging.UI
                     msg.VAlign = 0.5f;
                     configPanel.Append(msg);
                 }
+            }
+            for (int i = 0; i < tabs.Length; i++)
+            {
+                tabs[i].BackgroundColor = (i == currentTab) ? new Color(63, 82, 151) * 0.7f : Color.Transparent;
             }
         }
 

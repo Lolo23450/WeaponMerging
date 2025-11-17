@@ -28,6 +28,12 @@ namespace WeaponMerging.Systems
         public bool Unlocked_SharkCannon;
         public bool Unlocked_AbyssalSharkCannon;
         public bool Unlocked_AuroraBow;
+        public bool Unlocked_OrbWeaverBand;
+        public bool Unlocked_OrbCatalystCore;
+        public bool Unlocked_FocusCrystal;
+        public bool Unlocked_OrbPersistenceCharm;
+        public bool Unlocked_AccelerantCharm;
+        public bool Unlocked_OrbAmplifierRing;
 
         public override void Initialize()
         {
@@ -51,6 +57,12 @@ namespace WeaponMerging.Systems
             Unlocked_SharkCannon = false;
             Unlocked_AbyssalSharkCannon = false;
             Unlocked_AuroraBow = false;
+            Unlocked_OrbWeaverBand = false;
+            Unlocked_OrbCatalystCore = false;
+            Unlocked_FocusCrystal = false;
+            Unlocked_OrbPersistenceCharm = false;
+            Unlocked_AccelerantCharm = false;
+            Unlocked_OrbAmplifierRing = false;
         }
 
         public override void SaveData(TagCompound tag)
@@ -76,6 +88,12 @@ namespace WeaponMerging.Systems
             if (Unlocked_SharkCannon) flags.Add(nameof(Unlocked_SharkCannon));
             if (Unlocked_AbyssalSharkCannon) flags.Add(nameof(Unlocked_AbyssalSharkCannon));
             if (Unlocked_AuroraBow) flags.Add(nameof(Unlocked_AuroraBow));
+            if (Unlocked_OrbWeaverBand) flags.Add(nameof(Unlocked_OrbWeaverBand));
+            if (Unlocked_OrbCatalystCore) flags.Add(nameof(Unlocked_OrbCatalystCore));
+            if (Unlocked_FocusCrystal) flags.Add(nameof(Unlocked_FocusCrystal));
+            if (Unlocked_OrbPersistenceCharm) flags.Add(nameof(Unlocked_OrbPersistenceCharm));
+            if (Unlocked_AccelerantCharm) flags.Add(nameof(Unlocked_AccelerantCharm));
+            if (Unlocked_OrbAmplifierRing) flags.Add(nameof(Unlocked_OrbAmplifierRing));
             tag["fusion_unlocks"] = flags;
         }
 
@@ -102,6 +120,12 @@ namespace WeaponMerging.Systems
             Unlocked_SharkCannon = flags.Contains(nameof(Unlocked_SharkCannon));
             Unlocked_AbyssalSharkCannon = flags.Contains(nameof(Unlocked_AbyssalSharkCannon));
             Unlocked_AuroraBow = flags.Contains(nameof(Unlocked_AuroraBow));
+            Unlocked_OrbWeaverBand = flags.Contains(nameof(Unlocked_OrbWeaverBand));
+            Unlocked_OrbCatalystCore = flags.Contains(nameof(Unlocked_OrbCatalystCore));
+            Unlocked_FocusCrystal = flags.Contains(nameof(Unlocked_FocusCrystal));
+            Unlocked_OrbPersistenceCharm = flags.Contains(nameof(Unlocked_OrbPersistenceCharm));
+            Unlocked_AccelerantCharm = flags.Contains(nameof(Unlocked_AccelerantCharm));
+            Unlocked_OrbAmplifierRing = flags.Contains(nameof(Unlocked_OrbAmplifierRing));
         }
     }
 }

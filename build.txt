@@ -1,3 +1,4 @@
 displayName = Weapon Merging
 author = lolo2345
 version = 0.1
+menuMusic = true
