@@ -179,9 +179,6 @@ namespace WeaponMerging.Content.Biomes
                 AddCaveDecorations(x, y, 40, radius - 10);
 
                 
-                CreateStructureTemplates(x, y, radius, islandCenters);
-
-                
                 CreateVineConnections(islandCenters);
 
                 
@@ -631,7 +628,7 @@ namespace WeaponMerging.Content.Biomes
                 int decoX = centerX + (int)(Math.Cos(angle) * distance);
                 int decoY = centerY + (int)(Math.Sin(angle) * distance);
 
-                int decoType = WorldGen.genRand.Next(4); 
+                int decoType = WorldGen.genRand.Next(3); 
 
                 switch (decoType)
                 {
@@ -639,12 +636,9 @@ namespace WeaponMerging.Content.Biomes
                         PlaceStalactite(decoX, decoY);
                         break;
                     case 1: 
-                        PlaceCrystalCluster(decoX, decoY);
-                        break;
-                    case 2: 
                         PlaceRockFormation(decoX, decoY);
                         break;
-                    case 3: 
+                    case 2: 
                         PlaceGemFormation(decoX, decoY);
                         break;
                 }
@@ -723,281 +717,6 @@ namespace WeaponMerging.Content.Biomes
             }
         }
 
-        private void CreateStructureTemplates(int centerX, int centerY, int radius, List<(int x, int y)> islandCenters)
-        {
-            List<(int x, int y)> roomCenters = new List<(int x, int y)>();
-
-            int maxRooms = Math.Min(islandCenters.Count - 1, 4);
-            for (int i = 0; i < maxRooms; i++)
-            {
-                roomCenters.Add(islandCenters[i]);
-            }
-
-            int additionalRooms = WorldGen.genRand.Next(1, 3);
-            for (int i = 0; i < additionalRooms; i++)
-            {
-                bool validPosition = false;
-                int attempts = 0;
-                while (!validPosition && attempts < 20)
-                {
-                    double angle = WorldGen.genRand.NextDouble() * Math.PI * 2;
-                    double distance = WorldGen.genRand.Next(60, radius - 40);
-                    int roomX = centerX + (int)(Math.Cos(angle) * distance);
-                    int roomY = centerY + (int)(Math.Sin(angle) * distance);
-
-                    validPosition = true;
-                    foreach (var existing in roomCenters)
-                    {
-                        double dist = Math.Sqrt((roomX - existing.x) * (roomX - existing.x) + (roomY - existing.y) * (roomY - existing.y));
-                        if (dist < 80)
-                        {
-                            validPosition = false;
-                            break;
-                        }
-                    }
-
-                    if (validPosition)
-                    {
-                        roomCenters.Add((roomX, roomY));
-                    }
-                    attempts++;
-                }
-            }
-
-            foreach (var roomCenter in roomCenters)
-            {
-                CreateTerrainAdaptiveRoom(roomCenter.x, roomCenter.y);
-            }
-
-            for (int i = 0; i < roomCenters.Count; i++)
-            {
-                for (int j = i + 1; j < roomCenters.Count; j++)
-                {
-                    var start = roomCenters[i];
-                    var end = roomCenters[j];
-                    double dist = Math.Sqrt((start.x - end.x) * (start.x - end.x) + (start.y - end.y) * (start.y - end.y));
-
-                    if (dist < 150)
-                    {
-                        CreateConnectingTunnel(start.x, start.y, end.x, end.y, WorldGen.genRand.Next(4, 7));
-                    }
-                }
-            }
-        }
-
-        private void CreateTerrainAdaptiveRoom(int centerX, int centerY)
-        {
-            PerlinNoise roomNoise = new PerlinNoise(WorldGen.genRand.Next());
-            int roomRadius = WorldGen.genRand.Next(15, 25);
-            int roomType = WorldGen.genRand.Next(4);
-
-            for (int i = centerX - roomRadius - 2; i <= centerX + roomRadius + 2; i++)
-            {
-                for (int j = centerY - roomRadius - 2; j <= centerY + roomRadius + 2; j++)
-                {
-                    if (i >= 0 && i < Main.maxTilesX && j >= 0 && j < Main.maxTilesY)
-                    {
-                        double dist = Math.Sqrt((i - centerX) * (i - centerX) + (j - centerY) * (j - centerY));
-                        float noiseValue = roomNoise.OctaveNoise(i * 0.03f, j * 0.03f, 4, 0.6f);
-
-                        float threshold = 0.4f + (float)dist / (roomRadius + 2);
-                        threshold *= (0.8f + noiseValue * 0.4f);
-
-                        bool shouldBeOpen = dist <= roomRadius && noiseValue > threshold;
-
-                        if (shouldBeOpen)
-                        {
-                            WorldGen.KillTile(i, j, false, false, true);
-                            WorldGen.KillWall(i, j);
-                        }
-                        else if (dist <= roomRadius + 1 && dist > roomRadius - 1 && WorldGen.genRand.NextFloat() < 0.3f)
-                        {
-                            if (!Main.tile[i, j].HasTile)
-                            {
-                                WorldGen.PlaceTile(i, j, ModContent.TileType<Tiles.FusionRuinsBrick>());
-                            }
-                        }
-                    }
-                }
-            }
-
-            switch (roomType)
-            {
-                case 0:
-                    PlaceRoomAltar(centerX, centerY);
-                    break;
-                case 1:
-                    PlaceRoomPillars(centerX, centerY, roomRadius);
-                    break;
-                case 2:
-                    PlaceRoomCrystalFormation(centerX, centerY, roomRadius);
-                    break;
-                case 3:
-                    PlaceRoomTreasure(centerX, centerY);
-                    break;
-            }
-        }
-
-        private void CreateConnectingTunnel(int startX, int startY, int endX, int endY, int width)
-        {
-            PerlinNoise tunnelNoise = new PerlinNoise(WorldGen.genRand.Next());
-            int dx = Math.Abs(endX - startX);
-            int dy = Math.Abs(endY - startY);
-            int sx = startX < endX ? 1 : -1;
-            int sy = startY < endY ? 1 : -1;
-            int err = dx - dy;
-
-            int currentX = startX;
-            int currentY = startY;
-
-            while (true)
-            {
-                int tunnelWidth = width + WorldGen.genRand.Next(-1, 2);
-
-                for (int i = currentX - tunnelWidth - 2; i <= currentX + tunnelWidth + 2; i++)
-                {
-                    for (int j = currentY - tunnelWidth - 2; j <= currentY + tunnelWidth + 2; j++)
-                    {
-                        if (i >= 0 && i < Main.maxTilesX && j >= 0 && j < Main.maxTilesY)
-                        {
-                            float tunnelNoiseValue = tunnelNoise.OctaveNoise(i * 0.04f, j * 0.04f, 3, 0.7f);
-                            double dist = Math.Sqrt((i - currentX) * (i - currentX) + (j - currentY) * (j - currentY));
-                            double effectiveDist = dist + tunnelNoiseValue * tunnelWidth * 0.5f;
-
-                            if (effectiveDist <= tunnelWidth + 1)
-                            {
-                                WorldGen.KillTile(i, j, false, false, true);
-                                WorldGen.KillWall(i, j);
-                            }
-                            else if (effectiveDist <= tunnelWidth + 3 && effectiveDist > tunnelWidth + 1)
-                            {
-                                if (!Main.tile[i, j].HasTile && WorldGen.genRand.NextFloat() < 0.6f)
-                                {
-                                    WorldGen.PlaceTile(i, j, ModContent.TileType<Tiles.FusionRuinsBrick>());
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (currentX == endX && currentY == endY) break;
-
-                int e2 = 2 * err;
-                if (e2 > -dy)
-                {
-                    err -= dy;
-                    currentX += sx;
-                }
-                if (e2 < dx)
-                {
-                    err += dx;
-                    currentY += sy;
-                }
-            }
-        }
-
-        private void PlaceRoomAltar(int x, int y)
-        {
-            for (int i = x - 3; i <= x + 3; i++)
-            {
-                for (int j = y - 3; j <= y + 3; j++)
-                {
-                    if (i >= 0 && i < Main.maxTilesX && j >= 0 && j < Main.maxTilesY)
-                    {
-                        WorldGen.KillTile(i, j, false, false, true);
-                        if (Math.Abs(i - x) <= 2 && Math.Abs(j - y) <= 2)
-                        {
-                            WorldGen.PlaceTile(i, j, ModContent.TileType<Tiles.FusionRuinsBrick>());
-                        }
-                    }
-                }
-            }
-            WorldGen.KillTile(x, y, false, false, true);
-            WorldGen.PlaceTile(x, y, ModContent.TileType<Tiles.FusionAltar>());
-        }
-
-        private void PlaceRoomPillars(int centerX, int centerY, int roomRadius)
-        {
-            int numPillars = WorldGen.genRand.Next(4, 8);
-
-            for (int p = 0; p < numPillars; p++)
-            {
-                double angle = (p * Math.PI * 2) / numPillars + WorldGen.genRand.NextDouble() * 0.2;
-                int pillarX = centerX + (int)(Math.Cos(angle) * (roomRadius * 0.6));
-                int pillarY = centerY + (int)(Math.Sin(angle) * (roomRadius * 0.6));
-
-                int pillarHeight = WorldGen.genRand.Next(5, roomRadius);
-                int pillarWidth = WorldGen.genRand.Next(1, 3);
-
-                for (int i = pillarX - pillarWidth; i <= pillarX + pillarWidth; i++)
-                {
-                    for (int j = pillarY - pillarHeight; j <= pillarY + pillarHeight; j++)
-                    {
-                        if (i >= 0 && i < Main.maxTilesX && j >= 0 && j < Main.maxTilesY)
-                        {
-                            if (!Main.tile[i, j].HasTile)
-                            {
-                                WorldGen.PlaceTile(i, j, ModContent.TileType<Tiles.FusionRuinsBrick>());
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private void PlaceRoomCrystalFormation(int centerX, int centerY, int roomRadius)
-        {
-            int numClusters = WorldGen.genRand.Next(3, 6);
-
-            for (int c = 0; c < numClusters; c++)
-            {
-                double angle = WorldGen.genRand.NextDouble() * Math.PI * 2;
-                double distance = WorldGen.genRand.Next(2, roomRadius - 3);
-                int crystalX = centerX + (int)(Math.Cos(angle) * distance);
-                int crystalY = centerY + (int)(Math.Sin(angle) * distance);
-
-                int clusterSize = WorldGen.genRand.Next(2, 4);
-
-                for (int i = crystalX - clusterSize; i <= crystalX + clusterSize; i++)
-                {
-                    for (int j = crystalY - clusterSize; j <= crystalY + clusterSize; j++)
-                    {
-                        if (i >= 0 && i < Main.maxTilesX && j >= 0 && j < Main.maxTilesY)
-                        {
-                            double dist = Math.Sqrt((i - crystalX) * (i - crystalX) + (j - crystalY) * (j - crystalY));
-                            if (dist <= clusterSize && WorldGen.genRand.NextFloat() < 0.7f && !Main.tile[i, j].HasTile)
-                            {
-                                WorldGen.PlaceTile(i, j, TileID.Crystals);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private void PlaceRoomTreasure(int x, int y)
-        {
-            for (int i = x - 4; i <= x + 4; i++)
-            {
-                for (int j = y - 4; j <= y + 4; j++)
-                {
-                    if (i >= 0 && i < Main.maxTilesX && j >= 0 && j < Main.maxTilesY)
-                    {
-                        WorldGen.KillTile(i, j, false, false, true);
-                        if (Math.Abs(i - x) <= 3 && Math.Abs(j - y) <= 3)
-                        {
-                            WorldGen.PlaceTile(i, j, ModContent.TileType<Tiles.FusionRuinsBrick>());
-                        }
-                    }
-                }
-            }
-
-            if (x >= 0 && x < Main.maxTilesX && y >= 0 && y < Main.maxTilesY)
-            {
-                WorldGen.KillTile(x, y, false, false, true);
-                WorldGen.PlaceTile(x, y, TileID.Containers);
-            }
-        }
 
         private void CreateVineConnections(List<(int x, int y)> centers)
         {

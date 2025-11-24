@@ -27,7 +27,7 @@ namespace WeaponMerging.Content.Biomes
         {
             if (maxDepth >= 0 && minDepth < 0)
             {
-                spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), new Color(0.1f, 0.15f, 0.2f) * intensity * 0.3f);
+                spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), new Color(0.2f, 0.1f, 0.3f) * intensity * 0.3f);
             }
         }
 

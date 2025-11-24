@@ -161,7 +161,12 @@ Items: {
 
 	OrbweaverBand: {
 		DisplayName: Orbweaver Band
-		Tooltip: Increases maximum orbiting orbs by 1 for compatible orb weapons
+		Tooltip:
+			'''
+			Accessory
+			Grants +1 orb mana capacity
+			Increases maximum orbiting orbs by 1 for compatible orb weapons
+			'''
 	}
 
 	FocusCrystal: {
@@ -180,7 +185,12 @@ Items: {
 	}
 
 	OrbCatalystCore: {
-		Tooltip: Increases maximum orbs by 1 and slightly speeds up laser orb barrages
+		Tooltip:
+			'''
+			Accessory
+			Grants +1 orb mana capacity
+			Increases maximum orbs by 1 and slightly speeds up laser orb barrages
+			'''
 		DisplayName: Orb Catalyst Core
 	}
 
@@ -225,8 +235,32 @@ Items: {
 	}
 
 	OrbMasterBand: {
-		Tooltip: ""
+		Tooltip:
+			'''
+			Accessory
+			Grants +2 orb mana capacity
+			Further empowers fusion-focused accessories
+			'''
 		DisplayName: Orb Master Band
+	}
+
+	OrbBlade: {
+		Tooltip:
+			'''
+			Consumes orb mana to ignite struck foes
+			Adds a fiery burn when charged with orb energy
+			'''
+		DisplayName: Orb Blade
+	}
+
+	OrbInfusionCore: {
+		DisplayName: Orb Infusion Core
+		Tooltip:
+			'''
+			Accessory
+			Increases maximum orb mana by 1
+			Infused shards hum with latent fusion energy
+			'''
 	}
 }
 

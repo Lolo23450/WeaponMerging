@@ -72,10 +72,15 @@ namespace WeaponMerging.Content.Players
             SoundEngine.PlaySound(SoundID.Item74 with { Volume = 1.0f, Pitch = 0.4f }, player.Center);
         }
 
-        public void GainOrb(Player player)
+        public bool GainOrb(Player player)
         {
             int maxOrbs = 4 + player.GetModPlayer<Content.Players.AccessoryEffectsPlayer>().BonusMaxOrbs;
-            if (orbCount >= maxOrbs) return;
+            if (orbCount >= maxOrbs)
+                return false;
+
+            var orbMana = player.GetModPlayer<OrbManaPlayer>();
+            if (!orbMana.TrySpendOrbMana(1, player))
+                return false;
 
             int orb = Projectile.NewProjectile(
                 player.GetSource_FromThis(),
@@ -102,6 +107,8 @@ namespace WeaponMerging.Content.Players
 
                 SoundEngine.PlaySound(SoundID.Item73 with { Pitch = 0.4f }, player.Center);
             }
+
+            return true;
         }
 
         public void UseOrbAttack(Player player, EntitySource_ItemUse_WithAmmo source, int damage, float knockback)

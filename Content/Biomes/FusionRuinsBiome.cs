@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.Audio;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
@@ -12,7 +13,7 @@ namespace WeaponMerging.Content.Biomes
 {
     public class FusionRuinsBiome : ModBiome
     {
-        public override int Music => MusicID.Shimmer; 
+        public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/FusionRuin"); 
         public override SceneEffectPriority Priority => SceneEffectPriority.BiomeLow;
 
         public override string BestiaryIcon => base.BestiaryIcon;
@@ -21,7 +22,7 @@ namespace WeaponMerging.Content.Biomes
 
         public override bool IsBiomeActive(Player player)
         {
-            return ModContent.GetInstance<FusionRuinsBiomeTileCount>().FusionRuinsTiles >= 5000; 
+            return ModContent.GetInstance<FusionRuinsBiomeTileCount>().FusionRuinsTiles >= 500; 
         }
 
         public override void OnEnter(Player player)
@@ -49,11 +50,11 @@ namespace WeaponMerging.Content.Biomes
 
         public override void TileCountsAvailable(ReadOnlySpan<int> tileCounts)
         {
-            FusionRuinsTiles = tileCounts[ModContent.TileType<Tiles.FusionRuinsBrick>()];
+            FusionRuinsTiles = tileCounts[ModContent.TileType<Tiles.FusionRuinsLight>()];
             
             if (FusionRuinsTiles > 0)
             {
-                ModContent.GetInstance<WeaponMerging>().Logger.Info($"Fusion Ruins: Found {FusionRuinsTiles} FusionRuinsBrick tiles");
+                ModContent.GetInstance<WeaponMerging>().Logger.Info($"Fusion Ruins: Found {FusionRuinsTiles} FusionRuinsLight tiles");
             }
         }
     }

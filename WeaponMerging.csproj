@@ -8,4 +8,8 @@
 		<EnableDefaultItems>true</EnableDefaultItems>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<PackageReference Include="SubworldLibrary" Version="2.1.1" />
+	</ItemGroup>
+
 </Project>

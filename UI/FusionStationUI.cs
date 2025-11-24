@@ -15,6 +15,7 @@ using WeaponMerging.Configs;
 using WeaponMerging.Content.Items;
 using WeaponMerging.Content.Items.Weapons;
 using WeaponMerging.Content.Items.Accessories;
+using WeaponMerging.Systems;
 
 namespace WeaponMerging.UI
 {
@@ -43,13 +44,34 @@ namespace WeaponMerging.UI
         private int currentTab = 0;
         private UIElement tabButtons;
         private UIElement configPanel;
+        private UIElement trialPanel;
+        private UIElement tokenShopPanel;
         private UIPanel[] tabs;
 
         private Vector2 _panOffset = Vector2.Zero;
         private bool _isDragging = false;
         private Vector2 _lastMousePos;
 
-        private bool JourneyCheatsEnabled => Main.LocalPlayer?.difficulty == PlayerDifficultyID.Creative;
+        private bool TrialsUnlocked => NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3;
+
+        private static bool JourneyCheatsEnabled
+        {
+            get
+            {
+                if (Main.dedServ)
+                {
+                    return false;
+                }
+
+                if (Main.GameMode != GameModeID.Creative)
+                {
+                    return false;
+                }
+
+                var player = Main.LocalPlayer;
+                return player != null && player.difficulty == PlayerDifficultyID.Creative;
+            }
+        }
 
         public override void OnInitialize()
         {
@@ -72,7 +94,7 @@ namespace WeaponMerging.UI
 
             tabButtons = new UIElement();
             tabButtons.Top.Set(8f, 0f);
-            tabButtons.Width.Set(300f, 0f);
+            tabButtons.Width.Set(500f, 0f);
             tabButtons.Height.Set(30f, 0f);
             panel.Append(tabButtons);
 
@@ -102,7 +124,33 @@ namespace WeaponMerging.UI
             tab2.Append(tab2Text);
             tabButtons.Append(tab2);
 
-            tabs = new UIPanel[] { tab1, tab2 };
+            var tab3 = new UIPanel();
+            tab3.Width.Set(120f, 0f);
+            tab3.Height.Set(30f, 0f);
+            tab3.Left.Set(260f, 0f);
+            tab3.BackgroundColor = Color.Transparent;
+            tab3.BorderColor = new Color(75, 85, 120);
+            tab3.OnLeftClick += (e, l) => { if (TrialsUnlocked) { currentTab = 2; UpdateUI(); } else { Main.NewText("Defeat the mechanical bosses first!", Color.Red); } };
+            var tab3Text = new UIText("Fusion Trials");
+            tab3Text.HAlign = 0.5f;
+            tab3Text.VAlign = 0.5f;
+            tab3.Append(tab3Text);
+            tabButtons.Append(tab3);
+
+            var tab4 = new UIPanel();
+            tab4.Width.Set(120f, 0f);
+            tab4.Height.Set(30f, 0f);
+            tab4.Left.Set(380f, 0f);
+            tab4.BackgroundColor = Color.Transparent;
+            tab4.BorderColor = new Color(75, 85, 120);
+            tab4.OnLeftClick += (e, l) => { currentTab = 3; UpdateUI(); };
+            var tab4Text = new UIText("Token Shop");
+            tab4Text.HAlign = 0.5f;
+            tab4Text.VAlign = 0.5f;
+            tab4.Append(tab4Text);
+            tabButtons.Append(tab4);
+
+            tabs = new UIPanel[] { tab1, tab2, tab3, tab4 };
 
             foreach (var tab in tabs)
             {
@@ -117,6 +165,20 @@ namespace WeaponMerging.UI
             configPanel.Left.Set(24f, 0f);
             configPanel.Top.Set(44f, 0f);
             panel.Append(configPanel);
+
+            trialPanel = new UIElement();
+            trialPanel.Width.Set(-48f, 1f);
+            trialPanel.Height.Set(-108f, 1f);
+            trialPanel.Left.Set(24f, 0f);
+            trialPanel.Top.Set(44f, 0f);
+            panel.Append(trialPanel);
+
+            tokenShopPanel = new UIElement();
+            tokenShopPanel.Width.Set(-48f, 1f);
+            tokenShopPanel.Height.Set(-108f, 1f);
+            tokenShopPanel.Left.Set(24f, 0f);
+            tokenShopPanel.Top.Set(44f, 0f);
+            panel.Append(tokenShopPanel);
 
             treeArea = new UIElement();
             treeArea.Width.Set(-348f, 1f);
@@ -1527,12 +1589,14 @@ namespace WeaponMerging.UI
             if (currentTab == 0)
             {
                 if (configPanel.Parent != null) configPanel.Remove();
+                if (trialPanel.Parent != null) trialPanel.Remove();
                 if (treeArea.Parent == null) panel.Append(treeArea);
                 if (infoPanel.Parent == null) panel.Append(infoPanel);
             }
-            else
+            else if (currentTab == 1)
             {
                 if (treeArea.Parent != null) treeArea.Remove();
+                if (trialPanel.Parent != null) trialPanel.Remove();
                 if (infoPanel.Parent != null) infoPanel.Remove();
                 if (configPanel.Parent == null) panel.Append(configPanel);
                 configPanel.RemoveAllChildren();
@@ -1590,12 +1654,214 @@ namespace WeaponMerging.UI
                     configPanel.Append(msg);
                 }
             }
+            else if (currentTab == 2)
+            {
+                if (treeArea.Parent != null) treeArea.Remove();
+                if (configPanel.Parent != null) configPanel.Remove();
+                if (infoPanel.Parent != null) infoPanel.Remove();
+                if (tokenShopPanel.Parent != null) tokenShopPanel.Remove();
+                if (trialPanel.Parent == null) panel.Append(trialPanel);
+                UpdateTrialPanel();
+            }
+            else if (currentTab == 3)
+            {
+                if (treeArea.Parent != null) treeArea.Remove();
+                if (configPanel.Parent != null) configPanel.Remove();
+                if (trialPanel.Parent != null) trialPanel.Remove();
+                if (infoPanel.Parent != null) infoPanel.Remove();
+                if (tokenShopPanel.Parent == null) panel.Append(tokenShopPanel);
+                UpdateTokenShopPanel();
+            }
             for (int i = 0; i < tabs.Length; i++)
             {
-                tabs[i].BackgroundColor = (i == currentTab) ? new Color(63, 82, 151) * 0.7f : Color.Transparent;
+                if (i == 2 && !TrialsUnlocked)
+                {
+                    tabs[i].BackgroundColor = new Color(80, 80, 80) * 0.5f; // Gray out
+                }
+                else
+                {
+                    tabs[i].BackgroundColor = (i == currentTab) ? new Color(63, 82, 151) * 0.7f : Color.Transparent;
+                }
+            }
+
+            if (currentTab == 2 && !TrialsUnlocked)
+            {
+                currentTab = 0;
+                UpdateUI();
             }
         }
 
+        private void UpdateTrialPanel()
+        {
+            trialPanel.RemoveAllChildren();
+            var title = new UIText("Fusion Trials");
+            title.Top.Set(8f, 0f);
+            title.HAlign = 0.5f;
+            trialPanel.Append(title);
+
+            var trialPlayer = Main.LocalPlayer.GetModPlayer<TrialPlayer>();
+            var stats = trialPlayer.TrialStats;
+
+            var tokenSummary = new UIText($"Trial Tokens: {stats.TrialTokens}");
+            tokenSummary.Top.Set(30f, 0f);
+            tokenSummary.HAlign = 0.5f;
+            tokenSummary.TextColor = Color.Gold;
+            trialPanel.Append(tokenSummary);
+
+            var trials = new[] {
+                ("Eye of Cthulhu Trial", "Defeat a harder Eye of Cthulhu with new attacks and phases."),
+                ("Skeletron Trial", "Endure a relentless skull and hand assault within the arena."),
+                ("Queen Bee Trial", "Survive toxic clouds and vicious wasps in the hive arena."),
+            };
+
+            float y = 70f;
+            foreach (var (trialName, trialDesc) in trials)
+            {
+                var trialPanel = new UIPanel();
+                trialPanel.Width.Set(420f, 0f);
+                trialPanel.Height.Set(140f, 0f);
+                trialPanel.Top.Set(y, 0f);
+                trialPanel.HAlign = 0.5f;
+                trialPanel.BackgroundColor = new Color(60, 80, 100) * 0.8f;
+                trialPanel.BorderColor = new Color(100, 120, 150);
+                this.trialPanel.Append(trialPanel);
+
+                var trialTitle = new UIText(trialName);
+                trialTitle.Top.Set(8f, 0f);
+                trialTitle.HAlign = 0.5f;
+                trialPanel.Append(trialTitle);
+
+                var trialDescText = new UIText(trialDesc);
+                trialDescText.Top.Set(30f, 0f);
+                trialDescText.HAlign = 0.5f;
+                trialDescText.VAlign = 0.5f;
+                trialPanel.Append(trialDescText);
+
+                int estimatedTokens = TrialSystem.GetEstimatedTokenReward(trialName);
+                var rewardText = new UIText($"Estimated Tokens: {estimatedTokens}");
+                rewardText.Top.Set(60f, 0f);
+                rewardText.HAlign = 0.5f;
+                rewardText.TextColor = Color.Goldenrod;
+                trialPanel.Append(rewardText);
+
+                var startBtn = new UIPanel();
+                startBtn.Width.Set(100f, 0f);
+                startBtn.Height.Set(24f, 0f);
+                startBtn.Top.Set(90f, 0f);
+                startBtn.HAlign = 0.5f;
+                startBtn.BackgroundColor = new Color(80, 120, 160);
+                startBtn.BorderColor = new Color(150, 180, 210);
+                startBtn.OnLeftClick += (e, l) => StartTrial(trialName);
+                trialPanel.Append(startBtn);
+
+                var startText = new UIText("Start Trial");
+                startText.HAlign = 0.5f;
+                startText.VAlign = 0.5f;
+                startBtn.Append(startText);
+
+                y += 160f;
+            }
+        }
+
+        private void UpdateTokenShopPanel()
+        {
+            tokenShopPanel.RemoveAllChildren();
+            var title = new UIText("Trial Token Shop");
+            title.Top.Set(8f, 0f);
+            title.HAlign = 0.5f;
+            tokenShopPanel.Append(title);
+
+            var trialPlayer = Main.LocalPlayer.GetModPlayer<TrialPlayer>();
+            var stats = trialPlayer.TrialStats;
+
+            var tokenSummary = new UIText($"Trial Tokens: {stats.TrialTokens}");
+            tokenSummary.Top.Set(30f, 0f);
+            tokenSummary.HAlign = 0.5f;
+            tokenSummary.TextColor = Color.Gold;
+            tokenShopPanel.Append(tokenSummary);
+
+            var shopItems = new[] {
+                ("Cobalt Bar (5)", 20, ItemID.CobaltBar, 5),
+                ("Mythril Bar (5)", 25, ItemID.MythrilBar, 5),
+                ("Adamantite Bar (5)", 30, ItemID.AdamantiteBar, 5),
+                ("Titanium Bar (5)", 35, ItemID.TitaniumBar, 5),
+                ("Hallowed Bar (5)", 40, ItemID.HallowedBar, 5),
+                ("Greater Healing Potion (10)", 20, ItemID.GreaterHealingPotion, 10),
+                ("Greater Mana Potion (10)", 20, ItemID.GreaterManaPotion, 10),
+                ("Wrath Potion (5)", 30, ItemID.WrathPotion, 5),
+                ("Rage Potion (5)", 30, ItemID.RagePotion, 5)
+            };
+
+            float y = 60f;
+            foreach (var (name, cost, itemId, amount) in shopItems)
+            {
+                var itemPanel = new UIPanel();
+                itemPanel.Width.Set(300f, 0f);
+                itemPanel.Height.Set(50f, 0f);
+                itemPanel.Top.Set(y, 0f);
+                itemPanel.HAlign = 0.5f;
+                itemPanel.BackgroundColor = new Color(60, 80, 100) * 0.8f;
+                itemPanel.BorderColor = new Color(100, 120, 150);
+                tokenShopPanel.Append(itemPanel);
+
+                var itemName = new UIText(name);
+                itemName.Top.Set(5f, 0f);
+                itemName.HAlign = 0.5f;
+                itemPanel.Append(itemName);
+
+                var costText = new UIText($"{cost} tokens");
+                costText.Top.Set(25f, 0f);
+                costText.HAlign = 0.5f;
+                costText.TextColor = Color.Goldenrod;
+                itemPanel.Append(costText);
+
+                var buyBtn = new UIPanel();
+                buyBtn.Width.Set(60f, 0f);
+                buyBtn.Height.Set(20f, 0f);
+                buyBtn.Top.Set(15f, 0f);
+                buyBtn.Left.Set(240f, 0f);
+                buyBtn.BackgroundColor = Color.LightGreen;
+                buyBtn.BorderColor = Color.Green;
+                buyBtn.OnLeftClick += (e, l) => BuyItem(cost, itemId, amount, name);
+                itemPanel.Append(buyBtn);
+
+                var buyText = new UIText("Buy");
+                buyText.HAlign = 0.5f;
+                buyText.VAlign = 0.5f;
+                buyBtn.Append(buyText);
+
+                y += 60f;
+            }
+        }
+
+        private void BuyItem(int cost, int itemId, int amount, string name)
+        {
+            var trialPlayer = Main.LocalPlayer.GetModPlayer<TrialPlayer>();
+            var stats = trialPlayer.TrialStats;
+            if (stats.TrialTokens >= cost)
+            {
+                stats.TrialTokens -= cost;
+                Main.LocalPlayer.QuickSpawnItem(null, itemId, amount);
+                Main.NewText($"Purchased {name} for {cost} tokens!", Color.Green);
+                UpdateTokenShopPanel();
+            }
+            else
+            {
+                Main.NewText("Not enough trial tokens!", Color.Red);
+            }
+        }
+
+        private void StartTrial(string trialName)
+        {
+            if (TrialsUnlocked)
+            {
+                TrialSystem.StartTrialWithModifiers(trialName, Main.LocalPlayer, TrialDifficulty.Normal);
+                Systems.FusionUISystem.HideFusionUI();
+            }
+            else
+            {
+                Main.NewText("Defeat the mechanical bosses first!", Color.Red);
+            }
+        }
     }
 }
-

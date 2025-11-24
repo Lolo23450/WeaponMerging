@@ -14,10 +14,11 @@ namespace WeaponMerging.Content.Players
         public bool focusedPersistenceEquipped;
         public bool comboCatalystEquipped;
         public bool amplifierEquipped;
+        public bool infusionCoreEquipped;
         public Dictionary<string, float> orbSpeedMultipliers = new Dictionary<string, float>();
         public int ComboReduction;
 
-        public int BonusMaxOrbs => (orbBandEquipped ? 1 : 0) + (catalystEquipped ? 1 : 0) + (orbMasterBandEquipped ? 2 : 0);
+        public int BonusMaxOrbs => (orbBandEquipped ? 1 : 0) + (catalystEquipped ? 1 : 0) + (orbMasterBandEquipped ? 2 : 0) + (infusionCoreEquipped ? 1 : 0);
         public int BonusShotsPerOrb => (focusEquipped ? 2 : 0) + (focusedPersistenceEquipped ? 2 : 0);
         public int IntervalReduction => (focusEquipped ? 2 : 0) + (catalystEquipped ? 1 : 0) + (focusedPersistenceEquipped ? 2 : 0) + (orbMasterBandEquipped ? 1 : 0) + (comboCatalystEquipped ? 1 : 0);
 
@@ -31,6 +32,7 @@ namespace WeaponMerging.Content.Players
             focusedPersistenceEquipped = false;
             comboCatalystEquipped = false;
             amplifierEquipped = false;
+            infusionCoreEquipped = false;
             ComboReduction = 0;
             if (orbSpeedMultipliers.Count == 0)
             {
@@ -40,6 +42,23 @@ namespace WeaponMerging.Content.Players
                 orbSpeedMultipliers["Crystal"] = 1f;
                 orbSpeedMultipliers["Starlit"] = 1f;
             }
+        }
+
+        public override void PostUpdateEquips()
+        {
+            var orbMana = Player.GetModPlayer<OrbManaPlayer>();
+
+            if (orbBandEquipped)
+                orbMana.AddBonusMaxUnits(1);
+
+            if (catalystEquipped)
+                orbMana.AddBonusMaxUnits(1);
+
+            if (orbMasterBandEquipped)
+                orbMana.AddBonusMaxUnits(2);
+
+            if (infusionCoreEquipped)
+                orbMana.AddBonusMaxUnits(1);
         }
 
         public bool RollPersist()

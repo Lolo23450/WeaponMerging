@@ -23,10 +23,17 @@ namespace WeaponMerging.Content.Players
         
         
         
-        public void GainOrb(Player player)
+        public bool GainOrb(Player player)
         {
             int maxOrbs = GetMaxOrbs(player);
-            orbCount = Math.Min(maxOrbs, orbCount + 1);
+            if (orbCount >= maxOrbs)
+                return false;
+
+            var orbMana = player.GetModPlayer<OrbManaPlayer>();
+            if (!orbMana.TrySpendOrbMana(1, player))
+                return false;
+
+            orbCount++;
 
             if (orbCount >= GetChargeThreshold(player))
                 laserModeActive = true;
@@ -50,6 +57,8 @@ namespace WeaponMerging.Content.Players
                 proj.localAI[1] = 0f;      
                 proj.netUpdate = true;
             }
+
+            return true;
         }
 
         
