@@ -24,7 +24,7 @@ namespace WeaponMerging.UI
         private UIPanel panel;
         private UIText titleText;
         private UIElement treeArea;
-        private UIText closeText;
+        
         private UIText _infoText;
         private string _currentDescTitle = string.Empty;
         private string _currentDescBody = string.Empty;
@@ -34,25 +34,15 @@ namespace WeaponMerging.UI
             = new List<(UIPanel, string, List<(int,int)>, System.Func<bool>)>();
         private readonly List<(UIPanel from, UIPanel to)> _links = new();
         private UIPanel _journeyUnlockAllButton;
-        private readonly Dictionary<string, UIPanel> _journeySkipButtons = new();
 
         private Dictionary<string, Vector2> _basePositions = new();
         private Dictionary<string, float> _baseWidths = new();
         private Dictionary<string, float> _baseHeights = new();
         private float _zoom = 1f;
 
-        private int currentTab = 0;
-        private UIElement tabButtons;
-        private UIElement configPanel;
-        private UIElement trialPanel;
-        private UIElement tokenShopPanel;
-        private UIPanel[] tabs;
-
         private Vector2 _panOffset = Vector2.Zero;
         private bool _isDragging = false;
         private Vector2 _lastMousePos;
-
-        private bool TrialsUnlocked => NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3;
 
         private static bool JourneyCheatsEnabled
         {
@@ -92,104 +82,23 @@ namespace WeaponMerging.UI
             titleText.HAlign = 0.5f;
             panel.Append(titleText);
 
-            tabButtons = new UIElement();
-            tabButtons.Top.Set(8f, 0f);
-            tabButtons.Width.Set(500f, 0f);
-            tabButtons.Height.Set(30f, 0f);
-            panel.Append(tabButtons);
+            // Tabs removed — UI is focused on the Tech Tree only.
 
-            var tab1 = new UIPanel();
-            tab1.Width.Set(120f, 0f);
-            tab1.Height.Set(30f, 0f);
-            tab1.Left.Set(0f, 0f);
-            tab1.BackgroundColor = Color.Transparent;
-            tab1.BorderColor = new Color(75, 85, 120);
-            tab1.OnLeftClick += (e, l) => { currentTab = 0; UpdateUI(); };
-            var tab1Text = new UIText("Tech Tree");
-            tab1Text.HAlign = 0.5f;
-            tab1Text.VAlign = 0.5f;
-            tab1.Append(tab1Text);
-            tabButtons.Append(tab1);
-
-            var tab2 = new UIPanel();
-            tab2.Width.Set(120f, 0f);
-            tab2.Height.Set(30f, 0f);
-            tab2.Left.Set(130f, 0f);
-            tab2.BackgroundColor = Color.Transparent;
-            tab2.BorderColor = new Color(75, 85, 120);
-            tab2.OnLeftClick += (e, l) => { currentTab = 1; UpdateUI(); };
-            var tab2Text = new UIText("Accessory Config");
-            tab2Text.HAlign = 0.5f;
-            tab2Text.VAlign = 0.5f;
-            tab2.Append(tab2Text);
-            tabButtons.Append(tab2);
-
-            var tab3 = new UIPanel();
-            tab3.Width.Set(120f, 0f);
-            tab3.Height.Set(30f, 0f);
-            tab3.Left.Set(260f, 0f);
-            tab3.BackgroundColor = Color.Transparent;
-            tab3.BorderColor = new Color(75, 85, 120);
-            tab3.OnLeftClick += (e, l) => { if (TrialsUnlocked) { currentTab = 2; UpdateUI(); } else { Main.NewText("Defeat the mechanical bosses first!", Color.Red); } };
-            var tab3Text = new UIText("Fusion Trials");
-            tab3Text.HAlign = 0.5f;
-            tab3Text.VAlign = 0.5f;
-            tab3.Append(tab3Text);
-            tabButtons.Append(tab3);
-
-            var tab4 = new UIPanel();
-            tab4.Width.Set(120f, 0f);
-            tab4.Height.Set(30f, 0f);
-            tab4.Left.Set(380f, 0f);
-            tab4.BackgroundColor = Color.Transparent;
-            tab4.BorderColor = new Color(75, 85, 120);
-            tab4.OnLeftClick += (e, l) => { currentTab = 3; UpdateUI(); };
-            var tab4Text = new UIText("Token Shop");
-            tab4Text.HAlign = 0.5f;
-            tab4Text.VAlign = 0.5f;
-            tab4.Append(tab4Text);
-            tabButtons.Append(tab4);
-
-            tabs = new UIPanel[] { tab1, tab2, tab3, tab4 };
-
-            foreach (var tab in tabs)
-            {
-                int idx = Array.IndexOf(tabs, tab);
-                tab.OnMouseOver += (e, l) => { tab.BackgroundColor = new Color(100, 120, 180) * 0.7f; };
-                tab.OnMouseOut += (e, l) => { tab.BackgroundColor = (idx == currentTab) ? new Color(63, 82, 151) * 0.7f : Color.Transparent; };
-            }
-
-            configPanel = new UIElement();
-            configPanel.Width.Set(-48f, 1f);
-            configPanel.Height.Set(-108f, 1f);
-            configPanel.Left.Set(24f, 0f);
-            configPanel.Top.Set(44f, 0f);
-            panel.Append(configPanel);
-
-            trialPanel = new UIElement();
-            trialPanel.Width.Set(-48f, 1f);
-            trialPanel.Height.Set(-108f, 1f);
-            trialPanel.Left.Set(24f, 0f);
-            trialPanel.Top.Set(44f, 0f);
-            panel.Append(trialPanel);
-
-            tokenShopPanel = new UIElement();
-            tokenShopPanel.Width.Set(-48f, 1f);
-            tokenShopPanel.Height.Set(-108f, 1f);
-            tokenShopPanel.Left.Set(24f, 0f);
-            tokenShopPanel.Top.Set(44f, 0f);
-            panel.Append(tokenShopPanel);
+            // Keep only the tree and info panels attached below
 
             treeArea = new UIElement();
             treeArea.Width.Set(-348f, 1f);
-            treeArea.Height.Set(-108f, 1f);
+            // Reduce bottom reserved space to maximize usable tree area
+            treeArea.Height.Set(-64f, 1f);
             treeArea.Left.Set(24f, 0f);
             treeArea.Top.Set(44f, 0f);
+            treeArea.OverflowHidden = true; // prevent node children from rendering over the info sidebar
             panel.Append(treeArea);
 
             infoPanel = new UIPanel();
             infoPanel.Width.Set(300f, 0f);
-            infoPanel.Height.Set(-108f, 1f);
+            // Match info panel height reservation to tree area
+            infoPanel.Height.Set(-64f, 1f);
             infoPanel.Left.Set(-300f, 1f);
             infoPanel.Top.Set(44f, 0f);
             infoPanel.BackgroundColor = Color.Transparent;
@@ -208,137 +117,431 @@ namespace WeaponMerging.UI
             _costDisplay.Height.Set(150f, 0f);
             infoPanel.Append(_costDisplay);
 
+            // Define nodes via a compact spec format and auto-generate links from children lists
+            var specs = new[]
+            {
+                new
+                {
+                    id = "Starlit Whirlwind",
+                    pos = new Vector2(300, 50),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_StarlitWhirlwind,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.WandofSparking, 1),
+                        (ItemID.FallenStar, 5),
+                        (ItemID.CopperBar, 10),
+                        (ModContent.ItemType<OrbFragment>(), 5),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_StarlitWhirlwind),
+                    children = new[] { "Crystal Cascade", "Pain Spiral", "Shurikenwood Bow", "Orb Amplifier Ring" }
+                },
+
+                new
+                {
+                    id = "Crystal Cascade",
+                    pos = new Vector2(200, 150),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_CrystalCascade,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.IceBlade, 1),
+                        (2745, 10),
+                        (ItemID.Sapphire, 10),
+                        (ItemID.Snowball, 25),
+                        (ModContent.ItemType<OrbFragment>(), 5),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_CrystalCascade),
+                    children = new[] { "Inferno Orb", "Nightfall Harbinger", "Focus Crystal" }
+                },
+
+                new
+                {
+                    id = "Pain Spiral",
+                    pos = new Vector2(400, 150),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_PainSpiral,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.BallOHurt, 1),
+                        (ItemID.ThornChakram, 1),
+                        (ItemID.Stinger, 4),
+                        (ItemID.JungleSpores, 8),
+                        (ModContent.ItemType<OrbFragment>(), 5),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_PainSpiral),
+                    children = new[] { "Venom Barrage", "Inferno Orb" }
+                },
+
+                new
+                {
+                    id = "Shurikenwood Bow",
+                    pos = new Vector2(400, -50),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_ShurikenwoodBow,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.WoodenBow, 1),
+                        (ItemID.Shuriken, 50),
+                        (ItemID.Wood, 20),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_ShurikenwoodBow),
+                    children = new[] { "Frost Shurikenwood Bow" }
+                },
+
+                new
+                {
+                    id = "Frost Shurikenwood Bow",
+                    pos = new Vector2(550, -50),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_FrostShurikenwoodBow,
+                    cost = new List<(int,int)>
+                    {
+                        (ModContent.ItemType<ShurikenwoodBow>(), 1),
+                        (ItemID.IceBlock, 10),
+                        (ItemID.Shiverthorn, 5),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_FrostShurikenwoodBow),
+                    children = new[] { "Aurora Bow" }
+                },
+
+                new
+                {
+                    id = "Aurora Bow",
+                    pos = new Vector2(700, -50),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_AuroraBow,
+                    cost = new List<(int,int)>
+                    {
+                        (ModContent.ItemType<FrostShurikenwoodBow>(), 1),
+                        (ItemID.IceBlade, 1),
+                        (ItemID.Diamond, 10),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_AuroraBow),
+                    children = new string[0]
+                },
+
+                new
+                {
+                    id = "Venom Barrage",
+                    pos = new Vector2(550, 150),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_VenomBarrage,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.ThrowingKnife, 100),
+                        (ItemID.Blowpipe, 1),
+                        (ItemID.Stinger, 5),
+                        (ItemID.JungleSpores, 7),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_VenomBarrage),
+                    children = new[] { "Combo Catalyst Charm" }
+                },
+
+                new
+                {
+                    id = "Inferno Orb",
+                    pos = new Vector2(300, 250),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_InfernoOrb,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.FlowerofFire, 1),
+                        (121, 1),
+                        (ItemID.HellstoneBar, 15),
+                        (2348, 2),
+                        (ModContent.ItemType<OrbFragment>(), 5),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_InfernoOrb),
+                    children = new[] { "Fossil Dancer", "Celestial Frost Blade" }
+                },
+
+                new
+                {
+                    id = "Fossil Dancer",
+                    pos = new Vector2(400, 350),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_FossilDancer,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.BoneSword, 1),
+                        (ItemID.AntlionClaw, 1),
+                        (ItemID.FossilOre, 8),
+                        (ItemID.AntlionMandible, 4),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_FossilDancer),
+                    children = new[] { "Gale Crescent", "Shark Cannon" }
+                },
+
+                new
+                {
+                    id = "Celestial Frost Blade",
+                    pos = new Vector2(200, 450),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_CelestialFrost,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.Starfury, 1),
+                        (ItemID.IceBlade, 1),
+                        (ItemID.MeteoriteBar, 10),
+                        (ItemID.Ruby, 7),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_CelestialFrostBlade),
+                    children = new[] { "Verdant Conduit Tome", "Gale Crescent", "Solar Conductor" }
+                },
+
+                new
+                {
+                    id = "Nightfall Harbinger",
+                    pos = new Vector2(100, 50),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_NightfallHarbinger,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.DemonBow, 1),
+                        (ItemID.DemonScythe, 1),
+                        (ItemID.SoulofNight, 10),
+                        (47, 5),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_NightfallHarbinger),
+                    children = new string[0]
+                },
+
+                new
+                {
+                    id = "Verdant Conduit Tome",
+                    pos = new Vector2(100, 350),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_VerdantConduitTome,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.SpellTome, 1),
+                        (3, 25),
+                        (ItemID.JungleSpores, 7),
+                        (ItemID.Vine, 7),
+                        (ItemID.SoulofLight, 5),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_VerdantConduitTome),
+                    children = new string[0]
+                },
+
+                new
+                {
+                    id = "Shark Cannon",
+                    pos = new Vector2(500, 550),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_SharkCannon,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.Boomstick, 1),
+                        (ItemID.Minishark, 1),
+                        (ItemID.SharkFin, 5),
+                        (ItemID.IllegalGunParts, 1),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_SharkCannon),
+                    children = new[] { "Abyssal Shark Cannon", "Shadow Reaper" }
+                },
+
+                new
+                {
+                    id = "Gale Crescent",
+                    pos = new Vector2(300, 550),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_GaleCrescent,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.DemonScythe, 1),
+                        (ItemID.Cloud, 25),
+                        (ItemID.Feather, 12),
+                        (ItemID.SoulofNight, 5),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_GaleCrescent),
+                    children = new[] { "Shadow Reaper" }
+                },
+
+                new
+                {
+                    id = "Shadow Reaper",
+                    pos = new Vector2(400, 650),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_ShadowReaper,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.ShadowbeamStaff, 1),
+                        (ItemID.DeathSickle, 1),
+                        (ItemID.Ectoplasm, 10),
+                        (ItemID.SoulofNight, 15),
+                        (ModContent.ItemType<OrbFragment>(), 5),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_ShadowReaper),
+                    children = new string[0]
+                },
+
+                new
+                {
+                    id = "Solar Conductor",
+                    pos = new Vector2(100, 550),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_SolarConductor,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.Flamelash, 1),
+                        (ItemID.FlowerofFire, 1),
+                        (ItemID.SoulofLight, 5),
+                        (ItemID.SoulofNight, 5),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_SolarConductor),
+                    children = new string[0]
+                },
+
+                new
+                {
+                    id = "Abyssal Shark Cannon",
+                    pos = new Vector2(600, 550),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_AbyssalSharkCannon,
+                    cost = new List<(int,int)>
+                    {
+                        (ModContent.ItemType<SharkCannon>(), 1),
+                        (ItemID.LunarBar, 10),
+                        (ItemID.FragmentVortex, 15),
+                        (ItemID.SharkFin, 5),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_AbyssalSharkCannon),
+                    children = new string[0]
+                },
+
+                new
+                {
+                    id = "Orb Master Band",
+                    pos = new Vector2(550, 350),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_OrbMasterBand,
+                    cost = new List<(int,int)>
+                    {
+                        (ModContent.ItemType<Content.Items.Accessories.OrbweaverBand>(), 1),
+                        (ModContent.ItemType<Content.Items.Accessories.OrbCatalystCore>(), 1),
+                        (ItemID.SoulofLight, 10),
+                        (ItemID.SoulofNight, 10),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_OrbMasterBand),
+                    children = new string[0]
+                },
+
+                new
+                {
+                    id = "Focus Crystal",
+                    pos = new Vector2(100, 150),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_FocusCrystal,
+                    cost = new List<(int,int)>
+                    {
+                        (ModContent.ItemType<Content.Items.Accessories.FocusCrystal>(), 1),
+                        (ModContent.ItemType<Content.Items.Accessories.OrbPersistenceCharm>(), 1),
+                        (ItemID.CrystalShard, 20),
+                        (ItemID.FallenStar, 5),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_FocusCrystal),
+                    children = new[] { "Orb Persistence Charm", "Focused Persistence Crystal" }
+                },
+
+                new
+                {
+                    id = "Combo Catalyst Charm",
+                    pos = new Vector2(650, 250),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_ComboCatalystCharm,
+                    cost = new List<(int,int)>
+                    {
+                        (ModContent.ItemType<Content.Items.Accessories.AccelerantCharm>(), 1),
+                        (ModContent.ItemType<Content.Items.Accessories.OrbCatalystCore>(), 1),
+                        (ItemID.Bone, 20),
+                        (ItemID.SoulofLight, 5),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_ComboCatalystCharm),
+                    children = new[] { "Orb Master Band" }
+                },
+
+                new
+                {
+                    id = "Orb Weaver Band",
+                    pos = new Vector2(100, -50),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_OrbWeaverBand,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.Silk, 20),
+                        (ItemID.IronBar, 10),
+                        (ModContent.ItemType<OrbFragment>(), 3),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_OrbWeaverBand),
+                    children = new[] { "Orb Catalyst Core" }
+                },
+
+                new
+                {
+                    id = "Orb Catalyst Core",
+                    pos = new Vector2(100, -150),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_OrbCatalystCore,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.GoldBar, 10),
+                        (ItemID.Sapphire, 5),
+                        (ModContent.ItemType<OrbFragment>(), 3),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_OrbCatalystCore),
+                    children = new[] { "Accelerant Charm" }
+                },
+
+                new
+                {
+                    id = "Focused Persistence Crystal",
+                    pos = new Vector2(0, 150),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_FocusedPersistenceCrystal,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.CrystalShard, 20),
+                        (ItemID.FallenStar, 5),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_FocusedPersistenceCrystal),
+                    children = new string[0]
+                },
+
+                new
+                {
+                    id = "Orb Persistence Charm",
+                    pos = new Vector2(100, 250),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_OrbPersistenceCharm,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.Bone, 15),
+                        (ItemID.FallenStar, 5),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_OrbPersistenceCharm),
+                    children = new string[0]
+                },
+
+                new
+                {
+                    id = "Accelerant Charm",
+                    pos = new Vector2(200, -150),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_AccelerantCharm,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.Gel, 20),
+                        (ItemID.Bone, 10),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_AccelerantCharm),
+                    children = new string[0]
+                },
+
+                new
+                {
+                    id = "Orb Amplifier Ring",
+                    pos = new Vector2(200, -50),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_OrbAmplifierRing,
+                    cost = new List<(int,int)>
+                    {
+                        (ItemID.GoldBar, 10),
+                        (ModContent.ItemType<OrbFragment>(), 5),
+                    },
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_OrbAmplifierRing),
+                    children = new[] { "Orb Weaver Band" }
+                },
+            };
+
             var nodes = new Dictionary<string, UIPanel>();
-
-            nodes["Starlit Whirlwind"] = CreateNode("Starlit Whirlwind", AttemptUnlock_StarlitWhirlwind,
-                new List<(int,int)>{ (ItemID.WandofSparking,1), (ItemID.FallenStar,5), (ItemID.CopperBar,10), (ModContent.ItemType<OrbFragment>(),5) },
-                () => FP != null && FP.Unlocked_StarlitWhirlwind,
-                new Vector2(300, 50));
-
-            nodes["Crystal Cascade"] = CreateNode("Crystal Cascade", AttemptUnlock_CrystalCascade,
-                new List<(int,int)>{ (ItemID.IceBlade,1), (2745,10), (ItemID.Sapphire,10), (ItemID.Snowball,25), (ModContent.ItemType<OrbFragment>(),5) },
-                () => FP != null && FP.Unlocked_CrystalCascade,
-                new Vector2(200, 150));
-
-            nodes["Pain Spiral"] = CreateNode("Pain Spiral", AttemptUnlock_PainSpiral,
-                new List<(int,int)>{ (ItemID.BallOHurt,1), (ItemID.ThornChakram,1), (ItemID.Stinger,4), (ItemID.JungleSpores,8), (ModContent.ItemType<OrbFragment>(),5) },
-                () => FP != null && FP.Unlocked_PainSpiral,
-                new Vector2(400, 150));
-
-            nodes["Shurikenwood Bow"] = CreateNode("Shurikenwood Bow", AttemptUnlock_ShurikenwoodBow,
-                new List<(int,int)>{ (ItemID.WoodenBow,1), (ItemID.Shuriken,50), (ItemID.Wood,20) },
-                () => FP != null && FP.Unlocked_ShurikenwoodBow,
-                new Vector2(400, -50));
-
-            nodes["Frost Shurikenwood Bow"] = CreateNode("Frost Shurikenwood Bow", AttemptUnlock_FrostShurikenwoodBow,
-                new List<(int,int)>{ (ModContent.ItemType<ShurikenwoodBow>(),1), (ItemID.IceBlock,10), (ItemID.Shiverthorn,5) },
-                () => FP != null && FP.Unlocked_FrostShurikenwoodBow,
-                new Vector2(550, -50));
-
-            nodes["Aurora Bow"] = CreateNode("Aurora Bow", AttemptUnlock_AuroraBow,
-                new List<(int,int)>{ (ModContent.ItemType<FrostShurikenwoodBow>(),1), (ItemID.IceBlade,1), (ItemID.Diamond,10) },
-                () => FP != null && FP.Unlocked_AuroraBow,
-                new Vector2(700, -50));
-
-            nodes["Venom Barrage"] = CreateNode("Venom Barrage", AttemptUnlock_VenomBarrage,
-                new List<(int,int)>{ (ItemID.ThrowingKnife,100), (ItemID.Blowpipe,1), (ItemID.Stinger,5), (ItemID.JungleSpores,7) },
-                () => FP != null && FP.Unlocked_VenomBarrage,
-                new Vector2(550, 150));
-
-            nodes["Inferno Orb"] = CreateNode("Inferno Orb", AttemptUnlock_InfernoOrb,
-                new List<(int,int)>{ (ItemID.FlowerofFire,1), (121,1), (ItemID.HellstoneBar,15), (2348,2), (ModContent.ItemType<OrbFragment>(),5) },
-                () => FP != null && FP.Unlocked_InfernoOrb,
-                new Vector2(300, 250));
-
-            nodes["Fossil Dancer"] = CreateNode("Fossil Dancer", AttemptUnlock_FossilDancer,
-                new List<(int,int)>{ (ItemID.BoneSword,1), (ItemID.AntlionClaw,1), (ItemID.FossilOre,8), (ItemID.AntlionMandible,4) },
-                () => FP != null && FP.Unlocked_FossilDancer,
-                new Vector2(400, 350));
-
-            nodes["Celestial Frost Blade"] = CreateNode("Celestial Frost Blade", AttemptUnlock_CelestialFrost,
-                new List<(int,int)>{ (ItemID.Starfury,1), (ItemID.IceBlade,1), (ItemID.MeteoriteBar,10), (ItemID.Ruby,7) },
-                () => FP != null && FP.Unlocked_CelestialFrostBlade,
-                new Vector2(200, 450));
-
-            nodes["Nightfall Harbinger"] = CreateNode("Nightfall Harbinger", AttemptUnlock_NightfallHarbinger,
-                new List<(int,int)>{ (ItemID.DemonBow,1), (ItemID.DemonScythe,1), (ItemID.SoulofNight,10), (47,5) },
-                () => FP != null && FP.Unlocked_NightfallHarbinger,
-                new Vector2(100, 50));
-
-            nodes["Verdant Conduit Tome"] = CreateNode("Verdant Conduit Tome", AttemptUnlock_VerdantConduitTome,
-                new List<(int,int)>{ (ItemID.SpellTome,1), (3,25), (ItemID.JungleSpores,7), (ItemID.Vine,7), (ItemID.SoulofLight,5) },
-                () => FP != null && FP.Unlocked_VerdantConduitTome,
-                new Vector2(100, 350));
-
-            nodes["Shark Cannon"] = CreateNode("Shark Cannon", AttemptUnlock_SharkCannon,
-                new List<(int,int)>{ (ItemID.Boomstick,1), (ItemID.Minishark,1), (ItemID.SharkFin,5), (ItemID.IllegalGunParts,1) },
-                () => FP != null && FP.Unlocked_SharkCannon,
-                new Vector2(500, 550));
-
-            nodes["Gale Crescent"] = CreateNode("Gale Crescent", AttemptUnlock_GaleCrescent,
-                new List<(int,int)>{ (ItemID.DemonScythe,1), (ItemID.Cloud,25), (ItemID.Feather,12), (ItemID.SoulofNight,5) },
-                () => FP != null && FP.Unlocked_GaleCrescent,
-                new Vector2(300, 550));
-
-            nodes["Shadow Reaper"] = CreateNode("Shadow Reaper", AttemptUnlock_ShadowReaper,
-                new List<(int,int)>{ (ItemID.ShadowbeamStaff,1), (ItemID.DeathSickle,1), (ItemID.Ectoplasm,10), (ItemID.SoulofNight,15), (ModContent.ItemType<OrbFragment>(),5) },
-                () => FP != null && FP.Unlocked_ShadowReaper,
-                new Vector2(400, 650));
-
-            nodes["Solar Conductor"] = CreateNode("Solar Conductor", AttemptUnlock_SolarConductor,
-                new List<(int,int)>{ (ItemID.Flamelash,1), (ItemID.FlowerofFire,1), (ItemID.SoulofLight,5), (ItemID.SoulofNight,5) },
-                () => FP != null && FP.Unlocked_SolarConductor,
-                new Vector2(100, 550));
-
-            nodes["Abyssal Shark Cannon"] = CreateNode("Abyssal Shark Cannon", AttemptUnlock_AbyssalSharkCannon,
-                new List<(int,int)>{ (ModContent.ItemType<SharkCannon>(),1), (ItemID.LunarBar,10), (ItemID.FragmentVortex,15), (ItemID.SharkFin,5) },
-                () => FP != null && FP.Unlocked_AbyssalSharkCannon,
-                new Vector2(600, 550));
-
-            nodes["Orb Master Band"] = CreateNode("Orb Master Band", AttemptUnlock_OrbMasterBand,
-                new List<(int,int)>{ (ModContent.ItemType<Content.Items.Accessories.OrbweaverBand>(),1), (ModContent.ItemType<Content.Items.Accessories.OrbCatalystCore>(),1), (ItemID.SoulofLight,10), (ItemID.SoulofNight,10) },
-                () => FP != null && FP.Unlocked_OrbMasterBand,
-                new Vector2(550, 350));
-
-            nodes["Focus Crystal"] = CreateNode("Focus Crystal", AttemptUnlock_FocusCrystal,
-                new List<(int,int)>{ (ModContent.ItemType<Content.Items.Accessories.FocusCrystal>(),1), (ModContent.ItemType<Content.Items.Accessories.OrbPersistenceCharm>(),1), (ItemID.CrystalShard,20), (ItemID.FallenStar,5) },
-                () => FP != null && FP.Unlocked_FocusCrystal,
-                new Vector2(100, 150));
-
-            nodes["Combo Catalyst Charm"] = CreateNode("Combo Catalyst Charm", AttemptUnlock_ComboCatalystCharm,
-                new List<(int,int)>{ (ModContent.ItemType<Content.Items.Accessories.AccelerantCharm>(),1), (ModContent.ItemType<Content.Items.Accessories.OrbCatalystCore>(),1), (ItemID.Bone, 20), (ItemID.SoulofLight,5) },
-                () => FP != null && FP.Unlocked_ComboCatalystCharm,
-                new Vector2(650, 250));
-
-            nodes["Orb Weaver Band"] = CreateNode("Orb Weaver Band", AttemptUnlock_OrbWeaverBand,
-                new List<(int,int)>{ (ItemID.Silk,20), (ItemID.IronBar,10), (ModContent.ItemType<OrbFragment>(),3) },
-                () => FP != null && FP.Unlocked_OrbWeaverBand,
-                new Vector2(100, -50));
-
-            nodes["Orb Catalyst Core"] = CreateNode("Orb Catalyst Core", AttemptUnlock_OrbCatalystCore,
-                new List<(int,int)>{ (ItemID.GoldBar,10), (ItemID.Sapphire,5), (ModContent.ItemType<OrbFragment>(),3) },
-                () => FP != null && FP.Unlocked_OrbCatalystCore,
-                new Vector2(100, -150));
-
-            nodes["Focused Persistence Crystal"] = CreateNode("Focused Persistence Crystal", AttemptUnlock_FocusCrystal,
-                new List<(int,int)>{ (ItemID.CrystalShard,20), (ItemID.FallenStar,5) },
-                () => FP != null && FP.Unlocked_FocusCrystal,
-                new Vector2(0, 150));
-
-            nodes["Orb Persistence Charm"] = CreateNode("Orb Persistence Charm", AttemptUnlock_OrbPersistenceCharm,
-                new List<(int,int)>{ (ItemID.Bone,15), (ItemID.FallenStar,5) },
-                () => FP != null && FP.Unlocked_OrbPersistenceCharm,
-                new Vector2(100, 250));
-
-            nodes["Accelerant Charm"] = CreateNode("Accelerant Charm", AttemptUnlock_AccelerantCharm,
-                new List<(int,int)>{ (ItemID.Gel,20), (ItemID.Bone,10) },
-                () => FP != null && FP.Unlocked_AccelerantCharm,
-                new Vector2(200, -150));
-
-            nodes["Orb Amplifier Ring"] = CreateNode("Orb Amplifier Ring", AttemptUnlock_OrbAmplifierRing,
-                new List<(int,int)>{ (ItemID.GoldBar,10), (ModContent.ItemType<OrbFragment>(),5) },
-                () => FP != null && FP.Unlocked_OrbAmplifierRing,
-                new Vector2(200, -50));
+            foreach (var s in specs)
+            {
+                nodes[s.id] = CreateNode(s.id, s.onClick, s.cost, s.isUnlocked, s.pos);
+            }
+            foreach (var s in specs)
+            {
+                foreach (var child in s.children)
+                {
+                    if (nodes.TryGetValue(s.id, out var from) && nodes.TryGetValue(child, out var to))
+                        Link(from, to);
+                }
+            }
 
             Link(nodes["Starlit Whirlwind"], nodes["Crystal Cascade"]);
             Link(nodes["Starlit Whirlwind"], nodes["Pain Spiral"]);
@@ -371,18 +574,6 @@ namespace WeaponMerging.UI
             Link(nodes["Orb Catalyst Core"], nodes["Accelerant Charm"]);
             Link(nodes["Orb Amplifier Ring"], nodes["Orb Weaver Band"]);
 
-            var closeBtn = new UIPanel();
-            closeBtn.Width.Set(60f, 0f);
-            closeBtn.Height.Set(24f, 0f);
-            closeBtn.Top.Set(8f, 0f);
-            closeBtn.Left.Set(1000f, 0f);
-            closeBtn.OnLeftClick += (_, __) => Systems.FusionUISystem.HideFusionUI();
-            panel.Append(closeBtn);
-            closeText = new UIText("Close");
-            closeText.HAlign = 0.5f;
-            closeText.VAlign = 0.5f;
-            closeText.IgnoresMouseInteraction = true;
-            closeBtn.Append(closeText);
 
             _journeyUnlockAllButton = new UIPanel();
             _journeyUnlockAllButton.Width.Set(80f, 0f);
@@ -409,7 +600,6 @@ namespace WeaponMerging.UI
 
         private void OnPanelScrollWheel(UIScrollWheelEvent evt, UIElement listeningElement)
         {
-            if (currentTab != 0) return;
             float oldZoom = _zoom;
             _zoom = MathHelper.Clamp(_zoom + evt.ScrollWheelValue * 0.001f, 0.5f, 2f);
             float newZoom = _zoom;
@@ -427,22 +617,41 @@ namespace WeaponMerging.UI
         {
             base.Update(gameTime);
 
-            if (Main.mouseRight && panel.ContainsPoint(Main.MouseScreen))
+            // Right-dragging pans the tree, but ignore right-clicks when interacting with nodes
+            if (Main.mouseRight && treeArea.ContainsPoint(Main.MouseScreen))
             {
-                if (!_isDragging)
+                bool overNode = false;
+                foreach (var e in _entries)
                 {
-                    _isDragging = true;
-                    _lastMousePos = Main.MouseScreen;
+                    if (e.panel != null && e.panel.IsMouseHovering)
+                    {
+                        overNode = true;
+                        break;
+                    }
                 }
 
-                Vector2 delta = Main.MouseScreen - _lastMousePos;
-                _panOffset += delta;
-                _lastMousePos = Main.MouseScreen;
-                UpdateZoomPositions();
+                if (!overNode)
+                {
+                    if (!_isDragging)
+                    {
+                        _isDragging = true;
+                        _lastMousePos = Main.MouseScreen;
+                    }
+
+                    Vector2 delta = Main.MouseScreen - _lastMousePos;
+                    _panOffset += delta;
+                    _lastMousePos = Main.MouseScreen;
+                    UpdateZoomPositions();
+                }
             }
             else
             {
                 _isDragging = false;
+            }
+
+            if (Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape) && !Main.oldKeyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
+            {
+                Systems.FusionUISystem.HideFusionUI();
             }
         }
 
@@ -450,16 +659,17 @@ namespace WeaponMerging.UI
         {
             spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), new Color(18, 20, 31) * 0.95f);
 
+            // Update positions and compute panel states before drawing UI so links render behind panels
             UpdateZoomPositions();
 
-            base.DrawSelf(spriteBatch);
-            EnsureJourneyControls();
-
-            if (currentTab != 0) return;
-
             if (_entries == null || _entries.Count == 0)
+            {
+                base.DrawSelf(spriteBatch);
+                EnsureJourneyControls();
                 return;
+            }
 
+            // Update panel background colors based on state
             foreach (var idx in _entries)
             {
                 if (idx.panel == null || idx.isUnlocked == null)
@@ -471,7 +681,7 @@ namespace WeaponMerging.UI
                 bool affordable = idx.cost != null && HasItems(idx.cost);
 
                 if (unlocked)
-                    idx.panel.BackgroundColor = new Color(40,140,60) * 0.7f;
+                    idx.panel.BackgroundColor = new Color(40, 140, 60) * 0.7f;
                 else if (!prereqsMet)
                     idx.panel.BackgroundColor = new Color(80, 80, 80) * 0.7f;
                 else if (affordable)
@@ -480,7 +690,9 @@ namespace WeaponMerging.UI
                     idx.panel.BackgroundColor = new Color(140, 60, 40) * 0.7f;
             }
 
+            // Draw links within the tree area before drawing panels so they don't overlap the sidebar
             var panelDims = panel.GetDimensions();
+            var treeDims = treeArea.GetDimensions();
             if (_links != null && _links.Count > 0)
             {
                 var pixel = TextureAssets.MagicPixel.Value;
@@ -492,8 +704,8 @@ namespace WeaponMerging.UI
                     Vector2 a = GetCenter(from);
                     Vector2 b = GetCenter(to);
 
-                    if (a.X < panelDims.X || a.X > panelDims.X + panelDims.Width || a.Y < panelDims.Y || a.Y > panelDims.Y + panelDims.Height ||
-                        b.X < panelDims.X || b.X > panelDims.X + panelDims.Width || b.Y < panelDims.Y || b.Y > panelDims.Y + panelDims.Height)
+                    // Clip links to the tree area so they appear cut at the sidebar edge instead of drawing over it
+                    if (!ClipSegmentToRect(a, b, treeDims, out Vector2 ca, out Vector2 cb))
                         continue;
 
                     var (toUnlocked, toPrereqs, toAffordable) = GetEntryState(to);
@@ -513,8 +725,8 @@ namespace WeaponMerging.UI
                         lineCol = new Color(255, 200, 150);
                     }
 
-                    DrawLine(spriteBatch, pixel, a, b, lineCol * 0.3f, 10f);
-                    DrawLine(spriteBatch, pixel, a, b, lineCol * 0.8f, 6f);
+                    DrawLine(spriteBatch, pixel, ca, cb, lineCol * 0.3f, 10f);
+                    DrawLine(spriteBatch, pixel, ca, cb, lineCol * 0.8f, 6f);
 
                     if (hasParticles)
                     {
@@ -528,8 +740,8 @@ namespace WeaponMerging.UI
                             {
                                 float tParticle = (time + p * 0.25f) % 1f;
                                 Vector2 particlePos = a + dir * (length * tParticle);
-                                if (particlePos.X < panelDims.X || particlePos.X > panelDims.X + panelDims.Width ||
-                                    particlePos.Y < panelDims.Y || particlePos.Y > panelDims.Y + panelDims.Height)
+                                if (particlePos.X < treeDims.X || particlePos.X > treeDims.X + treeDims.Width ||
+                                    particlePos.Y < treeDims.Y || particlePos.Y > treeDims.Y + treeDims.Height)
                                     continue;
                                 spriteBatch.Draw(pixel, new Rectangle((int)particlePos.X - 3, (int)particlePos.Y - 3, 6, 6), Color.White * 0.6f);
                             }
@@ -538,6 +750,10 @@ namespace WeaponMerging.UI
                 }
             }
 
+            base.DrawSelf(spriteBatch);
+            EnsureJourneyControls();
+
+            // Draw node labels on top of panels
             foreach (var idx in _entries)
             {
                 if (idx.panel == null)
@@ -549,9 +765,9 @@ namespace WeaponMerging.UI
                 string display = unlocked ? $"{idx.label} [Unlocked]" : idx.label;
                 var dims = idx.panel.GetDimensions();
                 Vector2 textPos = new Vector2(dims.X + dims.Width / 2, dims.Y + dims.Height + 10);
-                
-                if (textPos.X < panelDims.X || textPos.X > panelDims.X + panelDims.Width ||
-                    textPos.Y < panelDims.Y || textPos.Y > panelDims.Y + panelDims.Height)
+
+                if (textPos.X < treeDims.X || textPos.X > treeDims.X + treeDims.Width ||
+                    textPos.Y < treeDims.Y || textPos.Y > treeDims.Y + treeDims.Height)
                     continue;
                 Utils.DrawBorderString(spriteBatch, display, textPos, Color.White, _zoom * 0.6f, 0.5f, 0.5f);
             }
@@ -626,6 +842,17 @@ namespace WeaponMerging.UI
             button.Left.Set(pos.X * _zoom, 0f);
             button.Top.Set(pos.Y * _zoom, 0f);
             button.OnLeftClick += onClick;
+            button.OnRightClick += (evt, el) =>
+            {
+                if (JourneyCheatsEnabled)
+                {
+                    SkipUnlock(label);
+                }
+                else
+                {
+                    Main.NewText("Right-click skip is only available in Journey mode", Color.Red);
+                }
+            };
             button.BorderColor = new Color(90, 100, 140);
             treeArea.Append(button);
 
@@ -639,19 +866,7 @@ namespace WeaponMerging.UI
             
 
             
-            var skipBtn = new UIPanel();
-            skipBtn.Width.Set(35f, 0f);
-            skipBtn.Height.Set(12f, 0f);
-            skipBtn.Top.Set(0f, 0f);
-            skipBtn.Left.Set(80f - 35f, 0f);
-            skipBtn.OnLeftClick += (evt, el) => SkipUnlock(label);
-            var skipText = new UIText("Skip");
-            skipText.HAlign = 0.5f;
-            skipText.VAlign = 0.5f;
-            skipText.IgnoresMouseInteraction = true;
-            skipBtn.Append(skipText);
-            skipBtn.IgnoresMouseInteraction = true;
-            _journeySkipButtons[label] = skipBtn;
+            // Skip button removed; right-click on the node will perform skip when in Journey mode.
 
             
             button.OnMouseOver += (_, __) =>
@@ -683,6 +898,10 @@ namespace WeaponMerging.UI
                 string desc = ItemLoader.GetItem(type)?.Tooltip?.Value ?? string.Empty;
                 _currentDescTitle = name;
                 _currentDescBody = desc;
+                if (JourneyCheatsEnabled)
+                {
+                    _currentDescBody += "\n\nRight-click to skip unlock";
+                }
             }
             else
             {
@@ -710,14 +929,7 @@ namespace WeaponMerging.UI
                 }
             }
             
-            foreach (var kvp in _journeySkipButtons)
-            {
-                var skipBtn = kvp.Value;
-                skipBtn.Width.Set(35f * _zoom, 0f);
-                skipBtn.Height.Set(12f * _zoom, 0f);
-                skipBtn.Top.Set(0f * _zoom, 0f);
-                skipBtn.Left.Set((80f - 35f) * _zoom, 0f);
-            }
+            // Skip buttons removed; no zoom updates required for them.
         }
 
         private Player P => Main.LocalPlayer;
@@ -740,6 +952,64 @@ namespace WeaponMerging.UI
             float angle = (float)System.Math.Atan2(edge.Y, edge.X);
             float length = edge.Length();
             spriteBatch.Draw(tex, new Rectangle((int)start.X, (int)start.Y, (int)length, (int)thickness), null, color, angle, Vector2.Zero, SpriteEffects.None, 0f);
+        }
+
+        // Clip a line segment to an axis-aligned rectangle using Liang-Barsky algorithm.
+        private static bool ClipSegmentToRect(Vector2 p0, Vector2 p1, CalculatedStyle rect, out Vector2 out0, out Vector2 out1)
+        {
+            float xMin = rect.X;
+            float xMax = rect.X + rect.Width;
+            float yMin = rect.Y;
+            float yMax = rect.Y + rect.Height;
+
+            Vector2 d = p1 - p0;
+            float t0 = 0f, t1 = 1f;
+
+            float[] p = { -d.X, d.X, -d.Y, d.Y };
+            float[] q = { p0.X - xMin, xMax - p0.X, p0.Y - yMin, yMax - p0.Y };
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (Math.Abs(p[i]) < 1e-6f)
+                {
+                    if (q[i] < 0)
+                    {
+                        out0 = default;
+                        out1 = default;
+                        return false;
+                    }
+                }
+                else
+                {
+                    float r = q[i] / p[i];
+                    if (p[i] < 0)
+                    {
+                        if (r > t1)
+                        {
+                            out0 = default;
+                            out1 = default;
+                            return false;
+                        }
+                        else if (r > t0)
+                            t0 = r;
+                    }
+                    else
+                    {
+                        if (r < t0)
+                        {
+                            out0 = default;
+                            out1 = default;
+                            return false;
+                        }
+                        else if (r < t1)
+                            t1 = r;
+                    }
+                }
+            }
+
+            out0 = p0 + d * t0;
+            out1 = p0 + d * t1;
+            return true;
         }
 
         private (bool unlocked, bool prereqsMet, bool affordable) GetEntryState(UIPanel panel)
@@ -1528,16 +1798,7 @@ namespace WeaponMerging.UI
 
         private void EnsureJourneyControls()
         {
-            if (currentTab != 0)
-            {
-                if (_journeyUnlockAllButton.Parent != null) _journeyUnlockAllButton.Remove();
-                foreach (var kvp in _journeySkipButtons)
-                {
-                    var skipBtn = kvp.Value;
-                    if (skipBtn.Parent != null) skipBtn.Remove();
-                }
-                return;
-            }
+            // Always manage journey controls (tabs removed)
 
             bool isJourney = JourneyCheatsEnabled;
 
@@ -1558,310 +1819,16 @@ namespace WeaponMerging.UI
                 }
             }
 
-            foreach (var kvp in _journeySkipButtons)
-            {
-                string label = kvp.Key;
-                var skipPanel = kvp.Value;
-                var nodePanel = GetPanelByLabel(label);
-                if (skipPanel == null || nodePanel == null)
-                    continue;
-
-                if (isJourney)
-                {
-                    if (skipPanel.Parent != nodePanel)
-                    {
-                        skipPanel.Remove();
-                        nodePanel.Append(skipPanel);
-                        skipPanel.BackgroundColor = new Color(60, 80, 120) * 0.9f;
-                        skipPanel.BorderColor = new Color(200, 220, 255);
-                    }
-                    skipPanel.IgnoresMouseInteraction = false;
-                }
-                else if (skipPanel.Parent != null)
-                {
-                    skipPanel.Remove();
-                }
-            }
+            // Skip panels removed; right-clicking nodes handles skipping in Journey mode.
         }
 
         private void UpdateUI()
         {
-            if (currentTab == 0)
-            {
-                if (configPanel.Parent != null) configPanel.Remove();
-                if (trialPanel.Parent != null) trialPanel.Remove();
-                if (treeArea.Parent == null) panel.Append(treeArea);
-                if (infoPanel.Parent == null) panel.Append(infoPanel);
-            }
-            else if (currentTab == 1)
-            {
-                if (treeArea.Parent != null) treeArea.Remove();
-                if (trialPanel.Parent != null) trialPanel.Remove();
-                if (infoPanel.Parent != null) infoPanel.Remove();
-                if (configPanel.Parent == null) panel.Append(configPanel);
-                configPanel.RemoveAllChildren();
-                var player = Main.LocalPlayer.GetModPlayer<Content.Players.AccessoryEffectsPlayer>();
-                if (player.amplifierEquipped)
-                {
-                    var title = new UIText("Orb Speed Multipliers");
-                    title.Top.Set(8f, 0f);
-                    title.HAlign = 0.5f;
-                    configPanel.Append(title);
-                    string[] categories = { "Inferno", "Shadow", "Pain", "Crystal", "Starlit" };
-                    float y = 40f;
-                    foreach (var cat in categories)
-                    {
-                        var row = new UIElement();
-                        row.Width.Set(0f, 1f);
-                        row.Height.Set(30f, 0f);
-                        row.Top.Set(y, 0f);
-                        configPanel.Append(row);
-                        var label = new UIText(cat + ": " + player.orbSpeedMultipliers[cat].ToString("F2"));
-                        label.Left.Set(10f, 0f);
-                        label.VAlign = 0.5f;
-                        row.Append(label);
-                        var minusBtn = new UIElement();
-                        minusBtn.Width.Set(20f, 0f);
-                        minusBtn.Height.Set(20f, 0f);
-                        minusBtn.Left.Set(150f, 0f);
-                        minusBtn.VAlign = 0.5f;
-                        minusBtn.OnLeftClick += (e, l) => { player.orbSpeedMultipliers[cat] = Math.Max(0.1f, player.orbSpeedMultipliers[cat] - 0.1f); UpdateUI(); };
-                        var minusText = new UIText("-");
-                        minusText.HAlign = 0.5f;
-                        minusText.VAlign = 0.5f;
-                        minusBtn.Append(minusText);
-                        row.Append(minusBtn);
-
-                        var plusBtn = new UIElement();
-                        plusBtn.Width.Set(20f, 0f);
-                        plusBtn.Height.Set(20f, 0f);
-                        plusBtn.Left.Set(180f, 0f);
-                        plusBtn.VAlign = 0.5f;
-                        plusBtn.OnLeftClick += (e, l) => { player.orbSpeedMultipliers[cat] = Math.Min(3f, player.orbSpeedMultipliers[cat] + 0.1f); UpdateUI(); };
-                        var plusText = new UIText("+");
-                        plusText.HAlign = 0.5f;
-                        plusText.VAlign = 0.5f;
-                        plusBtn.Append(plusText);
-                        row.Append(plusBtn);
-                        y += 35f;
-                    }
-                }
-                else
-                {
-                    var msg = new UIText("Equip the Orb Amplifier Ring to access this config.");
-                    msg.HAlign = 0.5f;
-                    msg.VAlign = 0.5f;
-                    configPanel.Append(msg);
-                }
-            }
-            else if (currentTab == 2)
-            {
-                if (treeArea.Parent != null) treeArea.Remove();
-                if (configPanel.Parent != null) configPanel.Remove();
-                if (infoPanel.Parent != null) infoPanel.Remove();
-                if (tokenShopPanel.Parent != null) tokenShopPanel.Remove();
-                if (trialPanel.Parent == null) panel.Append(trialPanel);
-                UpdateTrialPanel();
-            }
-            else if (currentTab == 3)
-            {
-                if (treeArea.Parent != null) treeArea.Remove();
-                if (configPanel.Parent != null) configPanel.Remove();
-                if (trialPanel.Parent != null) trialPanel.Remove();
-                if (infoPanel.Parent != null) infoPanel.Remove();
-                if (tokenShopPanel.Parent == null) panel.Append(tokenShopPanel);
-                UpdateTokenShopPanel();
-            }
-            for (int i = 0; i < tabs.Length; i++)
-            {
-                if (i == 2 && !TrialsUnlocked)
-                {
-                    tabs[i].BackgroundColor = new Color(80, 80, 80) * 0.5f; // Gray out
-                }
-                else
-                {
-                    tabs[i].BackgroundColor = (i == currentTab) ? new Color(63, 82, 151) * 0.7f : Color.Transparent;
-                }
-            }
-
-            if (currentTab == 2 && !TrialsUnlocked)
-            {
-                currentTab = 0;
-                UpdateUI();
-            }
+            // Simplified UI: keep the tech tree and info panel visible
+            if (treeArea.Parent == null) panel.Append(treeArea);
+            if (infoPanel.Parent == null) panel.Append(infoPanel);
         }
 
-        private void UpdateTrialPanel()
-        {
-            trialPanel.RemoveAllChildren();
-            var title = new UIText("Fusion Trials");
-            title.Top.Set(8f, 0f);
-            title.HAlign = 0.5f;
-            trialPanel.Append(title);
-
-            var trialPlayer = Main.LocalPlayer.GetModPlayer<TrialPlayer>();
-            var stats = trialPlayer.TrialStats;
-
-            var tokenSummary = new UIText($"Trial Tokens: {stats.TrialTokens}");
-            tokenSummary.Top.Set(30f, 0f);
-            tokenSummary.HAlign = 0.5f;
-            tokenSummary.TextColor = Color.Gold;
-            trialPanel.Append(tokenSummary);
-
-            var trials = new[] {
-                ("Eye of Cthulhu Trial", "Defeat a harder Eye of Cthulhu with new attacks and phases."),
-                ("Skeletron Trial", "Endure a relentless skull and hand assault within the arena."),
-                ("Queen Bee Trial", "Survive toxic clouds and vicious wasps in the hive arena."),
-            };
-
-            float y = 70f;
-            foreach (var (trialName, trialDesc) in trials)
-            {
-                var trialPanel = new UIPanel();
-                trialPanel.Width.Set(420f, 0f);
-                trialPanel.Height.Set(140f, 0f);
-                trialPanel.Top.Set(y, 0f);
-                trialPanel.HAlign = 0.5f;
-                trialPanel.BackgroundColor = new Color(60, 80, 100) * 0.8f;
-                trialPanel.BorderColor = new Color(100, 120, 150);
-                this.trialPanel.Append(trialPanel);
-
-                var trialTitle = new UIText(trialName);
-                trialTitle.Top.Set(8f, 0f);
-                trialTitle.HAlign = 0.5f;
-                trialPanel.Append(trialTitle);
-
-                var trialDescText = new UIText(trialDesc);
-                trialDescText.Top.Set(30f, 0f);
-                trialDescText.HAlign = 0.5f;
-                trialDescText.VAlign = 0.5f;
-                trialPanel.Append(trialDescText);
-
-                int estimatedTokens = TrialSystem.GetEstimatedTokenReward(trialName);
-                var rewardText = new UIText($"Estimated Tokens: {estimatedTokens}");
-                rewardText.Top.Set(60f, 0f);
-                rewardText.HAlign = 0.5f;
-                rewardText.TextColor = Color.Goldenrod;
-                trialPanel.Append(rewardText);
-
-                var startBtn = new UIPanel();
-                startBtn.Width.Set(100f, 0f);
-                startBtn.Height.Set(24f, 0f);
-                startBtn.Top.Set(90f, 0f);
-                startBtn.HAlign = 0.5f;
-                startBtn.BackgroundColor = new Color(80, 120, 160);
-                startBtn.BorderColor = new Color(150, 180, 210);
-                startBtn.OnLeftClick += (e, l) => StartTrial(trialName);
-                trialPanel.Append(startBtn);
-
-                var startText = new UIText("Start Trial");
-                startText.HAlign = 0.5f;
-                startText.VAlign = 0.5f;
-                startBtn.Append(startText);
-
-                y += 160f;
-            }
-        }
-
-        private void UpdateTokenShopPanel()
-        {
-            tokenShopPanel.RemoveAllChildren();
-            var title = new UIText("Trial Token Shop");
-            title.Top.Set(8f, 0f);
-            title.HAlign = 0.5f;
-            tokenShopPanel.Append(title);
-
-            var trialPlayer = Main.LocalPlayer.GetModPlayer<TrialPlayer>();
-            var stats = trialPlayer.TrialStats;
-
-            var tokenSummary = new UIText($"Trial Tokens: {stats.TrialTokens}");
-            tokenSummary.Top.Set(30f, 0f);
-            tokenSummary.HAlign = 0.5f;
-            tokenSummary.TextColor = Color.Gold;
-            tokenShopPanel.Append(tokenSummary);
-
-            var shopItems = new[] {
-                ("Cobalt Bar (5)", 20, ItemID.CobaltBar, 5),
-                ("Mythril Bar (5)", 25, ItemID.MythrilBar, 5),
-                ("Adamantite Bar (5)", 30, ItemID.AdamantiteBar, 5),
-                ("Titanium Bar (5)", 35, ItemID.TitaniumBar, 5),
-                ("Hallowed Bar (5)", 40, ItemID.HallowedBar, 5),
-                ("Greater Healing Potion (10)", 20, ItemID.GreaterHealingPotion, 10),
-                ("Greater Mana Potion (10)", 20, ItemID.GreaterManaPotion, 10),
-                ("Wrath Potion (5)", 30, ItemID.WrathPotion, 5),
-                ("Rage Potion (5)", 30, ItemID.RagePotion, 5)
-            };
-
-            float y = 60f;
-            foreach (var (name, cost, itemId, amount) in shopItems)
-            {
-                var itemPanel = new UIPanel();
-                itemPanel.Width.Set(300f, 0f);
-                itemPanel.Height.Set(50f, 0f);
-                itemPanel.Top.Set(y, 0f);
-                itemPanel.HAlign = 0.5f;
-                itemPanel.BackgroundColor = new Color(60, 80, 100) * 0.8f;
-                itemPanel.BorderColor = new Color(100, 120, 150);
-                tokenShopPanel.Append(itemPanel);
-
-                var itemName = new UIText(name);
-                itemName.Top.Set(5f, 0f);
-                itemName.HAlign = 0.5f;
-                itemPanel.Append(itemName);
-
-                var costText = new UIText($"{cost} tokens");
-                costText.Top.Set(25f, 0f);
-                costText.HAlign = 0.5f;
-                costText.TextColor = Color.Goldenrod;
-                itemPanel.Append(costText);
-
-                var buyBtn = new UIPanel();
-                buyBtn.Width.Set(60f, 0f);
-                buyBtn.Height.Set(20f, 0f);
-                buyBtn.Top.Set(15f, 0f);
-                buyBtn.Left.Set(240f, 0f);
-                buyBtn.BackgroundColor = Color.LightGreen;
-                buyBtn.BorderColor = Color.Green;
-                buyBtn.OnLeftClick += (e, l) => BuyItem(cost, itemId, amount, name);
-                itemPanel.Append(buyBtn);
-
-                var buyText = new UIText("Buy");
-                buyText.HAlign = 0.5f;
-                buyText.VAlign = 0.5f;
-                buyBtn.Append(buyText);
-
-                y += 60f;
-            }
-        }
-
-        private void BuyItem(int cost, int itemId, int amount, string name)
-        {
-            var trialPlayer = Main.LocalPlayer.GetModPlayer<TrialPlayer>();
-            var stats = trialPlayer.TrialStats;
-            if (stats.TrialTokens >= cost)
-            {
-                stats.TrialTokens -= cost;
-                Main.LocalPlayer.QuickSpawnItem(null, itemId, amount);
-                Main.NewText($"Purchased {name} for {cost} tokens!", Color.Green);
-                UpdateTokenShopPanel();
-            }
-            else
-            {
-                Main.NewText("Not enough trial tokens!", Color.Red);
-            }
-        }
-
-        private void StartTrial(string trialName)
-        {
-            if (TrialsUnlocked)
-            {
-                TrialSystem.StartTrialWithModifiers(trialName, Main.LocalPlayer, TrialDifficulty.Normal);
-                Systems.FusionUISystem.HideFusionUI();
-            }
-            else
-            {
-                Main.NewText("Defeat the mechanical bosses first!", Color.Red);
-            }
-        }
+            // Trials and Token Shop UI removed — this UI now focuses solely on the Tech Tree.
     }
 }

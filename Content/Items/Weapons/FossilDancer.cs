@@ -28,7 +28,7 @@ namespace WeaponMerging.Content.Items.Weapons
             Item.autoReuse = true;
             
             
-            Item.damage = 8;
+            Item.damage = 13;
             Item.knockBack = 6f;
             Item.DamageType = DamageClass.Melee;
             
@@ -62,7 +62,7 @@ namespace WeaponMerging.Content.Items.Weapons
                 0 => damage,
                 1 => (int)(damage * 1.35f),
                 2 => (int)(damage * 1.45f),
-                3 => (int)(damage * 1.8f), 
+                3 => (int)(damage * 1.65f), 
                 _ => damage
             };
             

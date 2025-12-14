@@ -1,8 +1,20 @@
 {
   "version": 2,
-  "dgSpecHash": "Mj4Dgr32/M0=",
-  "success": true,
-  "projectFilePath": "c:\\Users\\trufa\\OneDrive\\Documentos\\My Games\\Terraria\\tModLoader\\ModSources\\WeaponMerging\\WeaponMerging.csproj",
+  "dgSpecHash": "MxL+TOV+giM=",
+  "success": false,
+  "projectFilePath": "C:\\Users\\trufa\\OneDrive\\Documentos\\My Games\\Terraria\\tModLoader\\ModSources\\WeaponMerging\\WeaponMerging.csproj",
   "expectedPackageFiles": [],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package SubworldLibrary. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages, nuget.org",
+      "projectPath": "C:\\Users\\trufa\\OneDrive\\Documentos\\My Games\\Terraria\\tModLoader\\ModSources\\WeaponMerging\\WeaponMerging.csproj",
+      "filePath": "C:\\Users\\trufa\\OneDrive\\Documentos\\My Games\\Terraria\\tModLoader\\ModSources\\WeaponMerging\\WeaponMerging.csproj",
+      "libraryId": "SubworldLibrary",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }

@@ -11,7 +11,7 @@ namespace WeaponMerging.Content.Items.Weapons
     {
         public override void SetDefaults()
         {
-            Item.damage = 13;
+            Item.damage = 5;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 108;
             Item.height = 44;
@@ -41,30 +41,34 @@ namespace WeaponMerging.Content.Items.Weapons
 
         public override bool CanConsumeAmmo(Item ammo, Player player)
         {
-            
             return Main.rand.NextFloat() >= 0.25f;
         }
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            
             velocity = velocity.RotatedByRandom(MathHelper.ToRadians(2));
-            
-            
             position += velocity.SafeNormalize(Vector2.UnitX) * 30f;
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
+            // 1. Get the ModPlayer instance
+            ScreenShakePlayer modPlayer = player.GetModPlayer<ScreenShakePlayer>();
             
-            bool isMegaBlast = Main.GameUpdateCount % 9 == 0;
-            
+            // 2. Increment the shot counter
+            modPlayer.sharkCannonShotCount++;
+
+            // 3. Check if we hit the combo limit (e.g., every 9th shot)
+            bool isMegaBlast = modPlayer.sharkCannonShotCount >= 9;
+
             if (isMegaBlast)
             {
-                
+                // Reset the counter
+                modPlayer.sharkCannonShotCount = 0;
+
                 SoundEngine.PlaySound(SoundID.Item38, position);
                 
-                
+                // --- Visuals: Flash ---
                 for (int i = 0; i < 35; i++)
                 {
                     Vector2 speed = velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.ToRadians(45)) * Main.rand.NextFloat(8f, 16f);
@@ -73,6 +77,7 @@ namespace WeaponMerging.Content.Items.Weapons
                     flash.fadeIn = 0.8f;
                 }
                 
+                // --- Visuals: Fire ---
                 for (int i = 0; i < 25; i++)
                 {
                     Vector2 speed = velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.ToRadians(40)) * Main.rand.NextFloat(6f, 14f);
@@ -81,7 +86,7 @@ namespace WeaponMerging.Content.Items.Weapons
                     fire.fadeIn = 1.2f;
                 }
                 
-                
+                // --- Visuals: Energy ---
                 for (int i = 0; i < 20; i++)
                 {
                     Vector2 speed = velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.ToRadians(35)) * Main.rand.NextFloat(4f, 10f);
@@ -90,10 +95,10 @@ namespace WeaponMerging.Content.Items.Weapons
                     energy.fadeIn = 1.4f;
                 }
                 
-                
+                // --- Projectiles ---
                 for (int i = 0; i < 7; i++)
                 {
-                    Vector2 pelletVel = velocity.RotatedByRandom(MathHelper.ToRadians(24)) * Main.rand.NextFloat(0.85f, 1.15f);
+                    Vector2 pelletVel = velocity.RotatedByRandom(MathHelper.ToRadians(12)) * Main.rand.NextFloat(0.85f, 1.0f);
                     int bullet = Projectile.NewProjectile(source, position, pelletVel, type, damage, knockback, player.whoAmI);
                     
                     if (bullet >= 0 && bullet < Main.maxProjectiles && Main.projectile[bullet].active)
@@ -102,17 +107,17 @@ namespace WeaponMerging.Content.Items.Weapons
                     }
                 }
                 
-                
+                // --- Screen Shake ---
                 if (Main.LocalPlayer == player)
                 {
-                    player.GetModPlayer<ScreenShakePlayer>().AddShake(6);
+                    modPlayer.AddShake(6);
                 }
                 
                 return false;
             }
             else
             {
-                
+                // Normal Fire Logic
                 for (int i = 0; i < 8; i++)
                 {
                     Vector2 speed = velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.ToRadians(16)) * Main.rand.NextFloat(3f, 8f);
@@ -127,7 +132,6 @@ namespace WeaponMerging.Content.Items.Weapons
                     spark.noGravity = true;
                 }
                 
-                
                 for (int i = 0; i < 3; i++)
                 {
                     Dust trail = Dust.NewDustPerfect(position, DustID.IceTorch, 
@@ -135,7 +139,6 @@ namespace WeaponMerging.Content.Items.Weapons
                         100, Color.Cyan, Main.rand.NextFloat(0.8f, 1.2f));
                     trail.noGravity = true;
                 }
-                
                 
                 for (int i = 0; i < 2; i++)
                 {
@@ -164,11 +167,13 @@ namespace WeaponMerging.Content.Items.Weapons
         }
     }
     
-    
     public class ScreenShakePlayer : ModPlayer
     {
         public int shakeTimer = 0;
         public int shakeIntensity = 0;
+        
+        // ADDED: Tracks the combo for the Shark Cannon
+        public int sharkCannonShotCount = 0;
         
         public void AddShake(int intensity)
         {
@@ -188,6 +193,18 @@ namespace WeaponMerging.Content.Items.Weapons
             }
         }
         
+        // Optional: Reset combo if they switch weapons?
+        // Uncomment this if you want the combo to break when they stop holding the item
+        /*
+        public override void PostUpdateMiscEffects()
+        {
+            if (Player.HeldItem.type != ModContent.ItemType<SharkCannon>())
+            {
+                sharkCannonShotCount = 0;
+            }
+        }
+        */
+
         public override void ModifyScreenPosition()
         {
             if (shakeTimer > 0)
@@ -198,4 +215,3 @@ namespace WeaponMerging.Content.Items.Weapons
         }
     }
 }
-
