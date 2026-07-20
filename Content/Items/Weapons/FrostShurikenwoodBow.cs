@@ -60,14 +60,6 @@ namespace WeaponMerging.Content.Items.Weapons
             return true;
         }
 
-        public override void AddRecipes()
-        {
-            CreateRecipe()
-                .AddIngredient(ModContent.ItemType<ShurikenwoodBow>())
-                .AddIngredient(ItemID.SnowballCannon)
-                .AddTile(TileID.Anvils)
-                .Register();
-        }
     }
 }
 

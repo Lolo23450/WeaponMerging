@@ -31,7 +31,7 @@ namespace WeaponMerging.Content.Items.Weapons
             Item.useStyle = ItemUseStyleID.Swing;
             Item.autoReuse = true;
 
-            Item.damage = 22;
+            Item.damage = 26;
             Item.knockBack = 4.5f;
             Item.DamageType = DamageClass.Magic;
 

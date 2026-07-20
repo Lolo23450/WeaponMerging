@@ -49,15 +49,6 @@ namespace WeaponMerging.Content.Items.Weapons
             return false; 
         }
 
-        public override void AddRecipes()
-        {
-            CreateRecipe()
-                .AddIngredient(ItemID.DaedalusStormbow)
-                .AddIngredient(ItemID.RainbowRod)
-                .AddIngredient(ItemID.FallenStar, 10)
-                .AddTile(TileID.MythrilAnvil)
-                .Register();
-        }
     }
 }
 

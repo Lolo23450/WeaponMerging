@@ -128,16 +128,6 @@ namespace WeaponMerging.Content.Items.Weapons
             }
         }
 
-        public override void AddRecipes()
-        {
-            CreateRecipe()
-                .AddIngredient(ModContent.ItemType<SharkCannon>())
-                .AddIngredient(ItemID.LunarBar, 12)
-                .AddIngredient(ItemID.FragmentVortex, 18)
-                .AddIngredient(ItemID.SharkFin, 10)
-                .AddTile(TileID.LunarCraftingStation)
-                .Register();
-        }
     }
 }
 

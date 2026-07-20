@@ -8,6 +8,11 @@ namespace WeaponMerging.Content.Items.Accessories
     {
         public override string Texture => "Terraria/Images/Item_3337"; // Example texture, replace with custom if available
 
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 1;
+        }
+
         public override void SetDefaults()
         {
             Item.width = 28;

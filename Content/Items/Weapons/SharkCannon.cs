@@ -155,16 +155,6 @@ namespace WeaponMerging.Content.Items.Weapons
             }
         }
 
-        public override void AddRecipes()
-        {
-            CreateRecipe()
-                .AddIngredient(ItemID.Boomstick, 1)
-                .AddIngredient(ItemID.Minishark, 1)
-                .AddIngredient(ItemID.SharkFin, 5)
-                .AddIngredient(ItemID.IllegalGunParts, 1)
-                .AddTile(TileID.Anvils)
-                .Register();
-        }
     }
     
     public class ScreenShakePlayer : ModPlayer

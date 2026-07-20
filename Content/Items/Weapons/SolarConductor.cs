@@ -12,7 +12,7 @@ namespace WeaponMerging.Content.Items.Weapons
         public override void SetDefaults()
         {
             
-            Item.damage = 55;
+            Item.damage = 62;
             Item.DamageType = DamageClass.Magic;
             Item.width = 40;
             Item.height = 40;

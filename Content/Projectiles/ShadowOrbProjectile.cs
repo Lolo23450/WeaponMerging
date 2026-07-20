@@ -34,49 +34,6 @@ namespace WeaponMerging.Content.Projectiles
 
         public override void AI()
         {
-            
-            if (Projectile.ai[1] == 0f) 
-            {
-                for (int i = 0; i < Main.maxProjectiles; i++)
-                {
-                    Projectile other = Main.projectile[i];
-                    if (other.active && other.type == ModContent.ProjectileType<PainOrbProjectile>() && other.owner == Projectile.owner && other.ai[1] == 0f)
-                    {
-                        if (Vector2.Distance(Projectile.Center, other.Center) < FUSION_RADIUS)
-                        {
-                            
-                            if (Main.myPlayer == Projectile.owner)
-                            {
-                                Vector2 fusionPos = (Projectile.Center + other.Center) / 2f;
-                                Player ownerPlayer = Main.player[Projectile.owner];
-                                int heldDmg = ownerPlayer?.HeldItem?.damage ?? 0;
-                                int baseDmg = Math.Max(Projectile.damage, other.damage);
-                                if (baseDmg <= 0)
-                                    baseDmg = (int)(heldDmg * 0.75f);
-
-                                Projectile fusion = Projectile.NewProjectileDirect(
-                                    Projectile.GetSource_FromThis(),
-                                    fusionPos,
-                                    Vector2.Zero,
-                                    ModContent.ProjectileType<FusionOrbProjectile>(),
-                                    Math.Max(20, baseDmg * 2),
-                                    1f,
-                                    Projectile.owner
-                                );
-
-                                fusion.ai[0] = 0f; 
-                                fusion.localAI[0] = 0f; 
-                                fusion.netUpdate = true;
-                            }
-                            
-                            Projectile.Kill();
-                            other.Kill();
-                            return;
-                        }
-                    }
-                }
-            }
-
             if (Projectile.owner < 0 || Projectile.owner >= Main.maxPlayers)
             {
                 Projectile.Kill();
@@ -85,12 +42,29 @@ namespace WeaponMerging.Content.Projectiles
 
             Player owner = Main.player[Projectile.owner];
 
+            if (Projectile.ai[1] == 1f)
+            {
+                Projectile.rotation = Projectile.velocity.ToRotation();
+                Lighting.AddLight(Projectile.Center, new Vector3(0.6f, 0.2f, 0.8f));
+
+                if (Main.rand.NextBool(2))
+                {
+                    Dust dust = Dust.NewDustPerfect(Projectile.Center, 27,
+                        -Projectile.velocity * 0.25f, 100, Color.Purple, Main.rand.NextFloat(1.0f, 1.5f));
+                    dust.noGravity = true;
+                    dust.alpha = 120;
+                }
+
+                return;
+            }
+
             var modPlayer = owner.GetModPlayer<Content.Players.ShadowReaperPlayer>();
             int orbCount = modPlayer?.orbCount ?? 1;
             if (orbCount < 1) orbCount = 1;
 
             var accessoryPlayer = owner.GetModPlayer<Content.Players.AccessoryEffectsPlayer>();
             float speedMult = accessoryPlayer.orbSpeedMultipliers.TryGetValue("Shadow", out float mult) ? mult : 1f;
+            speedMult *= accessoryPlayer.GetOrbRotationSpeedMultiplier(orbCount);
 
             float index = Projectile.localAI[0];
             float globalAngle = Main.GlobalTimeWrappedHourly * ORBIT_SPEED * 2f * speedMult;

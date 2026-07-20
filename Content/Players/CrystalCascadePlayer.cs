@@ -78,54 +78,46 @@ namespace WeaponMerging.Content.Players
 
         public void UseCrystalAttack(Player player, EntitySource_ItemUse_WithAmmo source, int damage, float knockback)
         {
+            LaunchNextCrystal(player, damage, knockback);
+        }
+
+        private void LaunchNextCrystal(Player player, int damage, float knockback)
+        {
             if (crystalCount == 0) return;
 
-            Vector2 targetVelocity = (Main.MouseWorld - player.Center).SafeNormalize(Vector2.UnitX) * 16f;
-
-            
-            int largestCrystalSize = GetLargestCrystalSize();
-
-            if (largestCrystalSize >= 2)
+            for (int i = 0; i < crystalProjectiles.Count; i++)
             {
-                
-                AttackMegaCrystalLance(player, source, damage, knockback, targetVelocity, largestCrystalSize);
-            }
-            else
-            {
-                
-                switch (crystalCount)
-                {
-                    case 1:
-                        Attack1FrostBolt(player, source, damage, knockback, targetVelocity);
-                        break;
-                    case 2:
-                        Attack2PrecisionBeam(player, source, damage, knockback, targetVelocity);
-                        break;
-                    case 3:
-                        Attack3IceSpear(player, source, damage, knockback, targetVelocity);
-                        break;
-                    case 4:
-                        Attack4CrystalBarrage(player, source, damage, knockback, targetVelocity);
-                        break;
-                    case 5:
-                        Attack5GlacialCannon(player, source, damage, knockback, targetVelocity);
-                        break;
-                    case 6:
-                        Attack6DiamondStorm(player, source, damage, knockback, targetVelocity);
-                        break;
-                }
-            }
-
-            
-            foreach (int crystalID in crystalProjectiles)
-            {
+                int crystalID = crystalProjectiles[i];
                 if (crystalID >= 0 && crystalID < Main.maxProjectiles && Main.projectile[crystalID].active)
                 {
-                    Main.projectile[crystalID].Kill();
+                    Projectile crystal = Main.projectile[crystalID];
+                    int absorbed = 0;
+                    if (crystal.ModProjectile is Projectiles.CrystalOrbProjectile crystalOrb)
+                    {
+                        absorbed = crystalOrb.absorbedCount;
+                    }
+
+                    Vector2 dir = (Main.MouseWorld - crystal.Center).SafeNormalize(Vector2.UnitX);
+                    crystal.ai[1] = 1f;
+                    crystal.velocity = dir * 17f;
+                    crystal.damage = System.Math.Max(1, (int)(damage * (1.1f + absorbed * 0.35f)));
+                    crystal.knockBack = knockback + absorbed;
+                    crystal.friendly = true;
+                    crystal.hostile = false;
+                    crystal.penetrate = 2 + absorbed;
+                    crystal.tileCollide = true;
+                    crystal.timeLeft = 240;
+                    crystal.netUpdate = true;
+
+                    crystalProjectiles.RemoveAt(i);
+                    crystalCount = crystalProjectiles.Count;
+                    ReassignCrystalIndices();
+                    SoundEngine.PlaySound(SoundID.Item29 with { Volume = 0.8f, Pitch = 0.2f + absorbed * 0.05f }, crystal.Center);
+                    return;
                 }
             }
-            crystalProjectiles.Clear();
-            crystalCount = 0;
+
+            crystalCount = crystalProjectiles.Count;
         }
 
         private int GetLargestCrystalSize()

@@ -35,63 +35,6 @@ namespace WeaponMerging.Content.Projectiles
 
         public override void AI()
         {
-            
-            if (Projectile.ai[1] == 0f)
-            {
-                for (int i = 0; i < Main.maxProjectiles; i++)
-                {
-                    Projectile other = Main.projectile[i];
-                    if (!other.active || other.owner != Projectile.owner || other.ai[1] != 0f)
-                        continue;
-
-                    bool isShadow = other.type == ModContent.ProjectileType<ShadowOrbProjectile>();
-                    bool isPain = other.type == ModContent.ProjectileType<PainOrbProjectile>();
-                    bool isInferno = other.type == ModContent.ProjectileType<InfernoOrbProjectile>();
-
-                    if (isShadow || isPain || isInferno)
-                    {
-                        float dist = Vector2.Distance(Projectile.Center, other.Center);
-                        if (dist < 32f)
-                        {
-                            if (Main.myPlayer == Projectile.owner)
-                            {
-                                Vector2 fusionPos = (Projectile.Center + other.Center) / 2f;
-                                int fusionType = isInferno
-                                    ? ModContent.ProjectileType<StarlitInfernoFusionOrbProjectile>()
-                                    : (isShadow
-                                        ? ModContent.ProjectileType<StarlitShadowFusionOrbProjectile>()
-                                        : ModContent.ProjectileType<StarlitPainFusionOrbProjectile>());
-
-                                Player ownerPlayer = Main.player[Projectile.owner];
-                                int heldDmg = ownerPlayer?.HeldItem?.damage ?? 0;
-                                int baseDmg = Math.Max(Projectile.damage, other.damage);
-                                if (baseDmg <= 0)
-                                    baseDmg = (int)(heldDmg * 0.75f);
-
-                                Projectile fusion = Projectile.NewProjectileDirect(
-                                    Projectile.GetSource_FromThis(),
-                                    fusionPos,
-                                    Vector2.Zero,
-                                    fusionType,
-                                    Math.Max(20, baseDmg * 2),
-                                    1f,
-                                    Projectile.owner
-                                );
-                                fusion.ai[0] = 0f; 
-                                fusion.localAI[0] = 0f;
-                                fusion.netUpdate = true;
-                            }
-
-                            
-                            Projectile.Kill();
-                            other.Kill();
-                            return;
-                        }
-                    }
-                }
-            }
-
-            
             if (Projectile.ai[1] == 1f)
             {
                 NPC target = FindNearestTarget(Projectile.Center, 500f);
@@ -121,6 +64,7 @@ namespace WeaponMerging.Content.Projectiles
 
             var accessoryPlayer = Main.player[Projectile.owner].GetModPlayer<Content.Players.AccessoryEffectsPlayer>();
             float speedMult = accessoryPlayer.orbSpeedMultipliers.TryGetValue("Starlit", out float mult) ? mult : 1f;
+            speedMult *= accessoryPlayer.GetOrbRotationSpeedMultiplier(orbCount);
 
             float index = Projectile.localAI[0];
             float globalAngle = Main.GlobalTimeWrappedHourly * ORBIT_SPEED * 2.5f * speedMult;
@@ -172,7 +116,10 @@ namespace WeaponMerging.Content.Projectiles
             }
 
             var modPlayer = Main.player[Projectile.owner].GetModPlayer<Content.Players.StarlitModPlayer>();
-            modPlayer.orbCount = modPlayer.orbCount - 1;
+            if (Projectile.ai[1] == 0f)
+            {
+                modPlayer.orbCount = modPlayer.orbCount - 1;
+            }
             SoundEngine.PlaySound(SoundID.Item10 with { Volume = 0.6f, Pitch = 0.2f }, Projectile.Center);
         }
 

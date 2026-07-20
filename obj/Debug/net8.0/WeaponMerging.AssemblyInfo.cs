@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WeaponMerging")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3718a76c3535b58ea2bd1f1d151651353b5cb38d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8d1ee3955723e42e677ce3fd57d59fa95786ba39")]
 [assembly: System.Reflection.AssemblyProductAttribute("WeaponMerging")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WeaponMerging")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

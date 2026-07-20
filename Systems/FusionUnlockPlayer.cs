@@ -11,7 +11,7 @@ namespace WeaponMerging.Systems
         public bool Unlocked_InfernoOrb;
         public bool Unlocked_ShadowReaper;
         public bool Unlocked_CelestialFrostBlade;
-        public bool Unlocked_PainSpiral;
+        public bool Unlocked_VoidEchoBlade;
         public bool Unlocked_SolarConductor;
         public bool Unlocked_CrystalCascade;
         public bool Unlocked_FossilDancer;
@@ -23,7 +23,6 @@ namespace WeaponMerging.Systems
         public bool Unlocked_ShurikenwoodBow;
         public bool Unlocked_FrostShurikenwoodBow;
         public bool Unlocked_VenomBarrage;
-        public bool Unlocked_NightfallHarbinger;
         public bool Unlocked_VerdantConduitTome;
         public bool Unlocked_SharkCannon;
         public bool Unlocked_AbyssalSharkCannon;
@@ -40,7 +39,7 @@ namespace WeaponMerging.Systems
             Unlocked_InfernoOrb = false;
             Unlocked_ShadowReaper = false;
             Unlocked_CelestialFrostBlade = false;
-            Unlocked_PainSpiral = false;
+            Unlocked_VoidEchoBlade = false;
             Unlocked_SolarConductor = false;
             Unlocked_CrystalCascade = false;
             Unlocked_FossilDancer = false;
@@ -52,7 +51,6 @@ namespace WeaponMerging.Systems
             Unlocked_ShurikenwoodBow = false;
             Unlocked_FrostShurikenwoodBow = false;
             Unlocked_VenomBarrage = false;
-            Unlocked_NightfallHarbinger = false;
             Unlocked_VerdantConduitTome = false;
             Unlocked_SharkCannon = false;
             Unlocked_AbyssalSharkCannon = false;
@@ -71,7 +69,7 @@ namespace WeaponMerging.Systems
             if (Unlocked_InfernoOrb) flags.Add(nameof(Unlocked_InfernoOrb));
             if (Unlocked_ShadowReaper) flags.Add(nameof(Unlocked_ShadowReaper));
             if (Unlocked_CelestialFrostBlade) flags.Add(nameof(Unlocked_CelestialFrostBlade));
-            if (Unlocked_PainSpiral) flags.Add(nameof(Unlocked_PainSpiral));
+            if (Unlocked_VoidEchoBlade) flags.Add(nameof(Unlocked_VoidEchoBlade));
             if (Unlocked_SolarConductor) flags.Add(nameof(Unlocked_SolarConductor));
             if (Unlocked_CrystalCascade) flags.Add(nameof(Unlocked_CrystalCascade));
             if (Unlocked_FossilDancer) flags.Add(nameof(Unlocked_FossilDancer));
@@ -83,7 +81,6 @@ namespace WeaponMerging.Systems
             if (Unlocked_ShurikenwoodBow) flags.Add(nameof(Unlocked_ShurikenwoodBow));
             if (Unlocked_FrostShurikenwoodBow) flags.Add(nameof(Unlocked_FrostShurikenwoodBow));
             if (Unlocked_VenomBarrage) flags.Add(nameof(Unlocked_VenomBarrage));
-            if (Unlocked_NightfallHarbinger) flags.Add(nameof(Unlocked_NightfallHarbinger));
             if (Unlocked_VerdantConduitTome) flags.Add(nameof(Unlocked_VerdantConduitTome));
             if (Unlocked_SharkCannon) flags.Add(nameof(Unlocked_SharkCannon));
             if (Unlocked_AbyssalSharkCannon) flags.Add(nameof(Unlocked_AbyssalSharkCannon));
@@ -103,7 +100,7 @@ namespace WeaponMerging.Systems
             Unlocked_InfernoOrb = flags.Contains(nameof(Unlocked_InfernoOrb));
             Unlocked_ShadowReaper = flags.Contains(nameof(Unlocked_ShadowReaper));
             Unlocked_CelestialFrostBlade = flags.Contains(nameof(Unlocked_CelestialFrostBlade));
-            Unlocked_PainSpiral = flags.Contains(nameof(Unlocked_PainSpiral));
+            Unlocked_VoidEchoBlade = flags.Contains(nameof(Unlocked_VoidEchoBlade));
             Unlocked_SolarConductor = flags.Contains(nameof(Unlocked_SolarConductor));
             Unlocked_CrystalCascade = flags.Contains(nameof(Unlocked_CrystalCascade));
             Unlocked_FossilDancer = flags.Contains(nameof(Unlocked_FossilDancer));
@@ -115,7 +112,6 @@ namespace WeaponMerging.Systems
             Unlocked_ShurikenwoodBow = flags.Contains(nameof(Unlocked_ShurikenwoodBow));
             Unlocked_FrostShurikenwoodBow = flags.Contains(nameof(Unlocked_FrostShurikenwoodBow));
             Unlocked_VenomBarrage = flags.Contains(nameof(Unlocked_VenomBarrage));
-            Unlocked_NightfallHarbinger = flags.Contains(nameof(Unlocked_NightfallHarbinger));
             Unlocked_VerdantConduitTome = flags.Contains(nameof(Unlocked_VerdantConduitTome));
             Unlocked_SharkCannon = flags.Contains(nameof(Unlocked_SharkCannon));
             Unlocked_AbyssalSharkCannon = flags.Contains(nameof(Unlocked_AbyssalSharkCannon));

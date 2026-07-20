@@ -96,7 +96,7 @@ namespace WeaponMerging.Content.Projectiles
                     Projectile.GetSource_FromThis(),
                     Projectile.Center,
                     Vector2.Zero,
-                    ProjectileID.DD2ExplosiveTrapT1Explosion,
+                    ProjectileID.DaybreakExplosion,
                     Projectile.damage,
                     Projectile.knockBack,
                     Projectile.owner);

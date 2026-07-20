@@ -28,14 +28,6 @@ namespace WeaponMerging.Content.Items.Weapons
             Item.mana = 10;
         }
 
-        public override void AddRecipes()
-        {
-            CreateRecipe()
-                .AddIngredient(ItemID.WoodenBow)
-                .AddIngredient(ModContent.ItemType<OrbFragment>(), 12)
-                .AddTile(TileID.Anvils)
-                .Register();
-        }
     }
 }
 

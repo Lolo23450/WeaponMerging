@@ -84,36 +84,57 @@ namespace WeaponMerging.Content.Players
 
         public void ReleaseAllOrbs(Player player, EntitySource_ItemUse_WithAmmo source)
         {
-            if (orbCount >= GetChargeThreshold(player))
-            {
-                CombatText.NewText(player.getRect(), new Color(255, 240, 100), "Starlit Burst!", true);
-                SoundEngine.PlaySound(SoundID.Item9 with { Volume = 0.8f, Pitch = 0.3f }, player.Center);
-                return;
-            }
-
+            Projectile nextOrb = null;
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile pr = Main.projectile[i];
-                if (pr.active && pr.owner == player.whoAmI && pr.type == ModContent.ProjectileType<Content.Projectiles.StarlitOrbProjectile>())
+                if (pr.active && pr.owner == player.whoAmI && pr.type == ModContent.ProjectileType<Content.Projectiles.StarlitOrbProjectile>() && pr.ai[1] == 0f)
                 {
-                    pr.ai[1] = 1f;
-
-                    NPC target = FindNearestTarget(pr.Center, 500f);
-                    Vector2 dir = (target != null ? target.Center : Main.MouseWorld) - pr.Center;
-                    if (dir == Vector2.Zero) dir = Main.rand.NextVector2Unit();
-                    dir.Normalize();
-                    pr.velocity = dir * 18f;
-                    pr.timeLeft = 240;
-                    pr.netUpdate = true;
+                    if (nextOrb == null || pr.localAI[0] < nextOrb.localAI[0])
+                        nextOrb = pr;
                 }
             }
 
-            laserModeActive = false;
-            orbCount = 0;
-            hasShield = false; 
-            shieldRechargeTimer = SHIELD_RECHARGE_TIME;
+            if (nextOrb == null)
+                return;
+
+            Vector2 dir = (Main.MouseWorld - nextOrb.Center).SafeNormalize(Vector2.UnitX);
+            nextOrb.ai[1] = 1f;
+            nextOrb.velocity = dir * 18f;
+            nextOrb.damage = Math.Max(1, (int)(player.HeldItem.damage * 0.9f));
+            nextOrb.knockBack = 1f;
+            nextOrb.friendly = true;
+            nextOrb.hostile = false;
+            nextOrb.penetrate = 2;
+            nextOrb.timeLeft = 240;
+            nextOrb.netUpdate = true;
+
+            orbCount = Math.Max(0, orbCount - 1);
+            laserModeActive = orbCount >= GetChargeThreshold(player);
+            if (orbCount < SHIELD_THRESHOLD && hasShield)
+            {
+                hasShield = false;
+                shieldRechargeTimer = SHIELD_RECHARGE_TIME;
+            }
+
+            ReassignOrbIndices(player);
 
             SoundEngine.PlaySound(SoundID.Item9 with { Volume = 0.7f, Pitch = 0.1f }, player.Center);
+        }
+
+        private void ReassignOrbIndices(Player player)
+        {
+            int index = 0;
+            for (int i = 0; i < Main.maxProjectiles; i++)
+            {
+                Projectile pr = Main.projectile[i];
+                if (pr.active && pr.owner == player.whoAmI && pr.type == ModContent.ProjectileType<Content.Projectiles.StarlitOrbProjectile>() && pr.ai[1] == 0f)
+                {
+                    pr.localAI[0] = index;
+                    pr.netUpdate = true;
+                    index++;
+                }
+            }
         }
 
         private NPC FindNearestTarget(Vector2 position, float maxRange)

@@ -27,6 +27,7 @@ namespace WeaponMerging.Content.Items
         public override bool? UseItem(Player player)
         {
             bool releasedAny = false;
+            int releasedCount = 0;
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile proj = Main.projectile[i];
@@ -36,14 +37,17 @@ namespace WeaponMerging.Content.Items
                     int t = proj.type;
                     if (t == ModContent.ProjectileType<Content.Projectiles.FusionOrbProjectile>()
                         || t == ModContent.ProjectileType<Content.Projectiles.ChaosOrbProjectile>()
-                        || t == ModContent.ProjectileType<Content.Projectiles.InfernoPainFusionOrbProjectile>()
                         || t == ModContent.ProjectileType<Content.Projectiles.StarlitShadowFusionOrbProjectile>()
-                        || t == ModContent.ProjectileType<Content.Projectiles.StarlitPainFusionOrbProjectile>()
                         || t == ModContent.ProjectileType<Content.Projectiles.StarlitInfernoFusionOrbProjectile>())
                     {
-                        proj.ai[1] = 1f; 
+                        Vector2 direction = (Main.MouseWorld - proj.Center).SafeNormalize(Vector2.UnitX);
+                        float spread = MathHelper.ToRadians((releasedCount - 1) * 8f);
+                        proj.ai[1] = 1f;
+                        proj.velocity = direction.RotatedBy(spread) * 12f;
+                        proj.timeLeft = System.Math.Max(proj.timeLeft, 180);
                         proj.netUpdate = true;
                         releasedAny = true;
+                        releasedCount++;
                     }
                 }
             }

@@ -3,190 +3,144 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
-using Terraria.Localization;
+using Terraria.Audio;
 
 namespace WeaponMerging.Content.Items.Weapons
 {
     public class CelestialFrostBlade : ModItem
     {
-        private int swingCounter = 0;
-
-        public override void SetDefaults()
-        {
-            Item.damage = 48;
-            Item.DamageType = DamageClass.Melee;
-            Item.width = 48;
-            Item.height = 48;
-            Item.useTime = 18;
-            Item.useAnimation = 18;
-            Item.useStyle = ItemUseStyleID.Swing;
-            Item.knockBack = 5f;
-            Item.value = Item.sellPrice(gold: 2);
-            Item.rare = ItemRarityID.Orange;
-            Item.UseSound = SoundID.Item1;
-            Item.autoReuse = true;
-            Item.useTurn = true;
-            
-            Item.shoot = ProjectileID.PurificationPowder;
-            Item.shootSpeed = 10f;
-        }
-
+        private int comboCounter = 0;
+        private int comboResetTimer = 0;
+        private const int COMBO_RESET_TIME = 60; 
+        
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 1;
         }
 
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs();
-
-        public override void UseStyle(Player player, Rectangle heldItemFrame)
+        public override void SetDefaults()
         {
+            Item.width = 60;
+            Item.height = 60;
+            Item.scale = 1.2f;
+            Item.rare = ItemRarityID.Pink;
+            Item.value = Item.sellPrice(gold: 5);
+
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.autoReuse = true;
+            Item.channel = true;
             
-            float progress = 1f - player.itemAnimation / (float)player.itemAnimationMax;
-            float rotationOffset = MathHelper.Lerp(-MathHelper.PiOver4 * 1.5f, MathHelper.PiOver4 * 1.5f, progress);
+            Item.damage = 72; 
+            Item.knockBack = 6f;
+            Item.DamageType = DamageClass.Melee;
             
+            Item.shoot = ModContent.ProjectileType<Content.Projectiles.CelestialFrostBladeProjectile>();
+            Item.shootSpeed = 1f;
+            Item.noMelee = true;
+            Item.noUseGraphic = true;
             
-            player.itemRotation = rotationOffset * player.direction;
-            
-            
-            if (player.itemAnimation > player.itemAnimationMax / 2)
+            Item.UseSound = null; // Handled by projectile
+        }
+
+        public override void UpdateInventory(Player player)
+        {
+            if (comboResetTimer > 0)
             {
-                float swingProgress = (player.itemAnimation - player.itemAnimationMax / 2) / (float)(player.itemAnimationMax / 2);
-                
-                
-                if (Main.rand.NextBool(2))
-                {
-                    Vector2 position = player.Center;
-                    float rotation = player.itemRotation + (player.direction == 1 ? 0 : MathHelper.Pi);
-                    Vector2 offset = new Vector2(40, 0).RotatedBy(rotation);
-                    
-                    
-                    Dust ice = Dust.NewDustPerfect(position + offset, DustID.IceTorch, 
-                        offset.SafeNormalize(Vector2.UnitX) * 3f, 100, Color.LightCyan, Main.rand.NextFloat(1.2f, 1.8f));
-                    ice.noGravity = true;
-                    ice.fadeIn = 1.1f;
-                    ice.alpha = 70;
-                }
-                
-                
-                if (Main.rand.NextBool(4))
-                {
-                    Vector2 position = player.Center;
-                    float rotation = player.itemRotation + (player.direction == 1 ? 0 : MathHelper.Pi);
-                    Vector2 offset = new Vector2(Main.rand.Next(20, 50), 0).RotatedBy(rotation);
-                    
-                    Dust star = Dust.NewDustPerfect(position + offset, DustID.BlueFairy, 
-                        Vector2.Zero, 180, Color.White, Main.rand.NextFloat(0.8f, 1.3f));
-                    star.noGravity = true;
-                    star.fadeIn = 1.0f;
-                }
+                comboResetTimer--;
+                if (comboResetTimer <= 0) comboCounter = 0;
             }
+        }
+
+        public override bool CanUseItem(Player player)
+        {
+            // Dynamic combo pacing: Fast -> Fast -> Slow Sweep -> Heavy Slam
+            switch (comboCounter)
+            {
+                case 0:
+                case 1:
+                    Item.useTime = 22; 
+                    Item.useAnimation = 22;
+                    break;
+                case 2:
+                    Item.useTime = 36; // Slower charge/windup sweep
+                    Item.useAnimation = 36;
+                    break;
+                case 3:
+                    Item.useTime = 48; // Huge heavy slam
+                    Item.useAnimation = 48;
+                    break;
+            }
+            return player.ownedProjectileCounts[Item.shoot] < 1;
         }
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            Vector2 target = Main.MouseWorld;
-            position = new Vector2(target.X + Main.rand.Next(-150, 151), target.Y - 500);
-            velocity = Vector2.Normalize(target - position) * 12f; 
+            damage = comboCounter switch
+            {
+                2 => (int)(damage * 1.25f),
+                3 => (int)(damage * 2.50f), // Finisher massive damage
+                _ => damage
+            };
+            
+            knockback = comboCounter switch
+            {
+                3 => knockback * 2.5f, 
+                2 => knockback * 1.5f,
+                _ => knockback
+            };
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            swingCounter++;
+            Vector2 toMouse = Main.MouseWorld - player.Center;
+            toMouse.Normalize();
             
+            Projectile proj = Projectile.NewProjectileDirect(
+                source,
+                player.Center,
+                toMouse, 
+                type,
+                damage,
+                knockback,
+                player.whoAmI
+            );
             
-            for (int i = 0; i < 15; i++)
+            // Pass the combo state and the duration of this specific swing
+            proj.ai[0] = comboCounter;
+            proj.ai[1] = Item.useAnimation; 
+            
+            SpawnComboStartEffects(player, comboCounter);
+            
+            comboCounter++;
+            if (comboCounter > 3)
             {
-                Vector2 speed = Main.rand.NextVector2Circular(3f, 3f);
-                Dust starDust = Dust.NewDustPerfect(position, DustID.BlueFairy, 
-                    speed, 100, Color.LightCyan, Main.rand.NextFloat(1.0f, 1.5f));
-                starDust.noGravity = true;
-                starDust.fadeIn = 1.2f;
+                comboCounter = 0;
+                SoundEngine.PlaySound(SoundID.Item28 with { Volume = 0.8f, Pitch = -0.2f }, player.position); // Shatter sound
             }
             
-            
-            for (int i = 0; i < 12; i++)
-            {
-                float angle = MathHelper.ToRadians(i * 30);
-                Vector2 offset = new Vector2(30, 0).RotatedBy(angle);
-                Dust glow = Dust.NewDustPerfect(position + offset, DustID.IceTorch, 
-                    -offset * 0.1f, 100, Color.Cyan, 1.2f);
-                glow.noGravity = true;
-                glow.alpha = 80;
-            }
-            
-            
-            int mainProj = Projectile.NewProjectile(source, position, velocity, 
-                ProjectileID.StarCannonStar, damage, knockback, player.whoAmI);
-            
-            if (mainProj >= 0 && mainProj < Main.maxProjectiles && Main.projectile[mainProj].active)
-            {
-                Main.projectile[mainProj].CritChance = player.GetWeaponCrit(Item);
-                Main.projectile[mainProj].scale = 1.2f;
-            }
-            
-            
-            int particleCount = 8;
-            float rotationOffset = (swingCounter % 2 == 0) ? 0 : MathHelper.ToRadians(22.5f);
-            
-            for (int i = 0; i < particleCount; i++)
-            {
-                float angle = MathHelper.ToRadians(i * 45) + rotationOffset;
-                Vector2 dustVel = new Vector2(3f, 0).RotatedBy(angle);
-                Dust dust = Dust.NewDustPerfect(player.Center, DustID.IceTorch, dustVel, 100, Color.LightCyan, 1.3f);
-                dust.noGravity = true;
-                dust.fadeIn = 1.0f;
-                dust.alpha = 60;
-            }
-            
+            comboResetTimer = COMBO_RESET_TIME;
             return false;
         }
-
-        public override void MeleeEffects(Player player, Rectangle hitbox)
+                
+        private void SpawnComboStartEffects(Player player, int combo)
         {
-            
-            if (Main.rand.NextBool(2))
+            int dustType = combo switch
             {
-                Dust dust = Dust.NewDustDirect(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, 
-                    DustID.IceTorch, 0f, 0f, 100, Color.LightCyan, Main.rand.NextFloat(1.3f, 1.8f));
+                3 => DustID.BlueFairy,
+                _ => DustID.IceTorch
+            };
+            
+            for (int i = 0; i < 10 + (combo * 5); i++)
+            {
+                Vector2 velocity = Main.rand.NextVector2Circular(5f, 5f);
+                Dust dust = Dust.NewDustDirect(player.position, player.width, player.height, dustType, velocity.X, velocity.Y, 0, default, 1.5f);
                 dust.noGravity = true;
-                dust.velocity = player.velocity * 0.3f;
-                dust.fadeIn = 1.0f;
-                dust.alpha = 70;
+                dust.velocity *= (combo + 1) * 0.6f; 
             }
             
-            
-            if (Main.rand.NextBool(5))
-            {
-                Dust star = Dust.NewDustDirect(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height,
-                    DustID.BlueFairy, 0f, 0f, 180, Color.White, 1.1f);
-                star.noGravity = true;
-                star.velocity = Vector2.Zero;
-            }
-        }
-
-        public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
-        {
-            target.AddBuff(BuffID.Frostburn, 180);
-            
-            
-            for (int i = 0; i < 16; i++)
-            {
-                float angle = MathHelper.ToRadians(i * 22.5f);
-                Vector2 speed = new Vector2(4f, 0).RotatedBy(angle);
-                Dust dust = Dust.NewDustPerfect(target.Center, DustID.IceTorch, speed, 100, Color.LightCyan, 1.6f);
-                dust.noGravity = true;
-                dust.fadeIn = 1.1f;
-                dust.alpha = 60;
-            }
-            
-            
-            for (int i = 0; i < 5; i++)
-            {
-                Dust star = Dust.NewDustPerfect(target.Center, DustID.BlueFairy, 
-                    Main.rand.NextVector2Circular(2f, 2f), 200, Color.White, 1.3f);
-                star.noGravity = true;
+            if (combo == 3) {
+                CombatText.NewText(player.Hitbox, new Color(150, 255, 255), "FROSTFALL!", true, true);
             }
         }
     }
 }
-

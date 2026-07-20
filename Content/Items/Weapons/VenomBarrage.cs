@@ -11,7 +11,7 @@ namespace WeaponMerging.Content.Items.Weapons
     {
         public override void SetDefaults()
         {
-            Item.damage = 20;
+            Item.damage = 24;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 32;
             Item.height = 32;
@@ -101,16 +101,6 @@ namespace WeaponMerging.Content.Items.Weapons
             return false;
         }
 
-        public override void AddRecipes()
-        {
-            CreateRecipe()
-                .AddIngredient(ItemID.ThrowingKnife, 100)
-                .AddIngredient(ItemID.Blowpipe, 1)
-                .AddIngredient(ItemID.Stinger, 15)
-                .AddIngredient(ItemID.JungleSpores, 12)
-                .AddTile(TileID.Anvils)
-                .Register();
-        }
     }
 }
 

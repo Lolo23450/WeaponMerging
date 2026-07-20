@@ -41,6 +41,24 @@ namespace WeaponMerging.Content.Projectiles
             }
 
             Player owner = Main.player[Projectile.owner];
+
+            if (Projectile.ai[1] == 1f)
+            {
+                Projectile.rotation += 0.18f + absorbedCount * 0.03f;
+                Projectile.scale = growthScale;
+                Lighting.AddLight(Projectile.Center, new Vector3(0.3f, 0.8f, 1.0f) * (0.5f + absorbedCount * 0.15f));
+
+                if (Main.rand.NextBool(2))
+                {
+                    Dust dust = Dust.NewDustPerfect(Projectile.Center, 68,
+                        -Projectile.velocity * 0.2f, 100, GetCrystalColor(), Main.rand.NextFloat(1.0f, 1.5f) * growthScale);
+                    dust.noGravity = true;
+                    dust.alpha = 100;
+                }
+
+                return;
+            }
+
             if (!owner.active || owner.HeldItem.ModItem is not Items.Weapons.CrystalCascade)
             {
                 Projectile.Kill();
@@ -53,6 +71,7 @@ namespace WeaponMerging.Content.Projectiles
 
             var accessoryPlayer = owner.GetModPlayer<Players.AccessoryEffectsPlayer>();
             float speedMult = accessoryPlayer.orbSpeedMultipliers.TryGetValue("Crystal", out float mult) ? mult : 1f;
+            speedMult *= accessoryPlayer.GetOrbRotationSpeedMultiplier(crystalCount);
             
             float index = Projectile.localAI[0];
             if (index < 0) index = 0;

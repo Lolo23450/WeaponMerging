@@ -17,6 +17,8 @@ namespace WeaponMerging.Systems
         private GameTime _lastUpdateUiGameTime;
         internal static Vector2? LastStationWorldPos;
         private static int _animationLockTicks;
+        private static int _postCraftFadeTicks;
+        private const int PostCraftFadeDurationTicks = 75;
         private static Texture2D _proceduralGlow;
 
         internal static bool IsCraftAnimationActive => _animationLockTicks > 0;
@@ -43,6 +45,25 @@ namespace WeaponMerging.Systems
             if (_animationLockTicks > 0)
             {
                 _animationLockTicks--;
+            }
+
+            if (_postCraftFadeTicks > 0)
+            {
+                _postCraftFadeTicks--;
+            }
+
+            if ((_animationLockTicks > 0 || _postCraftFadeTicks > 0) && Main.LocalPlayer != null)
+            {
+                Player player = Main.LocalPlayer;
+                player.controlLeft = false;
+                player.controlRight = false;
+                player.controlUp = false;
+                player.controlDown = false;
+                player.controlJump = false;
+                player.controlUseItem = false;
+                player.velocity = Vector2.Zero;
+                player.itemAnimation = 0;
+                player.itemTime = 0;
             }
         }
 
@@ -90,7 +111,8 @@ namespace WeaponMerging.Systems
 
         internal static void BeginCraftAnimationLock()
         {
-            _animationLockTicks = Math.Max(_animationLockTicks, FusionCraftEffect.DurationTicks);
+            _animationLockTicks = Math.Max(_animationLockTicks, FusionCraftEffect.DurationTicks + PostCraftFadeDurationTicks);
+            _postCraftFadeTicks = Math.Max(_postCraftFadeTicks, PostCraftFadeDurationTicks);
         }
 
         public static void SetStationWorldPosition(Vector2 worldPosition)
@@ -101,6 +123,7 @@ namespace WeaponMerging.Systems
         private static void DrawFusionCraftOverlay(SpriteBatch spriteBatch)
         {
             int effectType = ModContent.ProjectileType<Content.Projectiles.FusionCraftEffect>();
+            bool hasActiveEffect = false;
             
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
@@ -108,11 +131,13 @@ namespace WeaponMerging.Systems
                 if (!pr.active || pr.type != effectType)
                     continue;
 
+                hasActiveEffect = true;
                 
                 if (_fusionInterface?.CurrentState != null)
                     HideFusionUI();
 
-                _animationLockTicks = Math.Max(_animationLockTicks, pr.timeLeft);
+                _animationLockTicks = Math.Max(_animationLockTicks, pr.timeLeft + PostCraftFadeDurationTicks);
+                _postCraftFadeTicks = Math.Max(_postCraftFadeTicks, PostCraftFadeDurationTicks);
 
                 
                 float durationTicks = FusionCraftEffect.DurationTicks;
@@ -158,6 +183,19 @@ namespace WeaponMerging.Systems
                 float baseScale = glowRadius / (glowTex.Width * 0.5f);
                 float fade = 1f - EaseOutCubic(MathHelper.Clamp((t - 0.6f) / 0.05f, 0f, 1f));
 
+                float particleProgress = MathHelper.Clamp(t / 0.72f, 0f, 1f);
+                int particleCount = 36;
+                for (int p = 0; p < particleCount; p++)
+                {
+                    float particleAngle = (p / (float)particleCount) * MathHelper.TwoPi + t * 1.2f;
+                    float startRadius = 132f + p * 2.8f;
+                    float currentRadius = MathHelper.Lerp(startRadius, 0f, particleProgress * particleProgress * 1.05f);
+                    Vector2 particlePos = centerScreen + new Vector2((float)Math.Cos(particleAngle), (float)Math.Sin(particleAngle)) * currentRadius;
+                    float alpha = MathHelper.Clamp(1f - particleProgress, 0f, 1f);
+                    Color particleColor = Color.Lerp(new Color(245, 245, 255), new Color(190, 220, 255), (p % 3) / 3f) * alpha;
+                    int particleSize = 3 + (p % 3);
+                    spriteBatch.Draw(pixel, new Rectangle((int)particlePos.X, (int)particlePos.Y, particleSize, particleSize), particleColor);
+                }
 
                 Color innerGlow = new Color(1f, 1f, 1f, 0.95f * fade);
                 Color closeGlow = new Color(0.8f, 0.9f, 1f, 0.6f * fade);
@@ -219,6 +257,14 @@ namespace WeaponMerging.Systems
 
                 
                 fade *= preludeT;
+            }
+
+            if (!hasActiveEffect && _postCraftFadeTicks > 0)
+            {
+                float fadeOutT = 1f - (_postCraftFadeTicks / (float)PostCraftFadeDurationTicks);
+                fadeOutT = MathHelper.Clamp(fadeOutT, 0f, 1f);
+                Color fadeOverlay = Color.Lerp(Color.White, Color.Transparent, fadeOutT);
+                spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), fadeOverlay);
             }
         }
 

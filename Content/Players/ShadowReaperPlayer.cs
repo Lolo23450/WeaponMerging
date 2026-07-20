@@ -103,48 +103,53 @@ namespace WeaponMerging.Content.Players
 
         public void UseOrbAttack(Player player, EntitySource_ItemUse_WithAmmo source, int damage, float knockback)
         {
+            LaunchNextOrb(player, damage, knockback);
+        }
+
+        private void LaunchNextOrb(Player player, int damage, float knockback)
+        {
             if (orbCount == 0) return;
 
-            
-            switch (orbCount)
+            for (int i = 0; i < orbProjectiles.Count; i++)
             {
-                case 1:
-                    
-                    Attack1ShadowBeam(player, source, damage, knockback);
-                    break;
-                case 2:
-                    
-                    Attack2ReaperWave(player, source, damage, knockback);
-                    break;
-                case 3:
-                    
-                    Attack3DeathStorm(player, source, damage, knockback);
-                    break;
-                default:
-                    
-                    Attack4AbyssalRequiem(player, source, damage, knockback);
-                    break;
-            }
-
-            
-            var kept = new List<int>();
-            var acc = player.GetModPlayer<Content.Players.AccessoryEffectsPlayer>();
-            foreach (int orbID in orbProjectiles)
-            {
+                int orbID = orbProjectiles[i];
                 if (orbID >= 0 && orbID < Main.maxProjectiles && Main.projectile[orbID].active)
                 {
-                    if (acc.RollPersist())
-                    {
-                        kept.Add(orbID); 
-                    }
-                    else
-                    {
-                        Main.projectile[orbID].Kill();
-                    }
+                    Projectile orb = Main.projectile[orbID];
+                    Vector2 dir = (Main.MouseWorld - orb.Center).SafeNormalize(Vector2.UnitX);
+                    orb.ai[1] = 1f;
+                    orb.velocity = dir * 19f;
+                    orb.damage = System.Math.Max(1, (int)(damage * 1.15f));
+                    orb.knockBack = knockback;
+                    orb.friendly = true;
+                    orb.hostile = false;
+                    orb.penetrate = 3;
+                    orb.tileCollide = true;
+                    orb.timeLeft = 240;
+                    orb.netUpdate = true;
+
+                    orbProjectiles.RemoveAt(i);
+                    orbCount = orbProjectiles.Count;
+                    ReassignOrbIndices();
+                    SoundEngine.PlaySound(SoundID.Item8 with { Volume = 0.8f, Pitch = -0.2f }, orb.Center);
+                    return;
                 }
             }
-            orbProjectiles = kept;
+
             orbCount = orbProjectiles.Count;
+        }
+
+        private void ReassignOrbIndices()
+        {
+            for (int i = 0; i < orbProjectiles.Count; i++)
+            {
+                int id = orbProjectiles[i];
+                if (id >= 0 && id < Main.maxProjectiles && Main.projectile[id].active)
+                {
+                    Main.projectile[id].localAI[0] = i;
+                    Main.projectile[id].ai[0] = i;
+                }
+            }
         }
 
         private void Attack1ShadowBeam(Player player, EntitySource_ItemUse_WithAmmo source, int damage, float knockback)

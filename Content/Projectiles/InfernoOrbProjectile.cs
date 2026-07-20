@@ -11,7 +11,6 @@ namespace WeaponMerging.Content.Projectiles
     {
         private const float ORBIT_RADIUS = 52f;
         private const float ORBIT_SPEED = 0.28f;
-        private const float FUSION_RADIUS = 35f;
         private int trailCounter = 0;
 
         public override void SetStaticDefaults()
@@ -34,53 +33,19 @@ namespace WeaponMerging.Content.Projectiles
 
         public override void AI()
         {
-            
-            if (Projectile.ai[1] == 0f)
+            if (Projectile.ai[1] == 1f)
             {
-                
-                for (int i = 0; i < Main.maxProjectiles; i++)
+                Projectile.rotation = Projectile.velocity.ToRotation();
+                Lighting.AddLight(Projectile.Center, new Vector3(1f, 0.55f, 0.1f));
+
+                if (Main.rand.NextBool(2))
                 {
-                    Projectile other = Main.projectile[i];
-                    if (!other.active || other.owner != Projectile.owner || other.ai[1] != 0f)
-                        continue;
-
-                    bool isShadow = other.type == ModContent.ProjectileType<ShadowOrbProjectile>();
-                    bool isPain = other.type == ModContent.ProjectileType<PainOrbProjectile>();
-
-                    if ((isShadow || isPain) && Vector2.Distance(Projectile.Center, other.Center) < FUSION_RADIUS)
-                    {
-                        
-                        if (Main.myPlayer == Projectile.owner)
-                        {
-                            Vector2 fusionPos = (Projectile.Center + other.Center) / 2f;
-                            int fusionType = isShadow
-                                ? ModContent.ProjectileType<ChaosOrbProjectile>()
-                                : ModContent.ProjectileType<InfernoPainFusionOrbProjectile>();
-
-                            Player ownerPlayer = Main.player[Projectile.owner];
-                            int heldDmg = ownerPlayer?.HeldItem?.damage ?? 0;
-                            int baseDmg = Math.Max(Projectile.damage, other.damage);
-                            if (baseDmg <= 0)
-                                baseDmg = (int)(heldDmg * 0.75f);
-
-                            Projectile fusion = Projectile.NewProjectileDirect(
-                                Projectile.GetSource_FromThis(),
-                                fusionPos,
-                                Vector2.Zero,
-                                fusionType,
-                                Math.Max(20, baseDmg * 2),
-                                1.5f,
-                                Projectile.owner
-                            );
-                            fusion.ai[0] = 0f;
-                            fusion.localAI[0] = 0f;
-                            fusion.netUpdate = true;
-                        }
-                        Projectile.Kill();
-                        other.Kill();
-                        return;
-                    }
+                    Dust dust = Dust.NewDustPerfect(Projectile.Center, 6,
+                        -Projectile.velocity * 0.25f, 100, new Color(255, 140, 0), Main.rand.NextFloat(1.2f, 1.8f));
+                    dust.noGravity = true;
                 }
+
+                return;
             }
 
             if (Projectile.owner < 0 || Projectile.owner >= Main.maxPlayers)
@@ -96,6 +61,7 @@ namespace WeaponMerging.Content.Projectiles
 
             var accessoryPlayer = owner.GetModPlayer<Content.Players.AccessoryEffectsPlayer>();
             float speedMult = accessoryPlayer.orbSpeedMultipliers.TryGetValue("Inferno", out float mult) ? mult : 1f;
+            speedMult *= accessoryPlayer.GetOrbRotationSpeedMultiplier(orbCount);
 
             float index = Projectile.localAI[0];
             float globalAngle = Main.GlobalTimeWrappedHourly * ORBIT_SPEED * 2f * speedMult;

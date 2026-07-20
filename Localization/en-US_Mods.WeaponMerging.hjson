@@ -38,11 +38,6 @@ Items: {
 			'''
 	}
 
-	NightfallHarbinger: {
-		DisplayName: Nightfall Harbinger
-		Tooltip: Turns wooden arrows into 2 or 3 piercing shadow scythes that slightly home into enemies
-	}
-
 	FossilDancer: {
 		DisplayName: Fossil Dancer
 		Tooltip:
@@ -51,17 +46,6 @@ Items: {
 			Each stage increases the size, knockback and damage of the blade, up to 300% knockback, 180% damage, and ~170% size at stage 4
 			Killing an enemy with the blade while in the 4th stage releases a burst of damaging bones
 			Downside: The stage resets after reaching stage 4 or after not swinging for a short time
-			'''
-	}
-
-	PainSpiral: {
-		DisplayName: Pain Spiral
-		Tooltip:
-			'''
-			Summons Pain Orbs that orbit around you, up to 5 at a time, you can release them with right click to make them home into enemies dealing normal damage
-			If you dont want to release them, they will stay with you until you have 5 Pain Orbs, at which point the orbs will start firing 12 lasers that deal about half damage
-			Releasing Pain Orbs early adds more orbs to the count of orbs needed to charge the lasers, making it take more time, but have an additional laser shooting orb
-			Downside: Using lasers resets orb count after all 12 lasers are fired from all orbs, and the orbs dont last indefinetely
 			'''
 	}
 
@@ -140,6 +124,16 @@ Items: {
 		DisplayName: Gale Crescent
 	}
 
+	VoidEchoBlade: {
+		DisplayName: Void Echo Blade
+		Tooltip:
+			'''
+			Left-click: Quick void slashes that inflict Shadowflame
+			Right-click: Heavy sweeping attack that releases lingering void echoes
+			Downside: Special attack has a cooldown
+			'''
+	}
+
 	AbyssalSharkCannon: {
 		DisplayName: Abyssal Shark Cannon
 		Tooltip:
@@ -211,7 +205,7 @@ Items: {
 
 	OrbAmplifierRing: {
 		DisplayName: Orb Amplifier Ring
-		Tooltip: Allows configuration of orbiting orb speeds in the Fusion Station
+		Tooltip: Increases orb rotation speed by 10% for each orb currently orbiting you
 	}
 
 	AuroraBow: {
@@ -262,14 +256,15 @@ Items: {
 			Infused shards hum with latent fusion energy
 			'''
 	}
+
+	LuminousMirageBlade: {
+		Tooltip: ""
+		DisplayName: Luminous Mirage Blade
+	}
 }
 
 Projectiles: {
-	NightfallHarbingerProjectile.DisplayName: Nightfall Harbinger Projectile
 	FossilDancerProjectile.DisplayName: Fossil Dancer Projectile
-	PainSpiralProjectile.DisplayName: Pain Spiral Projectile
-	PainOrbLaser.DisplayName: Pain Orb Laser
-	PainOrbProjectile.DisplayName: Pain Orb Projectile
 	ShadowReaperProjectile.DisplayName: Shadow Reaper Projectile
 	ShadowOrbProjectile.DisplayName: Shadow Orb Projectile
 	FusionOrbProjectile.DisplayName: Fusion Orb Projectile
@@ -288,14 +283,21 @@ Projectiles: {
 	VerdantRune.DisplayName: Verdant Rune
 	VerdantZap.DisplayName: Verdant Zap
 	StarlitShadowFusionOrbProjectile.DisplayName: Starlit Shadow Fusion Orb Projectile
-	StarlitPainFusionOrbProjectile.DisplayName: Starlit Pain Fusion Orb Projectile
 	StarlitInfernoFusionOrbProjectile.DisplayName: Starlit Inferno Fusion Orb Projectile
-	InfernoPainFusionOrbProjectile.DisplayName: Inferno Pain Fusion Orb Projectile
 	FusionCraftEffect.DisplayName: Fusion Craft Effect
 	AuroraArrow.DisplayName: Aurora Arrow
 	AuroraParticle.DisplayName: Aurora Particle
 	OrbBlast.DisplayName: Orb Blast
 	OrbProjectile.DisplayName: Orb Projectile
+	VoidEchoSlash.DisplayName: Void Echo Slash
+	VoidEchoSpecial.DisplayName: Void Echo Special
+	VoidEchoAfterimage.DisplayName: Void Echo Afterimage
+	LuminousMirageBladeProjectile.DisplayName: Luminous Mirage Blade Projectile
+	CelestialComet.DisplayName: Celestial Comet
+	CelestialFrostFinisherProjectile.DisplayName: Celestial Frost Finisher Projectile
+	CelestialFrostSlashProjectile.DisplayName: Celestial Frost Slash Projectile
+	CelestialFrostHeldSword.DisplayName: Celestial Frost Held Sword
+	CelestialFrostBladeProjectile.DisplayName: Celestial Frost Blade Projectile
 }
 
 Tiles: {

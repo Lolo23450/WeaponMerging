@@ -56,17 +56,6 @@ namespace WeaponMerging.Content.Items.Weapons
             return false;
         }
 
-        public override void AddRecipes()
-        {
-            CreateRecipe()
-                .AddIngredient(ItemID.SpellTome)
-                .AddIngredient(ItemID.CrystalShard, 20)
-                .AddIngredient(ItemID.JungleSpores, 12)
-                .AddIngredient(ItemID.Vine, 5)
-                .AddIngredient(ItemID.SoulofLight, 8)
-                .AddTile(TileID.MythrilAnvil)
-                .Register();
-        }
     }
 }
 

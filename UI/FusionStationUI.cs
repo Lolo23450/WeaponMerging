@@ -127,13 +127,13 @@ namespace WeaponMerging.UI
                     onClick = (UIElement.MouseEvent)AttemptUnlock_StarlitWhirlwind,
                     cost = new List<(int,int)>
                     {
-                        (ItemID.WandofSparking, 1),
-                        (ItemID.FallenStar, 5),
-                        (ItemID.CopperBar, 10),
-                        (ModContent.ItemType<OrbFragment>(), 5),
+                        (ItemID.FallenStar, 2),
+                        (ItemID.Wood, 25),
+                        (ItemID.ManaCrystal, 1),
+                        (ModContent.ItemType<OrbFragment>(), 3),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_StarlitWhirlwind),
-                    children = new[] { "Crystal Cascade", "Pain Spiral", "Shurikenwood Bow", "Orb Amplifier Ring" }
+                    children = new[] { "Crystal Cascade", "Shurikenwood Bow", "Orb Amplifier Ring" }
                 },
 
                 new
@@ -143,31 +143,30 @@ namespace WeaponMerging.UI
                     onClick = (UIElement.MouseEvent)AttemptUnlock_CrystalCascade,
                     cost = new List<(int,int)>
                     {
-                        (ItemID.IceBlade, 1),
-                        (2745, 10),
-                        (ItemID.Sapphire, 10),
-                        (ItemID.Snowball, 25),
+                        (ItemID.IceBlock, 50),
+                        (ItemID.BorealWood, 20),
+                        (ItemID.Sapphire, 3),
+                        (ItemID.FallenStar, 3),
                         (ModContent.ItemType<OrbFragment>(), 5),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_CrystalCascade),
-                    children = new[] { "Inferno Orb", "Nightfall Harbinger", "Focus Crystal" }
+                    children = new[] { "Inferno Orb", "Focus Crystal" }
                 },
 
                 new
                 {
-                    id = "Pain Spiral",
-                    pos = new Vector2(400, 150),
-                    onClick = (UIElement.MouseEvent)AttemptUnlock_PainSpiral,
+                    id = "Void Echo Blade",
+                    pos = new Vector2(400, 200),
+                    onClick = (UIElement.MouseEvent)AttemptUnlock_VoidEchoBlade,
                     cost = new List<(int,int)>
                     {
-                        (ItemID.BallOHurt, 1),
-                        (ItemID.ThornChakram, 1),
-                        (ItemID.Stinger, 4),
-                        (ItemID.JungleSpores, 8),
-                        (ModContent.ItemType<OrbFragment>(), 5),
+                        (ItemID.BreakerBlade, 1),
+                        (ItemID.ShadowScale, 15),
+                        (ItemID.SoulofNight, 12),
+                        (ItemID.CursedFlame, 8),
                     },
-                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_PainSpiral),
-                    children = new[] { "Venom Barrage", "Inferno Orb" }
+                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_VoidEchoBlade),
+                    children = new string[0]
                 },
 
                 new
@@ -178,8 +177,9 @@ namespace WeaponMerging.UI
                     cost = new List<(int,int)>
                     {
                         (ItemID.WoodenBow, 1),
-                        (ItemID.Shuriken, 50),
-                        (ItemID.Wood, 20),
+                        (ItemID.Shuriken, 100),
+                        (ItemID.Wood, 50),
+                        (ModContent.ItemType<OrbFragment>(), 2),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_ShurikenwoodBow),
                     children = new[] { "Frost Shurikenwood Bow" }
@@ -193,8 +193,10 @@ namespace WeaponMerging.UI
                     cost = new List<(int,int)>
                     {
                         (ModContent.ItemType<ShurikenwoodBow>(), 1),
-                        (ItemID.IceBlock, 10),
-                        (ItemID.Shiverthorn, 5),
+                        (ItemID.IceBlock, 15),
+                        (ItemID.Shiverthorn, 2),
+                        (ItemID.BorealWood, 25),
+                        (ItemID.FrostburnArrow, 15)
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_FrostShurikenwoodBow),
                     children = new[] { "Aurora Bow" }
@@ -207,9 +209,11 @@ namespace WeaponMerging.UI
                     onClick = (UIElement.MouseEvent)AttemptUnlock_AuroraBow,
                     cost = new List<(int,int)>
                     {
-                        (ModContent.ItemType<FrostShurikenwoodBow>(), 1),
-                        (ItemID.IceBlade, 1),
-                        (ItemID.Diamond, 10),
+                        (ItemID.DemonBow, 1),
+                        (ItemID.IceBlock, 15),
+                        (ItemID.Shiverthorn, 2),
+                        (ItemID.BorealWood, 25),
+                        (ItemID.FrostburnArrow, 15),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_AuroraBow),
                     children = new string[0]
@@ -222,10 +226,10 @@ namespace WeaponMerging.UI
                     onClick = (UIElement.MouseEvent)AttemptUnlock_VenomBarrage,
                     cost = new List<(int,int)>
                     {
-                        (ItemID.ThrowingKnife, 100),
                         (ItemID.Blowpipe, 1),
-                        (ItemID.Stinger, 5),
-                        (ItemID.JungleSpores, 7),
+                        (ItemID.Stinger, 10),
+                        (ItemID.JungleSpores, 10),
+                        (ModContent.ItemType<OrbFragment>(), 5),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_VenomBarrage),
                     children = new[] { "Combo Catalyst Charm" }
@@ -238,11 +242,10 @@ namespace WeaponMerging.UI
                     onClick = (UIElement.MouseEvent)AttemptUnlock_InfernoOrb,
                     cost = new List<(int,int)>
                     {
-                        (ItemID.FlowerofFire, 1),
-                        (121, 1),
                         (ItemID.HellstoneBar, 15),
-                        (2348, 2),
-                        (ModContent.ItemType<OrbFragment>(), 5),
+                        (ItemID.Obsidian, 20),
+                        (ItemID.Fireblossom, 3),
+                        (ModContent.ItemType<OrbFragment>(), 8),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_InfernoOrb),
                     children = new[] { "Fossil Dancer", "Celestial Frost Blade" }
@@ -251,14 +254,14 @@ namespace WeaponMerging.UI
                 new
                 {
                     id = "Fossil Dancer",
-                    pos = new Vector2(400, 350),
+                    pos = new Vector2(550, 250),
                     onClick = (UIElement.MouseEvent)AttemptUnlock_FossilDancer,
                     cost = new List<(int,int)>
                     {
                         (ItemID.BoneSword, 1),
-                        (ItemID.AntlionClaw, 1),
-                        (ItemID.FossilOre, 8),
-                        (ItemID.AntlionMandible, 4),
+                        (ItemID.AntlionMandible, 5),
+                        (ItemID.Bone, 20),
+                        (ModContent.ItemType<OrbFragment>(), 8),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_FossilDancer),
                     children = new[] { "Gale Crescent", "Shark Cannon" }
@@ -271,29 +274,13 @@ namespace WeaponMerging.UI
                     onClick = (UIElement.MouseEvent)AttemptUnlock_CelestialFrost,
                     cost = new List<(int,int)>
                     {
-                        (ItemID.Starfury, 1),
-                        (ItemID.IceBlade, 1),
-                        (ItemID.MeteoriteBar, 10),
-                        (ItemID.Ruby, 7),
+                        (ItemID.MeteoriteBar, 15),
+                        (ItemID.SunplateBlock, 20),
+                        (ItemID.FrostCore, 1),
+                        (ItemID.SoulofLight, 5),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_CelestialFrostBlade),
                     children = new[] { "Verdant Conduit Tome", "Gale Crescent", "Solar Conductor" }
-                },
-
-                new
-                {
-                    id = "Nightfall Harbinger",
-                    pos = new Vector2(100, 50),
-                    onClick = (UIElement.MouseEvent)AttemptUnlock_NightfallHarbinger,
-                    cost = new List<(int,int)>
-                    {
-                        (ItemID.DemonBow, 1),
-                        (ItemID.DemonScythe, 1),
-                        (ItemID.SoulofNight, 10),
-                        (47, 5),
-                    },
-                    isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_NightfallHarbinger),
-                    children = new string[0]
                 },
 
                 new
@@ -304,9 +291,9 @@ namespace WeaponMerging.UI
                     cost = new List<(int,int)>
                     {
                         (ItemID.SpellTome, 1),
-                        (3, 25),
-                        (ItemID.JungleSpores, 7),
-                        (ItemID.Vine, 7),
+                        (ItemID.MudBlock, 50),
+                        (ItemID.JungleSpores, 15),
+                        (ItemID.Stinger, 10),
                         (ItemID.SoulofLight, 5),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_VerdantConduitTome),
@@ -320,10 +307,10 @@ namespace WeaponMerging.UI
                     onClick = (UIElement.MouseEvent)AttemptUnlock_SharkCannon,
                     cost = new List<(int,int)>
                     {
-                        (ItemID.Boomstick, 1),
                         (ItemID.Minishark, 1),
                         (ItemID.SharkFin, 5),
                         (ItemID.IllegalGunParts, 1),
+                        (ItemID.SoulofFright, 5),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_SharkCannon),
                     children = new[] { "Abyssal Shark Cannon", "Shadow Reaper" }
@@ -336,10 +323,10 @@ namespace WeaponMerging.UI
                     onClick = (UIElement.MouseEvent)AttemptUnlock_GaleCrescent,
                     cost = new List<(int,int)>
                     {
-                        (ItemID.DemonScythe, 1),
-                        (ItemID.Cloud, 25),
-                        (ItemID.Feather, 12),
-                        (ItemID.SoulofNight, 5),
+                        (ItemID.Sickle, 1),
+                        (ItemID.Cloud, 50),
+                        (ItemID.SoulofFlight, 10),
+                        (ModContent.ItemType<OrbFragment>(), 10),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_GaleCrescent),
                     children = new[] { "Shadow Reaper" }
@@ -352,11 +339,10 @@ namespace WeaponMerging.UI
                     onClick = (UIElement.MouseEvent)AttemptUnlock_ShadowReaper,
                     cost = new List<(int,int)>
                     {
-                        (ItemID.ShadowbeamStaff, 1),
-                        (ItemID.DeathSickle, 1),
-                        (ItemID.Ectoplasm, 10),
-                        (ItemID.SoulofNight, 15),
-                        (ModContent.ItemType<OrbFragment>(), 5),
+                        (ItemID.Ectoplasm, 15),
+                        (ItemID.SoulofNight, 20),
+                        (ItemID.Bone, 50),
+                        (ModContent.ItemType<OrbFragment>(), 15),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_ShadowReaper),
                     children = new string[0]
@@ -369,10 +355,9 @@ namespace WeaponMerging.UI
                     onClick = (UIElement.MouseEvent)AttemptUnlock_SolarConductor,
                     cost = new List<(int,int)>
                     {
-                        (ItemID.Flamelash, 1),
-                        (ItemID.FlowerofFire, 1),
-                        (ItemID.SoulofLight, 5),
-                        (ItemID.SoulofNight, 5),
+                        (ItemID.FragmentSolar, 10),
+                        (ItemID.HellstoneBar, 20),
+                        (ItemID.Ectoplasm, 10),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_SolarConductor),
                     children = new string[0]
@@ -386,9 +371,9 @@ namespace WeaponMerging.UI
                     cost = new List<(int,int)>
                     {
                         (ModContent.ItemType<SharkCannon>(), 1),
-                        (ItemID.LunarBar, 10),
-                        (ItemID.FragmentVortex, 15),
                         (ItemID.SharkFin, 5),
+                        (ItemID.FragmentVortex, 15),
+                        (ItemID.LunarBar, 10),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_AbyssalSharkCannon),
                     children = new string[0]
@@ -402,9 +387,9 @@ namespace WeaponMerging.UI
                     cost = new List<(int,int)>
                     {
                         (ModContent.ItemType<Content.Items.Accessories.OrbweaverBand>(), 1),
-                        (ModContent.ItemType<Content.Items.Accessories.OrbCatalystCore>(), 1),
-                        (ItemID.SoulofLight, 10),
-                        (ItemID.SoulofNight, 10),
+                        (ModContent.ItemType<Content.Items.Accessories.ComboCatalystCharm>(), 1),
+                        (ItemID.Ectoplasm, 10),
+                        (ItemID.LunarBar, 5),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_OrbMasterBand),
                     children = new string[0]
@@ -417,10 +402,9 @@ namespace WeaponMerging.UI
                     onClick = (UIElement.MouseEvent)AttemptUnlock_FocusCrystal,
                     cost = new List<(int,int)>
                     {
-                        (ModContent.ItemType<Content.Items.Accessories.FocusCrystal>(), 1),
-                        (ModContent.ItemType<Content.Items.Accessories.OrbPersistenceCharm>(), 1),
-                        (ItemID.CrystalShard, 20),
-                        (ItemID.FallenStar, 5),
+                        (ItemID.Sapphire, 5),
+                        (ItemID.Topaz, 5),
+                        (ItemID.FallenStar, 10),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_FocusCrystal),
                     children = new[] { "Orb Persistence Charm", "Focused Persistence Crystal" }
@@ -435,8 +419,8 @@ namespace WeaponMerging.UI
                     {
                         (ModContent.ItemType<Content.Items.Accessories.AccelerantCharm>(), 1),
                         (ModContent.ItemType<Content.Items.Accessories.OrbCatalystCore>(), 1),
-                        (ItemID.Bone, 20),
-                        (ItemID.SoulofLight, 5),
+                        (ItemID.HallowedBar, 10),
+                        (ItemID.SoulofFright, 5),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_ComboCatalystCharm),
                     children = new[] { "Orb Master Band" }
@@ -449,9 +433,9 @@ namespace WeaponMerging.UI
                     onClick = (UIElement.MouseEvent)AttemptUnlock_OrbWeaverBand,
                     cost = new List<(int,int)>
                     {
-                        (ItemID.Silk, 20),
-                        (ItemID.IronBar, 10),
-                        (ModContent.ItemType<OrbFragment>(), 3),
+                        (ItemID.Silk, 30),
+                        (ItemID.Cobweb, 50),
+                        (ModContent.ItemType<OrbFragment>(), 8),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_OrbWeaverBand),
                     children = new[] { "Orb Catalyst Core" }
@@ -464,9 +448,10 @@ namespace WeaponMerging.UI
                     onClick = (UIElement.MouseEvent)AttemptUnlock_OrbCatalystCore,
                     cost = new List<(int,int)>
                     {
-                        (ItemID.GoldBar, 10),
-                        (ItemID.Sapphire, 5),
-                        (ModContent.ItemType<OrbFragment>(), 3),
+                        (ItemID.Diamond, 5),
+                        (ItemID.MeteoriteBar, 10),
+                        (ItemID.FallenStar, 10),
+                        (ModContent.ItemType<OrbFragment>(), 10),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_OrbCatalystCore),
                     children = new[] { "Accelerant Charm" }
@@ -479,8 +464,9 @@ namespace WeaponMerging.UI
                     onClick = (UIElement.MouseEvent)AttemptUnlock_FocusedPersistenceCrystal,
                     cost = new List<(int,int)>
                     {
-                        (ItemID.CrystalShard, 20),
-                        (ItemID.FallenStar, 5),
+                        (ItemID.CrystalShard, 50),
+                        (ItemID.SoulofLight, 15),
+                        (ItemID.UnicornHorn, 2),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_FocusedPersistenceCrystal),
                     children = new string[0]
@@ -493,8 +479,9 @@ namespace WeaponMerging.UI
                     onClick = (UIElement.MouseEvent)AttemptUnlock_OrbPersistenceCharm,
                     cost = new List<(int,int)>
                     {
-                        (ItemID.Bone, 15),
-                        (ItemID.FallenStar, 5),
+                        (ItemID.Bone, 30),
+                        (ItemID.SoulofNight, 10),
+                        (ItemID.CursedFlame, 10), // Can be swapped with Ichor dynamically if you have an extension method, but CursedFlame works as a baseline HM material.
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_OrbPersistenceCharm),
                     children = new string[0]
@@ -507,8 +494,10 @@ namespace WeaponMerging.UI
                     onClick = (UIElement.MouseEvent)AttemptUnlock_AccelerantCharm,
                     cost = new List<(int,int)>
                     {
-                        (ItemID.Gel, 20),
-                        (ItemID.Bone, 10),
+                        (ItemID.PinkGel, 20),
+                        (ItemID.SoulofLight, 10),
+                        (ItemID.SoulofNight, 10),
+                        (ItemID.CrystalShard, 15),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_AccelerantCharm),
                     children = new string[0]
@@ -522,6 +511,7 @@ namespace WeaponMerging.UI
                     cost = new List<(int,int)>
                     {
                         (ItemID.GoldBar, 10),
+                        (ItemID.ManaCrystal, 2),
                         (ModContent.ItemType<OrbFragment>(), 5),
                     },
                     isUnlocked = (System.Func<bool>)(() => FP != null && FP.Unlocked_OrbAmplifierRing),
@@ -544,16 +534,14 @@ namespace WeaponMerging.UI
             }
 
             Link(nodes["Starlit Whirlwind"], nodes["Crystal Cascade"]);
-            Link(nodes["Starlit Whirlwind"], nodes["Pain Spiral"]);
             Link(nodes["Starlit Whirlwind"], nodes["Shurikenwood Bow"]);
+            Link(nodes["Starlit Whirlwind"], nodes["Void Echo Blade"]);
             Link(nodes["Shurikenwood Bow"], nodes["Frost Shurikenwood Bow"]);
             Link(nodes["Frost Shurikenwood Bow"], nodes["Aurora Bow"]);
-            Link(nodes["Pain Spiral"], nodes["Venom Barrage"]);
+            Link(nodes["Crystal Cascade"], nodes["Venom Barrage"]);
             Link(nodes["Crystal Cascade"], nodes["Inferno Orb"]);
-            Link(nodes["Pain Spiral"], nodes["Inferno Orb"]);
             Link(nodes["Inferno Orb"], nodes["Fossil Dancer"]);
             Link(nodes["Inferno Orb"], nodes["Celestial Frost Blade"]);
-            Link(nodes["Crystal Cascade"], nodes["Nightfall Harbinger"]);
             Link(nodes["Celestial Frost Blade"], nodes["Verdant Conduit Tome"]);
             Link(nodes["Fossil Dancer"], nodes["Gale Crescent"]);
             Link(nodes["Celestial Frost Blade"], nodes["Gale Crescent"]);
@@ -882,14 +870,16 @@ namespace WeaponMerging.UI
                 _costDisplay.SetCost(new List<(int, int)>());
             };
 
-            _entries.Add((button, label, cost, isUnlocked));
+            var effectiveCost = cost ?? GetCostForLabel(label);
+            _entries.Add((button, label, effectiveCost, isUnlocked));
 
             return button;
         }
 
         private void UpdateInfoPanel(string label, List<(int type, int count)> cost)
         {
-            _costDisplay.SetCost(cost);
+            var effectiveCost = cost != null && cost.Count > 0 ? cost : GetCostForLabel(label);
+            _costDisplay.SetCost(effectiveCost);
 
             int type = GetItemTypeFromLabel(label);
             if (type > 0)
@@ -1204,10 +1194,6 @@ namespace WeaponMerging.UI
         {
             CombatText.NewText(P.getRect(), Color.OrangeRed, reason);
             SoundEngine.PlaySound(SoundID.MenuClose);
-            if (reason == "Missing materials")
-            {
-                Systems.FusionUISystem.HideFusionUI();
-            }
         }
 
         private void ShowAccepted(string text)
@@ -1216,12 +1202,51 @@ namespace WeaponMerging.UI
             SoundEngine.PlaySound(SoundID.Research);
         }
 
+        private List<(int type, int count)> GetCostForLabel(string label)
+        {
+            foreach (var entry in _entries)
+            {
+                if (entry.label == label && entry.cost != null)
+                    return entry.cost;
+            }
+
+            return label switch
+            {
+                "Starlit Whirlwind" => new List<(int type, int count)> { (ItemID.FallenStar, 2), (ItemID.Wood, 25), (ItemID.ManaCrystal, 1), (ModContent.ItemType<OrbFragment>(), 3) },
+                "Crystal Cascade" => new List<(int type, int count)> { (ItemID.IceBlock, 50), (ItemID.BorealWood, 20), (ItemID.Sapphire, 3), (ItemID.FallenStar, 3), (ModContent.ItemType<OrbFragment>(), 5) },
+                "Void Echo Blade" => new List<(int type, int count)> { (ItemID.BreakerBlade, 1), (ItemID.ShadowScale, 15), (ItemID.SoulofNight, 12), (ItemID.CursedFlame, 8) },
+                "Shurikenwood Bow" => new List<(int type, int count)> { (ItemID.WoodenBow, 1), (ItemID.Shuriken, 100), (ItemID.Wood, 50), (ModContent.ItemType<OrbFragment>(), 2) },
+                "Frost Shurikenwood Bow" => new List<(int type, int count)> { (ModContent.ItemType<ShurikenwoodBow>(), 1), (ItemID.IceBlock, 15), (ItemID.Shiverthorn, 2), (ItemID.BorealWood, 25), (ItemID.FrostburnArrow, 15) },
+                "Aurora Bow" => new List<(int type, int count)> { (ItemID.DemonBow, 1), (ItemID.IceBlock, 15), (ItemID.Shiverthorn, 2), (ItemID.BorealWood, 25), (ItemID.FrostburnArrow, 15) },
+                "Venom Barrage" => new List<(int type, int count)> { (ItemID.Blowpipe, 1), (ItemID.Stinger, 10), (ItemID.JungleSpores, 10), (ModContent.ItemType<OrbFragment>(), 5) },
+                "Inferno Orb" => new List<(int type, int count)> { (ItemID.HellstoneBar, 15), (ItemID.Obsidian, 20), (ItemID.Fireblossom, 3), (ModContent.ItemType<OrbFragment>(), 8) },
+                "Fossil Dancer" => new List<(int type, int count)> { (ItemID.BoneSword, 1), (ItemID.AntlionMandible, 5), (ItemID.Bone, 20), (ModContent.ItemType<OrbFragment>(), 8) },
+                "Celestial Frost Blade" => new List<(int type, int count)> { (ItemID.MeteoriteBar, 15), (ItemID.SunplateBlock, 20), (ItemID.FrostCore, 1), (ItemID.SoulofLight, 5) },
+                "Verdant Conduit Tome" => new List<(int type, int count)> { (ItemID.SpellTome, 1), (ItemID.MudBlock, 50), (ItemID.JungleSpores, 15), (ItemID.Stinger, 10), (ItemID.SoulofLight, 5) },
+                "Shark Cannon" => new List<(int type, int count)> { (ItemID.Minishark, 1), (ItemID.SharkFin, 5), (ItemID.IllegalGunParts, 1), (ItemID.SoulofFright, 5) },
+                "Gale Crescent" => new List<(int type, int count)> { (ItemID.Sickle, 1), (ItemID.Cloud, 50), (ItemID.SoulofFlight, 10), (ModContent.ItemType<OrbFragment>(), 10) },
+                "Shadow Reaper" => new List<(int type, int count)> { (ItemID.Ectoplasm, 15), (ItemID.SoulofNight, 20), (ItemID.Bone, 50), (ModContent.ItemType<OrbFragment>(), 15) },
+                "Solar Conductor" => new List<(int type, int count)> { (ItemID.FragmentSolar, 10), (ItemID.HellstoneBar, 20), (ItemID.Ectoplasm, 10) },
+                "Abyssal Shark Cannon" => new List<(int type, int count)> { (ModContent.ItemType<SharkCannon>(), 1), (ItemID.SharkFin, 5), (ItemID.FragmentVortex, 15), (ItemID.LunarBar, 10) },
+                "Orb Master Band" => new List<(int type, int count)> { (ModContent.ItemType<Content.Items.Accessories.OrbweaverBand>(), 1), (ModContent.ItemType<Content.Items.Accessories.ComboCatalystCharm>(), 1), (ItemID.Ectoplasm, 10), (ItemID.LunarBar, 5) },
+                "Focus Crystal" => new List<(int type, int count)> { (ItemID.Sapphire, 5), (ItemID.Topaz, 5), (ItemID.FallenStar, 10) },
+                "Combo Catalyst Charm" => new List<(int type, int count)> { (ModContent.ItemType<Content.Items.Accessories.AccelerantCharm>(), 1), (ModContent.ItemType<Content.Items.Accessories.OrbCatalystCore>(), 1), (ItemID.HallowedBar, 10), (ItemID.SoulofFright, 5) },
+                "Orb Weaver Band" => new List<(int type, int count)> { (ItemID.Silk, 30), (ItemID.Cobweb, 50), (ModContent.ItemType<OrbFragment>(), 8) },
+                "Orb Catalyst Core" => new List<(int type, int count)> { (ItemID.Diamond, 5), (ItemID.MeteoriteBar, 10), (ItemID.FallenStar, 10), (ModContent.ItemType<OrbFragment>(), 10) },
+                "Focused Persistence Crystal" => new List<(int type, int count)> { (ItemID.CrystalShard, 50), (ItemID.SoulofLight, 15), (ItemID.UnicornHorn, 2) },
+                "Orb Persistence Charm" => new List<(int type, int count)> { (ItemID.Bone, 30), (ItemID.SoulofNight, 10), (ItemID.CursedFlame, 10) },
+                "Accelerant Charm" => new List<(int type, int count)> { (ItemID.PinkGel, 20), (ItemID.SoulofLight, 10), (ItemID.SoulofNight, 10), (ItemID.CrystalShard, 15) },
+                "Orb Amplifier Ring" => new List<(int type, int count)> { (ItemID.GoldBar, 10), (ItemID.ManaCrystal, 2), (ModContent.ItemType<OrbFragment>(), 5) },
+                _ => new List<(int type, int count)>()
+            };
+        }
+
         private void AttemptUnlock_InfernoOrb(UIMouseEvent evt, UIElement listeningElement)
         {
             if (FP.Unlocked_InfernoOrb) { ShowRejected("Already unlocked"); return; }
             var node = GetPanelByLabel("Inferno Orb");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ItemID.FlowerofFire,1), (121,1), (ItemID.HellstoneBar,15), (2348,2), (ModContent.ItemType<OrbFragment>(),5) };
+            var cost = GetCostForLabel("Inferno Orb");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_InfernoOrb = true;
@@ -1236,7 +1261,7 @@ namespace WeaponMerging.UI
             if (FP.Unlocked_ShadowReaper) { ShowRejected("Already unlocked"); return; }
             var node = GetPanelByLabel("Shadow Reaper");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ItemID.ShadowbeamStaff,1), (ItemID.DeathSickle,1), (ItemID.Ectoplasm,10), (ItemID.SoulofNight,15), (ModContent.ItemType<OrbFragment>(),5) };
+            var cost = GetCostForLabel("Shadow Reaper");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_ShadowReaper = true;
@@ -1251,7 +1276,7 @@ namespace WeaponMerging.UI
             if (FP.Unlocked_CelestialFrostBlade) { ShowRejected("Already unlocked"); return; }
             var node = GetPanelByLabel("Celestial Frost Blade");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ItemID.Starfury,1), (ItemID.IceBlade,1), (ItemID.MeteoriteBar,10), (ItemID.Ruby,7) };
+            var cost = GetCostForLabel("Celestial Frost Blade");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_CelestialFrostBlade = true;
@@ -1261,19 +1286,19 @@ namespace WeaponMerging.UI
                 StartCraftAnimation(ModContent.ItemType<CelestialFrostBlade>(), ItemID.Starfury, ItemID.IceBlade);
         }
 
-        private void AttemptUnlock_PainSpiral(UIMouseEvent evt, UIElement listeningElement)
+        private void AttemptUnlock_VoidEchoBlade(UIMouseEvent evt, UIElement listeningElement)
         {
-            if (FP.Unlocked_PainSpiral) { ShowRejected("Already unlocked"); return; }
-            var node = GetPanelByLabel("Pain Spiral");
+            if (FP.Unlocked_VoidEchoBlade) { ShowRejected("Already unlocked"); return; }
+            var node = GetPanelByLabel("Void Echo Blade");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ItemID.BallOHurt,1), (ItemID.ThornChakram,1), (ItemID.Stinger,4), (ItemID.JungleSpores,8), (ModContent.ItemType<OrbFragment>(),5) };
+            var cost = GetCostForLabel("Void Echo Blade");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
-            FP.Unlocked_PainSpiral = true;
-            ShowAccepted("Pain Spiral unlocked");
-            GrantItem(ModContent.ItemType<PainSpiral>());
+            FP.Unlocked_VoidEchoBlade = true;
+            ShowAccepted("Void Echo Blade unlocked");
+            GrantItem(ModContent.ItemType<VoidEchoBlade>());
             if (!ModContent.GetInstance<FusionStationConfig>().DisableAnimation)
-                StartCraftAnimation(ModContent.ItemType<PainSpiral>(), ItemID.BallOHurt, ItemID.ThornChakram);
+                StartCraftAnimation(ModContent.ItemType<VoidEchoBlade>(), ItemID.BreakerBlade, ItemID.ShadowScale);
         }
 
         private void AttemptUnlock_SolarConductor(UIMouseEvent evt, UIElement listeningElement)
@@ -1281,7 +1306,7 @@ namespace WeaponMerging.UI
             if (FP.Unlocked_SolarConductor) { ShowRejected("Already unlocked"); return; }
             var node = GetPanelByLabel("Solar Conductor");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ItemID.Flamelash,1), (ItemID.FlowerofFire,1), (ItemID.SoulofLight,5), (ItemID.SoulofNight,5) };
+            var cost = GetCostForLabel("Solar Conductor");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_SolarConductor = true;
@@ -1296,7 +1321,7 @@ namespace WeaponMerging.UI
             if (FP.Unlocked_CrystalCascade) { ShowRejected("Already unlocked"); return; }
             var node = GetPanelByLabel("Crystal Cascade");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ItemID.IceBlade,1), (2745,10), (ItemID.Sapphire,10), (ItemID.Snowball,25), (ModContent.ItemType<OrbFragment>(),5) };
+            var cost = GetCostForLabel("Crystal Cascade");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_CrystalCascade = true;
@@ -1311,7 +1336,7 @@ namespace WeaponMerging.UI
             if (FP.Unlocked_FossilDancer) { ShowRejected("Already unlocked"); return; }
             var node = GetPanelByLabel("Fossil Dancer");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ItemID.BoneSword,1), (ItemID.AntlionClaw,1), (ItemID.FossilOre,8), (ItemID.AntlionMandible,4) };
+            var cost = GetCostForLabel("Fossil Dancer");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_FossilDancer = true;
@@ -1326,7 +1351,7 @@ namespace WeaponMerging.UI
             if (FP.Unlocked_GaleCrescent) { ShowRejected("Already unlocked"); return; }
             var node = GetPanelByLabel("Gale Crescent");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ItemID.DemonScythe,1), (ItemID.Cloud,25), (ItemID.Feather,12), (ItemID.SoulofNight,5) };
+            var cost = GetCostForLabel("Gale Crescent");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_GaleCrescent = true;
@@ -1341,7 +1366,7 @@ namespace WeaponMerging.UI
             if (FP.Unlocked_StarlitWhirlwind) { ShowRejected("Already unlocked"); return; }
             var node = GetPanelByLabel("Starlit Whirlwind");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ItemID.WandofSparking,1), (ItemID.FallenStar,5), (ItemID.CopperBar,10), (ModContent.ItemType<OrbFragment>(),5) };
+            var cost = GetCostForLabel("Starlit Whirlwind");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_StarlitWhirlwind = true;
@@ -1356,7 +1381,7 @@ namespace WeaponMerging.UI
             if (FP.Unlocked_OrbMasterBand) { ShowRejected("Already unlocked"); return; }
             var node = GetPanelByLabel("Orb Master Band");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ModContent.ItemType<Content.Items.Accessories.OrbweaverBand>(),1), (ModContent.ItemType<Content.Items.Accessories.OrbCatalystCore>(),1), (ItemID.SoulofLight,10), (ItemID.SoulofNight,10) };
+            var cost = GetCostForLabel("Orb Master Band");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_OrbMasterBand = true;
@@ -1370,7 +1395,7 @@ namespace WeaponMerging.UI
             if (FP.Unlocked_FocusedPersistenceCrystal) { ShowRejected("Already unlocked"); return; }
             var node = GetPanelByLabel("Focused Persistence Crystal");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ModContent.ItemType<Content.Items.Accessories.FocusCrystal>(),1), (ModContent.ItemType<Content.Items.Accessories.OrbPersistenceCharm>(),1), (ItemID.CrystalShard,20), (ItemID.FallenStar,5) };
+            var cost = GetCostForLabel("Focused Persistence Crystal");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_FocusedPersistenceCrystal = true;
@@ -1383,7 +1408,7 @@ namespace WeaponMerging.UI
             if (FP.Unlocked_ComboCatalystCharm) { ShowRejected("Already unlocked"); return; }
             var node = GetPanelByLabel("Combo Catalyst Charm");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ModContent.ItemType<Content.Items.Accessories.AccelerantCharm>(),1), (ModContent.ItemType<Content.Items.Accessories.OrbCatalystCore>(),1), (ItemID.Bone, 20), (ItemID.SoulofLight,5) };
+            var cost = GetCostForLabel("Combo Catalyst Charm");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_ComboCatalystCharm = true;
@@ -1396,7 +1421,7 @@ namespace WeaponMerging.UI
             if (FP.Unlocked_ShurikenwoodBow) { ShowRejected("Already unlocked"); return; }
             var node = GetPanelByLabel("Shurikenwood Bow");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ItemID.WoodenBow,1), (ItemID.Shuriken,50), (ItemID.Wood,20) };
+            var cost = GetCostForLabel("Shurikenwood Bow");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_ShurikenwoodBow = true;
@@ -1411,7 +1436,7 @@ namespace WeaponMerging.UI
             if (FP.Unlocked_FrostShurikenwoodBow) { ShowRejected("Already unlocked"); return; }
             var node = GetPanelByLabel("Frost Shurikenwood Bow");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ModContent.ItemType<Content.Items.Weapons.ShurikenwoodBow>(),1), (ItemID.IceBlock,10), (ItemID.Shiverthorn,5) };
+            var cost = GetCostForLabel("Frost Shurikenwood Bow");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_FrostShurikenwoodBow = true;
@@ -1426,7 +1451,7 @@ namespace WeaponMerging.UI
             if (FP.Unlocked_VenomBarrage) { ShowRejected("Already unlocked"); return; }
             var node = GetPanelByLabel("Venom Barrage");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ItemID.ThrowingKnife,100), (ItemID.Blowpipe,1), (ItemID.Stinger,15), (ItemID.JungleSpores,12) };
+            var cost = GetCostForLabel("Venom Barrage");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_VenomBarrage = true;
@@ -1436,27 +1461,12 @@ namespace WeaponMerging.UI
                 StartCraftAnimation(ModContent.ItemType<Content.Items.Weapons.VenomBarrage>(), ItemID.ThrowingKnife, ItemID.Blowpipe);
         }
 
-        private void AttemptUnlock_NightfallHarbinger(UIMouseEvent evt, UIElement listeningElement)
-        {
-            if (FP.Unlocked_NightfallHarbinger) { ShowRejected("Already unlocked"); return; }
-            var node = GetPanelByLabel("Nightfall Harbinger");
-            if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ItemID.DemonBow,1), (ItemID.DemonScythe,1), (ItemID.SoulofNight,10), (47,5) };
-            if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
-            ConsumeItems(cost);
-            FP.Unlocked_NightfallHarbinger = true;
-            ShowAccepted("Nightfall Harbinger unlocked");
-            GrantItem(ModContent.ItemType<Content.Items.Weapons.NightfallHarbinger>());
-            if (!ModContent.GetInstance<FusionStationConfig>().DisableAnimation)
-                StartCraftAnimation(ModContent.ItemType<Content.Items.Weapons.NightfallHarbinger>(), ItemID.DemonBow, ItemID.DemonScythe);
-        }
-
         private void AttemptUnlock_VerdantConduitTome(UIMouseEvent evt, UIElement listeningElement)
         {
             if (FP.Unlocked_VerdantConduitTome) { ShowRejected("Already unlocked"); return; }
             var node = GetPanelByLabel("Verdant Conduit Tome");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ItemID.SpellTome,1), (3,25), (ItemID.JungleSpores,7), (ItemID.Vine,7), (ItemID.SoulofLight,5) };
+            var cost = GetCostForLabel("Verdant Conduit Tome");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_VerdantConduitTome = true;
@@ -1471,7 +1481,7 @@ namespace WeaponMerging.UI
             if (FP.Unlocked_SharkCannon) { ShowRejected("Already unlocked"); return; }
             var node = GetPanelByLabel("Shark Cannon");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ItemID.Boomstick,1), (ItemID.Minishark,1), (ItemID.SharkFin,5), (ItemID.IllegalGunParts,1) };
+            var cost = GetCostForLabel("Shark Cannon");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_SharkCannon = true;
@@ -1486,7 +1496,7 @@ namespace WeaponMerging.UI
             if (FP.Unlocked_AbyssalSharkCannon) { ShowRejected("Already unlocked"); return; }
             var node = GetPanelByLabel("Abyssal Shark Cannon");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ModContent.ItemType<SharkCannon>(),1), (ItemID.LunarBar,10), (ItemID.FragmentVortex,15), (ItemID.SharkFin,5) };
+            var cost = GetCostForLabel("Abyssal Shark Cannon");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_AbyssalSharkCannon = true;
@@ -1501,7 +1511,7 @@ namespace WeaponMerging.UI
             if (FP.Unlocked_AuroraBow) { ShowRejected("Already unlocked"); return; }
             var node = GetPanelByLabel("Aurora Bow");
             if (node != null && !PrereqsMet(node)) { ShowRejected("Missing prerequisites"); return; }
-            var cost = new List<(int,int)> { (ModContent.ItemType<FrostShurikenwoodBow>(),1), (ItemID.IceBlade,1), (ItemID.Diamond,10) };
+            var cost = GetCostForLabel("Aurora Bow");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_AuroraBow = true;
@@ -1514,7 +1524,7 @@ namespace WeaponMerging.UI
         private void AttemptUnlock_OrbWeaverBand(UIMouseEvent evt, UIElement listeningElement)
         {
             if (FP.Unlocked_OrbWeaverBand) { ShowRejected("Already unlocked"); return; }
-            var cost = new List<(int,int)> { (ItemID.Silk,20), (ItemID.IronBar,10), (ModContent.ItemType<OrbFragment>(),3) };
+            var cost = GetCostForLabel("Orb Weaver Band");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_OrbWeaverBand = true;
@@ -1525,7 +1535,7 @@ namespace WeaponMerging.UI
         private void AttemptUnlock_OrbCatalystCore(UIMouseEvent evt, UIElement listeningElement)
         {
             if (FP.Unlocked_OrbCatalystCore) { ShowRejected("Already unlocked"); return; }
-            var cost = new List<(int,int)> { (ItemID.GoldBar,10), (ItemID.Sapphire,5), (ModContent.ItemType<OrbFragment>(),3) };
+            var cost = GetCostForLabel("Orb Catalyst Core");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_OrbCatalystCore = true;
@@ -1536,7 +1546,7 @@ namespace WeaponMerging.UI
         private void AttemptUnlock_FocusCrystal(UIMouseEvent evt, UIElement listeningElement)
         {
             if (FP.Unlocked_FocusCrystal) { ShowRejected("Already unlocked"); return; }
-            var cost = new List<(int,int)> { (ItemID.CrystalShard,20), (ItemID.FallenStar,5) };
+            var cost = GetCostForLabel("Focus Crystal");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_FocusCrystal = true;
@@ -1547,7 +1557,7 @@ namespace WeaponMerging.UI
         private void AttemptUnlock_OrbPersistenceCharm(UIMouseEvent evt, UIElement listeningElement)
         {
             if (FP.Unlocked_OrbPersistenceCharm) { ShowRejected("Already unlocked"); return; }
-            var cost = new List<(int,int)> { (ItemID.Bone,15), (ItemID.FallenStar,5) };
+            var cost = GetCostForLabel("Orb Persistence Charm");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_OrbPersistenceCharm = true;
@@ -1558,7 +1568,7 @@ namespace WeaponMerging.UI
         private void AttemptUnlock_AccelerantCharm(UIMouseEvent evt, UIElement listeningElement)
         {
             if (FP.Unlocked_AccelerantCharm) { ShowRejected("Already unlocked"); return; }
-            var cost = new List<(int,int)> { (ItemID.Gel,20), (ItemID.Bone,10) };
+            var cost = GetCostForLabel("Accelerant Charm");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_AccelerantCharm = true;
@@ -1569,7 +1579,7 @@ namespace WeaponMerging.UI
         private void AttemptUnlock_OrbAmplifierRing(UIMouseEvent evt, UIElement listeningElement)
         {
             if (FP.Unlocked_OrbAmplifierRing) { ShowRejected("Already unlocked"); return; }
-            var cost = new List<(int,int)> { (ItemID.GoldBar,10), (ModContent.ItemType<OrbFragment>(),5) };
+            var cost = GetCostForLabel("Orb Amplifier Ring");
             if (!HasItems(cost)) { ShowRejected("Missing materials"); return; }
             ConsumeItems(cost);
             FP.Unlocked_OrbAmplifierRing = true;
@@ -1599,7 +1609,7 @@ namespace WeaponMerging.UI
             FP.Unlocked_InfernoOrb = true;
             FP.Unlocked_ShadowReaper = true;
             FP.Unlocked_CelestialFrostBlade = true;
-            FP.Unlocked_PainSpiral = true;
+            FP.Unlocked_VoidEchoBlade = true;
             FP.Unlocked_SolarConductor = true;
             FP.Unlocked_CrystalCascade = true;
             FP.Unlocked_FossilDancer = true;
@@ -1611,7 +1621,6 @@ namespace WeaponMerging.UI
             FP.Unlocked_ShurikenwoodBow = true;
             FP.Unlocked_FrostShurikenwoodBow = true;
             FP.Unlocked_VenomBarrage = true;
-            FP.Unlocked_NightfallHarbinger = true;
             FP.Unlocked_VerdantConduitTome = true;
             FP.Unlocked_SharkCannon = true;
             FP.Unlocked_AbyssalSharkCannon = true;
@@ -1619,7 +1628,7 @@ namespace WeaponMerging.UI
             GrantItem(ModContent.ItemType<InfernoOrb>());
             GrantItem(ModContent.ItemType<ShadowReaper>());
             GrantItem(ModContent.ItemType<CelestialFrostBlade>());
-            GrantItem(ModContent.ItemType<PainSpiral>());
+            GrantItem(ModContent.ItemType<VoidEchoBlade>());
             GrantItem(ModContent.ItemType<SolarConductor>());
             GrantItem(ModContent.ItemType<CrystalCascade>());
             GrantItem(ModContent.ItemType<FossilDancer>());
@@ -1631,7 +1640,6 @@ namespace WeaponMerging.UI
             GrantItem(ModContent.ItemType<ShurikenwoodBow>());
             GrantItem(ModContent.ItemType<FrostShurikenwoodBow>());
             GrantItem(ModContent.ItemType<VenomBarrage>());
-            GrantItem(ModContent.ItemType<NightfallHarbinger>());
             GrantItem(ModContent.ItemType<VerdantConduitTome>());
             GrantItem(ModContent.ItemType<SharkCannon>());
             GrantItem(ModContent.ItemType<AbyssalSharkCannon>());
@@ -1649,7 +1657,7 @@ namespace WeaponMerging.UI
                 "Inferno Orb" => FP.Unlocked_InfernoOrb,
                 "Shadow Reaper" => FP.Unlocked_ShadowReaper,
                 "Celestial Frost Blade" => FP.Unlocked_CelestialFrostBlade,
-                "Pain Spiral" => FP.Unlocked_PainSpiral,
+                "Void Echo Blade" => FP.Unlocked_VoidEchoBlade,
                 "Solar Conductor" => FP.Unlocked_SolarConductor,
                 "Crystal Cascade" => FP.Unlocked_CrystalCascade,
                 "Fossil Dancer" => FP.Unlocked_FossilDancer,
@@ -1661,7 +1669,6 @@ namespace WeaponMerging.UI
                 "Shurikenwood Bow" => FP.Unlocked_ShurikenwoodBow,
                 "Frost Shurikenwood Bow" => FP.Unlocked_FrostShurikenwoodBow,
                 "Venom Barrage" => FP.Unlocked_VenomBarrage,
-                "Nightfall Harbinger" => FP.Unlocked_NightfallHarbinger,
                 "Verdant Conduit Tome" => FP.Unlocked_VerdantConduitTome,
                 "Shark Cannon" => FP.Unlocked_SharkCannon,
                 "Abyssal Shark Cannon" => FP.Unlocked_AbyssalSharkCannon,
@@ -1677,7 +1684,7 @@ namespace WeaponMerging.UI
                 case "Inferno Orb": FP.Unlocked_InfernoOrb = true; GrantItem(ModContent.ItemType<InfernoOrb>()); break;
                 case "Shadow Reaper": FP.Unlocked_ShadowReaper = true; GrantItem(ModContent.ItemType<ShadowReaper>()); break;
                 case "Celestial Frost Blade": FP.Unlocked_CelestialFrostBlade = true; GrantItem(ModContent.ItemType<CelestialFrostBlade>()); break;
-                case "Pain Spiral": FP.Unlocked_PainSpiral = true; GrantItem(ModContent.ItemType<PainSpiral>()); break;
+                case "Void Echo Blade": FP.Unlocked_VoidEchoBlade = true; GrantItem(ModContent.ItemType<VoidEchoBlade>()); break;
                 case "Solar Conductor": FP.Unlocked_SolarConductor = true; GrantItem(ModContent.ItemType<SolarConductor>()); break;
                 case "Crystal Cascade": FP.Unlocked_CrystalCascade = true; GrantItem(ModContent.ItemType<CrystalCascade>()); break;
                 case "Fossil Dancer": FP.Unlocked_FossilDancer = true; GrantItem(ModContent.ItemType<FossilDancer>()); break;
@@ -1689,7 +1696,6 @@ namespace WeaponMerging.UI
                 case "Shurikenwood Bow": FP.Unlocked_ShurikenwoodBow = true; GrantItem(ModContent.ItemType<ShurikenwoodBow>()); break;
                 case "Frost Shurikenwood Bow": FP.Unlocked_FrostShurikenwoodBow = true; GrantItem(ModContent.ItemType<FrostShurikenwoodBow>()); break;
                 case "Venom Barrage": FP.Unlocked_VenomBarrage = true; GrantItem(ModContent.ItemType<VenomBarrage>()); break;
-                case "Nightfall Harbinger": FP.Unlocked_NightfallHarbinger = true; GrantItem(ModContent.ItemType<NightfallHarbinger>()); break;
                 case "Verdant Conduit Tome": FP.Unlocked_VerdantConduitTome = true; GrantItem(ModContent.ItemType<VerdantConduitTome>()); break;
                 case "Shark Cannon": FP.Unlocked_SharkCannon = true; GrantItem(ModContent.ItemType<SharkCannon>()); break;
                 case "Abyssal Shark Cannon": FP.Unlocked_AbyssalSharkCannon = true; GrantItem(ModContent.ItemType<AbyssalSharkCannon>()); break;
@@ -1742,7 +1748,7 @@ namespace WeaponMerging.UI
             "Inferno Orb" => (ModContent.ItemType<Content.Items.Weapons.InfernoOrb>(), ItemID.FlowerofFire, ItemID.MeteorStaff),
             "Shadow Reaper" => (ModContent.ItemType<Content.Items.Weapons.ShadowReaper>(), ItemID.ShadowbeamStaff, ItemID.DeathSickle),
             "Celestial Frost Blade" => (ModContent.ItemType<Content.Items.Weapons.CelestialFrostBlade>(), ItemID.Starfury, ItemID.IceBlade),
-            "Pain Spiral" => (ModContent.ItemType<Content.Items.Weapons.PainSpiral>(), ItemID.BallOHurt, ItemID.ThornChakram),
+            "Void Echo Blade" => (ModContent.ItemType<Content.Items.Weapons.VoidEchoBlade>(), ItemID.BreakerBlade, ItemID.ShadowScale),
             "Solar Conductor" => (ModContent.ItemType<Content.Items.Weapons.SolarConductor>(), ItemID.Flamelash, ItemID.FlowerofFire),
             "Crystal Cascade" => (ModContent.ItemType<Content.Items.Weapons.CrystalCascade>(), ItemID.IceBlade, 1306),
             "Fossil Dancer" => (ModContent.ItemType<Content.Items.Weapons.FossilDancer>(), ItemID.BoneSword, ItemID.AntlionClaw),
@@ -1756,7 +1762,7 @@ namespace WeaponMerging.UI
             "Inferno Orb" => ModContent.ItemType<InfernoOrb>(),
             "Shadow Reaper" => ModContent.ItemType<ShadowReaper>(),
             "Celestial Frost Blade" => ModContent.ItemType<CelestialFrostBlade>(),
-            "Pain Spiral" => ModContent.ItemType<PainSpiral>(),
+            "Void Echo Blade" => ModContent.ItemType<VoidEchoBlade>(),
             "Solar Conductor" => ModContent.ItemType<SolarConductor>(),
             "Crystal Cascade" => ModContent.ItemType<CrystalCascade>(),
             "Fossil Dancer" => ModContent.ItemType<FossilDancer>(),
@@ -1768,7 +1774,6 @@ namespace WeaponMerging.UI
             "Shurikenwood Bow" => ModContent.ItemType<ShurikenwoodBow>(),
             "Frost Shurikenwood Bow" => ModContent.ItemType<FrostShurikenwoodBow>(),
             "Venom Barrage" => ModContent.ItemType<VenomBarrage>(),
-            "Nightfall Harbinger" => ModContent.ItemType<NightfallHarbinger>(),
             "Verdant Conduit Tome" => ModContent.ItemType<VerdantConduitTome>(),
             "Shark Cannon" => ModContent.ItemType<SharkCannon>(),
             "Abyssal Shark Cannon" => ModContent.ItemType<AbyssalSharkCannon>(),
@@ -1787,7 +1792,7 @@ namespace WeaponMerging.UI
             "Inferno Orb" => "Content/Items/Weapons/InfernoOrb",
             "Shadow Reaper" => "Content/Items/Weapons/ShadowReaper",
             "Celestial Frost Blade" => "Content/Items/Weapons/CelestialFrostBlade",
-            "Pain Spiral" => "Content/Items/Weapons/PainSpiral",
+            "Void Echo Blade" => "Content/Items/Weapons/VoidEchoBlade",
             "Solar Conductor" => "Content/Items/Weapons/SolarConductor",
             "Crystal Cascade" => "Content/Items/Weapons/CrystalCascade",
             "Fossil Dancer" => "Content/Items/Weapons/FossilDancer",

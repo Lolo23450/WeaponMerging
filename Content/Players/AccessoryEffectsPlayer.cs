@@ -21,6 +21,7 @@ namespace WeaponMerging.Content.Players
         public int BonusMaxOrbs => (orbBandEquipped ? 1 : 0) + (catalystEquipped ? 1 : 0) + (orbMasterBandEquipped ? 2 : 0) + (infusionCoreEquipped ? 1 : 0);
         public int BonusShotsPerOrb => (focusEquipped ? 2 : 0) + (focusedPersistenceEquipped ? 2 : 0);
         public int IntervalReduction => (focusEquipped ? 2 : 0) + (catalystEquipped ? 1 : 0) + (focusedPersistenceEquipped ? 2 : 0) + (orbMasterBandEquipped ? 1 : 0) + (comboCatalystEquipped ? 1 : 0);
+        public float GetOrbRotationSpeedMultiplier(int orbitingOrbCount) => amplifierEquipped ? 1f + orbitingOrbCount * 0.10f : 1f;
 
         public override void ResetEffects()
         {
@@ -38,7 +39,6 @@ namespace WeaponMerging.Content.Players
             {
                 orbSpeedMultipliers["Inferno"] = 1f;
                 orbSpeedMultipliers["Shadow"] = 1f;
-                orbSpeedMultipliers["Pain"] = 1f;
                 orbSpeedMultipliers["Crystal"] = 1f;
                 orbSpeedMultipliers["Starlit"] = 1f;
             }

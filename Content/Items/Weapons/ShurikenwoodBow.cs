@@ -57,14 +57,6 @@ namespace WeaponMerging.Content.Items.Weapons
             return true; 
         }
 
-        public override void AddRecipes()
-        {
-            CreateRecipe()
-                .AddIngredient(ItemID.WoodenBow)
-                .AddIngredient(ItemID.Shuriken, 50)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
     }
 }
 
